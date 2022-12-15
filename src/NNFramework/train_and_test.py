@@ -16,7 +16,7 @@ def train_and_test(generator,
          testFrequency = 10,
          outputDimension = 1,
          deltidx=0,
-         epochs=100, 
+         epochs=1, 
          learning_rate_schedule=[
             (0.0, 0.01), 
             (0.2, 0.001), 
