@@ -1,39 +1,15 @@
 # MonteCarloLearning
 
-The goal of this repo is to introduce deep learning with sampled data and to create a flexible framework for its application.s
+- The first goal of this repo is to provide a flexible neural network training framework, not only able to handle the usual case of fixed inputs (e.g. .csv files), but to allow data generation (on the fly during the training process) through self-written functions. 
 
-The idea to study the different approaches stems from
+- The second goal is to give an introduction to the idea of understanding training data selection from the Monte Carlo point of view by showing examples from scratch, for which little prior knowledge is necessary. Hence, the first introductional example is the training of the cumulative normal densitity function, which is explained in-depth in the documentation.pdf and in jupyter notebooks to recompute in /Examples/CumulativeDensityFunction.
+
+The idea to study the different data generation approaches stems from
 https://arxiv.org/abs/2102.08734v1
 
-The idea and the first draft of the programming code stems from
+The basis of the code base which will be modified continuously stems from
 https://github.com/differential-machine-learning/notebooks
 
-### Installation
-(Python used: Python 3.10.8)
+While in this work I define Monte Carlo learning as the approach of using random sampled inputs and only approximations of the output, I believe that studying this approach may help to understand neural network training in general.
 
-# 1. Open command prompt and naviagte to folder (e.g. C\dev\MonteCarloLearning) 
-# 2. Create virtual environment
-python -m venv .venvNN
-# 3. Activate virtual environment in Command Prompt:
-.venvNN\Scripts\activate.bat
-# 4. Install packages from requirements.txt, 
-pip install -r requirements.txt
-
-
-### To add new packages: Update/Generate requirements.txt from current installation
-pip freeze > requirements.txt
-
-
-### Useful commands:
-
-# (Use direct path of Python if other python version is required, e.g. C\Users\AppData\Local\Programs\Python\Python39\python.exe)
-# Print used Python (prints version of global used or Venv if in a Venv)
-python -V
-# Deactivate environment
-deactivate
-# Python package lookup path
-echo %PATH%
-# pip upgrade can be upgraded by
-c:\dev\test\.venvNN\Scripts\python.exe -m pip install --upgrade pip
-# or if Veng is activated just
-python -m pip install --upgrade pip
+For high-dimensional problems, trying to first generate training data and store them in files will sooner or later lead to infeasible file sizes. Under these circumstances, it is necessary to be able to compute training data on the fly during the neural network training process.
