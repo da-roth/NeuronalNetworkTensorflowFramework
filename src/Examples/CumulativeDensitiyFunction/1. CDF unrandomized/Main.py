@@ -5,9 +5,8 @@
 ###
 ### Import framework
 import os
-mainDirectory = os.getcwd()
-packageFile = os.path.abspath(os.path.join(mainDirectory,'src', 'NNFramework', 'packages.py'))
-exec(open(packageFile).read())
+file_path = os.path.abspath(os.path.join(os.getcwd() , '..', 'NNFramework', 'packages.py'))
+exec(open(file_path).read())
 ### - dataSeed = seed for simulations or (for csv input) for randomization of csv
 dataSeed = 1 
 weightSeed = 1 

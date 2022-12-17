@@ -34,8 +34,9 @@ real_type = tf.float32
 # real_type = tf.float64
 
 import sys
-sys.path.append( 'C:/dev/NeuronalNetworkTensorflowFramework/src/NNFramework/' )
-sys.path.append( 'C:/dev/NeuronalNetworkTensorflowFramework/src/Examples/CumulativeDensitiyFunction/4. CDF_onFly/' )
+import os
+sys.path.append( os.path.join(mainDirectory,'src','NNFramework') )
+sys.path.append(os.path.join(mainDirectory,'src','Examples','CumulativeDensitiyFunction','4. CDF_onFly/' ))
 
 # Data importation or generation classes
 from BlackScholes import *
