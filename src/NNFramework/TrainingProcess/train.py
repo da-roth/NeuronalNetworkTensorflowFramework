@@ -39,14 +39,14 @@ def train(description,
     testFrequency = epochs/10
     
     # Print training setting
-    print('Training will be done with the following settings:\n')
-    print('min_batch_size: ' + str(min_batch_size))
-    print('batches per epoch: ' + str(batches_per_epoch))
-    print('Hence, used batch_size will be: ' + str(batch_size))
-    print('epochs: ' + str(epochs))
-    print('learning_rate_schedule: ' + str(learning_rate_schedule))
+    #print('Training will be done with the following settings:\n')
+    #print('min_batch_size: ' + str(min_batch_size))
+    #print('batches per epoch: ' + str(batches_per_epoch))
+    print('Used batch_size will be: ' + str(batch_size))
+    #print('epochs: ' + str(epochs))
+    #print('learning_rate_schedule: ' + str(learning_rate_schedule))
     
-    print('\n Train started:')
+    #print('\n Train started:')
     # loop on epochs, with progress bar (tqdm)
     for epoch in range(epochs):
         
@@ -76,13 +76,9 @@ def train(description,
                     predictionsTest = approximator.predict_values(xTest)
                     errorsTest = predictionsTest - yTest
                     rmseTest = np.sqrt((errorsTest ** 2).mean())
-                    print('RMSE on training data after ' + str(i) + ' epochs is '  + str(rmse) + '. RMSE on test data: ' + str(rmseTest) )
-                else:
-                    print('RMSE on training data after ' + str(i) + ' epochs is '  + str(rmse) )
-                    
-            
-            
-        
+                    #print('RMSE on training data after ' + str(i) + ' epochs is '  + str(rmse) + '. RMSE on test data: ' + str(rmseTest) )
+                #else:
+                #    #print('RMSE on training data after ' + str(i) + ' epochs is '  + str(rmse) )
         else:
         
             diff_train_one_epoch(
@@ -102,7 +98,7 @@ def train(description,
         if callback and epoch in callback_epochs:
             callback(approximator, epoch)
 
-    print('Training done.')
+    #print('Training done.')
     # final callback, if requested
     if callback and epochs in callback_epochs:
         callback(approximator, epochs)        

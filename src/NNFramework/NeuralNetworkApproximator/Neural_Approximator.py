@@ -6,7 +6,7 @@ from vanilla_graph import *
 from diff_training_graph import *
 from train import *
 import tensorflow as tf2
-print("TF version =", tf2.__version__)
+#print("TF version =", tf2.__version__)
 # we want TF 2.x
 assert tf2.__version__ >= "2.0"
 # disable eager execution etc
@@ -101,10 +101,10 @@ class Neural_Approximator():
             self.session.close()
 
         #Print neural network settings
-        print('Neural network initialized with the following settings:')
-        print('Neurons per layer: ' + str(hiddenNeurons))
-        print('Amount of hidden layers: ' +str(hiddenLayers))
-        print('Activations functions: ' + str(activationFunctions))
+        #print('Neural network initialized with the following settings:')
+        #print('Neurons per layer: ' + str(hiddenNeurons))
+        #print('Amount of hidden layers: ' +str(hiddenLayers))
+        #print('Activations functions: ' + str(activationFunctions))
         
         self.graph = tf.Graph()
         

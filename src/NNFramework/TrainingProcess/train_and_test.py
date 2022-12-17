@@ -28,15 +28,15 @@ def train_and_test(generator,
     
     if trainingMethod == TrainingMethod.Standard:
         # 1. Simulation of training set, but only for max(sizes), other sizes will use these
-        print("simulating training, valid and test sets")
+        #print("simulating training, valid and test sets")
         xTrain, yTrain, _unused = generator.trainingSet(max(sizes), trainSeed=dataSeed)
         xTest, yTest, _unused, _unused2 = generator.testSet(num=nTest, testSeed=testSeed)
-        print("done")
+        #print("done")
 
         # 2. Neural network initialization 
-        print("initializing neural appropximator")
+        #print("initializing neural appropximator")
         regressor = Neural_Approximator(xTrain, yTrain)
-        print("done")
+        #print("done")
         
         predvalues = {}    
         preddeltas = {}

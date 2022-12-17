@@ -1,7 +1,7 @@
 ###Packages
 from vanilla_net import *
 import tensorflow as tf2
-print("TF version =", tf2.__version__)
+#print("TF version =", tf2.__version__)
 # we want TF 2.x
 assert tf2.__version__ >= "2.0"
 # disable eager execution etc
