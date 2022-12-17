@@ -5,7 +5,7 @@
 
 # import and test
 import tensorflow as tf2
-print("TF version =", tf2.__version__)
+#print("TF version =", tf2.__version__)
 
 # we want TF 2.x
 assert tf2.__version__ >= "2.0"
@@ -41,7 +41,7 @@ sys.path.append( os.path.join(mainDirectory,'src','NNFramework','TestAndPlot') )
 sys.path.append( os.path.join(mainDirectory,'src','NNFramework','DifferentialML') )
 sys.path.append( os.path.join(mainDirectory,'src','NNFramework','TrainingProcess') )
 sys.path.append( os.path.join(mainDirectory,'src','NNFramework','NeuralNetworkApproximator') )
-sys.path.append(os.path.join(mainDirectory,'src','Examples','CumulativeDensitiyFunction','4. CDF_onFly/' ))
+sys.path.append( os.path.join(mainDirectory,'src','Examples','CumulativeDensitiyFunction','4. CDF_onFly/' ))
 
 # Data importation or generation classes
 from BlackScholes import *

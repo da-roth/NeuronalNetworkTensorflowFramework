@@ -4,8 +4,12 @@
 ### 0. Import packages and references
 ###
 
-exec(open('C:/dev/MonteCarloLearning/src/NNFramework/packages.py').read())
-# dataSeed = seed for simulations or (for csv input) for randomization of csv
+### Import framework
+import os
+mainDirectory = os.getcwd()
+packageFile = os.path.abspath(os.path.join(mainDirectory,'src', 'NNFramework', 'packages.py'))
+exec(open(packageFile).read())
+### - dataSeed = seed for simulations or (for csv input) for randomization of csv
 dataSeed = 1 
 weightSeed = 1 
 
