@@ -12,15 +12,31 @@ tf.disable_eager_execution()
 # compute d_output/d_inputs by (explicit) backprop in vanilla net
 def backprop(
     weights_and_biases, # 2nd output from vanilla_net() 
-    zs):                # 3rd output from vanilla_net()
+    zs,
+    activationFunctionsHidden,  # tensorflow activation functions for hidden layer
+    activationFunctionOutput,  # tensorflow activation functions for the output layer
+    ):                # 3rd output from vanilla_net()
     
     ws, bs = weights_and_biases
     L = len(zs) - 1
     
+    # if activationFunctionsHidden is only one function use it in each hidden layer, otherwise each entry per layer
+    if type(activationFunctionsHidden) == list:
+        if len(activationFunctionsHidden) == 1:
+            activationFunctionHidden = [activationFunctionsHidden[0]] * (L-1)
+        elif len(activationFunctionsHidden) < (L-1):
+            print('amount of activation functions must be one or amount of hidden layers')
+        else:
+            activationFunctionHidden = activationFunctionsHidden
+    else:
+        activationFunctionHidden = [activationFunctionsHidden] * (L-1)
+    
     # backpropagation, eq. 4, l=L..1
     zbar = tf.ones_like(zs[L]) # zbar_L = 1
-    for l in range(L-1, 0, -1):
-        zbar = (zbar @ tf.transpose(ws[l+1])) * tf.nn.sigmoid(zs[l]) # eq. 4
+    # output layer
+    zbar = (zbar @ tf.transpose(ws[L])) * activationFunctionOutput(zs[L-1])
+    for l in range(L-2, 0, -1):
+        zbar = (zbar @ tf.transpose(ws[l+1])) * activationFunctionHidden[l](zs[l]) # eq. 4
     # for l=0
     zbar = zbar @ tf.transpose(ws[1]) # eq. 4
     

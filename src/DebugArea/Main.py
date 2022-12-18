@@ -26,8 +26,8 @@ nTest = 2000 # Test set size
 ### 
 
 hiddenNeurons = 20              # we use equal neurons for each hidden layer
-hiddenLayers = 2                 # amount of hidden layers
-activationFunctionsHidden = [tf.nn.tanh]   # activation functions of hidden layers
+hiddenLayers = 3                # amount of hidden layers
+activationFunctionsHidden = [tf.nn.tanh,tf.nn.relu,tf.nn.softmax]   # activation functions of hidden layers
 ###
 ### 3. Train network
 ###

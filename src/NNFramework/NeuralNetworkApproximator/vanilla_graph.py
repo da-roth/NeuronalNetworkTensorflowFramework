@@ -9,7 +9,7 @@ def vanilla_training_graph(input_dim, hiddenNeurons, hiddenLayers, activationFun
     
     # backprop even though we are not USING differentials for training
     # we still need them to predict derivatives dy_dx 
-    derivs_predictions = backprop(weights_and_biases, layers)
+    derivs_predictions = backprop(weights_and_biases, layers, activationFunctionsHidden, activationFunctionOutput)
     
     # placeholder for labels
     labels = tf.placeholder(shape=[None, 1], dtype=real_type)
