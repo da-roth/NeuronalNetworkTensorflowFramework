@@ -15,8 +15,8 @@ def vanilla_training_graph(input_dim, hiddenNeurons, hiddenLayers, activationFun
     labels = tf.placeholder(shape=[None, 1], dtype=real_type)
     
     # loss 
-    #loss = tf.losses.mean_squared_error(labels, predictions)
-    loss = tf.losses.absolute_difference(labels, predictions)
+    loss = tf.losses.mean_squared_error(labels, predictions)
+    #loss = tf.losses.absolute_difference(labels, predictions)
     
     # optimizer
     learning_rate = tf.placeholder(real_type)

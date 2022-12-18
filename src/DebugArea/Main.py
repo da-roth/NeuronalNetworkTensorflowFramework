@@ -16,25 +16,29 @@ weightSeed = 1
 ### 1. Training data
 ###
 
-generator = CDF()
-sizes = [10000,100] # [sizePerTrainingStep, trainingSteps]
-nTest = 2000 # Test set size
+# 10^4 data data points
+randomized = False
+generator = DataImporter('C:/dev/NeuronalNetworkTensorflowFramework/src/Examples/CumulativeDensitiyFunction/1. CDF unrandomized/cdf_deterministic_data.csv','x','CDF(x)',randomized = randomized,testDataPath='C:/dev/NeuronalNetworkTensorflowFramework/src/Examples/CumulativeDensitiyFunction/1. CDF unrandomized/cdf_deterministic_data.csv') 
+sizes = [100,1000,10000] # training set sizes. Performed one after the other and might be compared
+nTest = None # Test set is given through a ratio of 0.8 in generator
 
 
 ###
 ### 2. Set Nueral network structure / Hyperparameters
 ### 
 
-hiddenNeurons = 20              # we use equal neurons for each hidden layer
-hiddenLayers = 3                # amount of hidden layers
-activationFunctionsHidden = [tf.nn.tanh,tf.nn.relu,tf.nn.softmax]   # activation functions of hidden layers
+hiddenNeurons = 20               # we use equal neurons for each hidden layer
+hiddenLayers = 2                # amount of hidden layers
+activationFunctionsHidden = [tf.nn.sigmoid]   # activation functions of hidden layers
+
+epochs = 30
 ###
 ### 3. Train network
 ###
-trainingMethod = TrainingMethod.GenerateDataDuringTraining
+trainingMethod = TrainingMethod.Standard
 
-xTest, yTest, yPredicted = train_and_test(generator, sizes, nTest, dataSeed, None, weightSeed, hiddenNeurons, hiddenLayers, activationFunctionsHidden, trainingMethod = trainingMethod)
-    
+xTest, yTest, yPredicted = train_and_test(generator, sizes, nTest, dataSeed, None, weightSeed, hiddenNeurons, hiddenLayers, activationFunctionsHidden, trainingMethod = trainingMethod, epochs = epochs)
+  
 ###
 ### 3. Study results
 ###   
