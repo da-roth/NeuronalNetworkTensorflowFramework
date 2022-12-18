@@ -27,13 +27,13 @@ nTest = 2000 # Test set size
 
 hiddenNeurons = 20              # we use equal neurons for each hidden layer
 hiddenLayers = 2                 # amount of hidden layers
-activationFunctions = tf.nn.tanh    # activation functions of hidden layers
+activationFunctionsHidden = [tf.nn.tanh]   # activation functions of hidden layers
 ###
 ### 3. Train network
 ###
 trainingMethod = TrainingMethod.GenerateDataDuringTraining
 
-xTest, yTest, yPredicted = train_and_test(generator, sizes, nTest, dataSeed, None, weightSeed, hiddenNeurons, hiddenLayers, activationFunctions, trainingMethod)
+xTest, yTest, yPredicted = train_and_test(generator, sizes, nTest, dataSeed, None, weightSeed, hiddenNeurons, hiddenLayers, activationFunctionsHidden, trainingMethod = trainingMethod)
     
 ###
 ### 3. Study results

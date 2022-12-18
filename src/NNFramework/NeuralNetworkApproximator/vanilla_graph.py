@@ -1,11 +1,11 @@
 from vanilla_net import *
 from backprop import *
 
-def vanilla_training_graph(input_dim, hiddenNeurons, hiddenLayers, activationFunctions, seed):
+def vanilla_training_graph(input_dim, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, seed):
     
     # net
     inputs, weights_and_biases, layers, predictions = \
-        vanilla_net(input_dim, hiddenNeurons, hiddenLayers, activationFunctions, seed)
+        vanilla_net(input_dim, hiddenNeurons, hiddenLayers, activationFunctionsHidden,activationFunctionOutput , seed)
     
     # backprop even though we are not USING differentials for training
     # we still need them to predict derivatives dy_dx 

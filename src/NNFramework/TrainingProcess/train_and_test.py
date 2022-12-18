@@ -1,7 +1,15 @@
 import time
+import tensorflow as tf2
+#print("TF version =", tf2.__version__)
+# we want TF 2.x
+assert tf2.__version__ >= "2.0"
+# disable eager execution etc
+tf = tf2.compat.v1
+tf.disable_eager_execution()
 
 from Neural_Approximator import *
 from TrainingMethod import *
+
 
 def train_and_test(generator, 
          sizes, 
@@ -11,7 +19,8 @@ def train_and_test(generator,
          weightSeed=None, 
          hiddenNeurons=20,
          hiddenLayers=2,
-         activationFunctions=tf.nn.softmax,
+         activationFunctionsHidden=tf.nn.relu,
+         activationFunctionOutput=tf.nn.relu,
          trainingMethod = TrainingMethod.Standard,
          testFrequency = 10,
          outputDimension = 1,
@@ -49,7 +58,7 @@ def train_and_test(generator,
             ###
             
             # Prepare: normalize dataset and initialize tf graph
-            regressor.prepare(size, False, hiddenNeurons, hiddenLayers, activationFunctions, weight_seed=weightSeed)
+            regressor.prepare(size, False, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed=weightSeed)
             
             # 4. Train network
             t0 = time.time()
@@ -72,7 +81,7 @@ def train_and_test(generator,
         #print("initializing neural appropximator")
         regressor = Neural_Approximator(xTrain, yTrain)
         # Prepare: normalize dataset and initialize tf graph
-        regressor.prepare(sizes[0], False, hiddenNeurons, hiddenLayers, activationFunctions, weight_seed=weightSeed)
+        regressor.prepare(sizes[0], False, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed=weightSeed)
         #print("done")        
         
         # 3. First training step

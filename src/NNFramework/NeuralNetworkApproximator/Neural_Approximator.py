@@ -67,7 +67,8 @@ class Neural_Approximator():
                 differential,
                 hiddenNeurons, 
                 hiddenLayers, 
-                activationFunctions,
+                activationFunctionsHidden,
+                activationFunctionOutput = tf.nn.softplus,
                 lam=1,
                 weight_seed=None):
 
@@ -77,7 +78,7 @@ class Neural_Approximator():
         
         # Build tensorflow graph        
         self.m, self.n = self.x.shape        
-        self.build_graph(differential, lam, hiddenNeurons, hiddenLayers, activationFunctions, weight_seed)
+        self.build_graph(differential, lam, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed)
         
         
     def storeNewDataAndNormalize(self, x_raw, y_raw, dydx_raw, dataSize):
@@ -93,7 +94,8 @@ class Neural_Approximator():
                 lam,                # balance cost between values and derivs  
                 hiddenNeurons, 
                 hiddenLayers,
-                activationFunctions, 
+                activationFunctionsHidden, 
+                activationFunctionOutput,
                 weight_seed):
         
         # First, deal with tensorflow logic
@@ -123,7 +125,7 @@ class Neural_Approximator():
                 self.learning_rate, \
                 self.loss, \
                 self.minimizer \
-                = vanilla_training_graph(self.n, hiddenNeurons, hiddenLayers, activationFunctions, weight_seed)
+                = vanilla_training_graph(self.n, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed)
                     
             else:
             # Build differential graph through diff_training_graph.py
