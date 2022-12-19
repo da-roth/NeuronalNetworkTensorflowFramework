@@ -70,7 +70,8 @@ class Neural_Approximator():
                 activationFunctionsHidden,
                 activationFunctionOutput = tf.nn.softplus,
                 lam=1,
-                weight_seed=None):
+                weight_seed=None,
+                biasNeuron=False):
 
         # Normalize dataset and cache analytics
         self.x_mean, self.x_std, self.x, self.y_mean, self.y_std, self.y, self.dy_dx, self.lambda_j = \
@@ -78,7 +79,7 @@ class Neural_Approximator():
         
         # Build tensorflow graph        
         self.m, self.n = self.x.shape        
-        self.build_graph(differential, lam, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed)
+        self.build_graph(differential, lam, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed, biasNeuron)
         
         
     def storeNewDataAndNormalize(self, x_raw, y_raw, dydx_raw, dataSize):
@@ -96,7 +97,8 @@ class Neural_Approximator():
                 hiddenLayers,
                 activationFunctionsHidden, 
                 activationFunctionOutput,
-                weight_seed):
+                weight_seed,
+                biasNeuron):
         
         # First, deal with tensorflow logic
         if self.session is not None:
@@ -125,7 +127,7 @@ class Neural_Approximator():
                 self.learning_rate, \
                 self.loss, \
                 self.minimizer \
-                = vanilla_training_graph(self.n, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed)
+                = vanilla_training_graph(self.n, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed, biasNeuron)
                     
             else:
             # Build differential graph through diff_training_graph.py

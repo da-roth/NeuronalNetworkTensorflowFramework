@@ -33,7 +33,8 @@ def train_and_test(generator,
             (0.6, 0.00001), 
             (0.8, 0.000001)], 
          batches_per_epoch=10,
-         min_batch_size=20):
+         min_batch_size=20,
+         biasNeuron=False):
     
     if trainingMethod == TrainingMethod.Standard:
         # 1. Simulation of training set, but only for max(sizes), other sizes will use these
@@ -58,7 +59,7 @@ def train_and_test(generator,
             ###
             
             # Prepare: normalize dataset and initialize tf graph
-            regressor.prepare(size, False, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed=weightSeed)
+            regressor.prepare(size, False, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed=weightSeed, biasNeuron = biasNeuron)
             
             # 4. Train network
             t0 = time.time()

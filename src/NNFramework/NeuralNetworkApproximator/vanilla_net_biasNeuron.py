@@ -10,7 +10,7 @@ tf.disable_eager_execution()
 
 real_type = tf.float32
 
-def vanilla_net(
+def vanilla_net_biasNeuron(
     input_dim,                  # dimension of inputs, e.g. 10
     hiddenNeurons,              # units in hidden layers, assumed constant, e.g. 20
     hiddenLayers,               # number of hidden layers, e.g. 4
@@ -31,13 +31,26 @@ def vanilla_net(
     
     # layer 0 = input layer
     zs = [xs] # eq.3, l=0
+    # Add bias neuron in such a way:
+    # - increase bias vector by biasNeuronAmount
+    # - in the next layer, increase input_dim by biasNeuronAmount, but output still hiddenNeurons 
+    # - to repair the dimensions, add a zero and non-trainable row to the weight-matrices.
+    # - Hence: the new layer will have weights coming from the bias neuron of the previous layer,
+    #       but the bias neuron of the next layer only has zeros as inputs.
+    biasNeuronAmount = 1
+    
+   
     
     # first hidden layer (index 1)
     # weight matrix
     ws.append(tf.get_variable("w1", [input_dim, hiddenNeurons], \
         initializer = tf.variance_scaling_initializer(), dtype=real_type))
+    # Add bias neuron (weights to the neuron are all zero, but next layer will have all the inputs)
+    biasRow = tf.zeros([1,ws[1].shape[0]])
+    biasRow = tf.Variable(biasRow, trainable=False)
+    ws[1] = tf.concat([ws[1], biasRow], axis=1)
     # bias vector
-    bs.append(tf.get_variable("b1", [hiddenNeurons], \
+    bs.append(tf.get_variable("b1", [hiddenNeurons+biasNeuronAmount], \
         initializer = tf.zeros_initializer(), dtype=real_type))
     # graph
     zs.append(zs[0] @ ws[1] + bs[1]) # eq. 3, l=1
@@ -55,15 +68,22 @@ def vanilla_net(
         activationFunctionHidden = [activationFunctionsHidden] * hiddenLayers
     
     for l in range(1, hiddenLayers): 
-        ws.append(tf.get_variable("w%d"%(l+1), [hiddenNeurons, hiddenNeurons], \
+        ws.append(tf.get_variable("w%d"%(l+1), [hiddenNeurons+biasNeuronAmount, hiddenNeurons], \
             initializer = tf.variance_scaling_initializer(), dtype=real_type))
-        bs.append(tf.get_variable("b%d"%(l+1), [hiddenNeurons], \
+        #bias = tf.ones((1, biasNeuronAmount))
+        #zs[l] = tf.concat([zs[l], bias], axis=1)
+        # Add bias neuron
+        biasRow = tf.zeros([hiddenNeurons+biasNeuronAmount,1])
+        biasRow = tf.Variable(biasRow, trainable=False)
+        ws[l+1] = tf.concat([ws[l+1], biasRow], axis=1)
+        # 
+        bs.append(tf.get_variable("b%d"%(l+1), [hiddenNeurons+biasNeuronAmount], \
             initializer = tf.zeros_initializer(), dtype=real_type))
         zs.append(activationFunctionHidden[l-1](zs[l]) @ ws[l+1] + bs[l+1]) # eq. 3, l=2..L-1
 
     activationFunctionOutput = activationFunctionOutput
     # output layer (index hiddenLayers+1)
-    ws.append(tf.get_variable("w"+str(hiddenLayers+1), [hiddenNeurons, 1], \
+    ws.append(tf.get_variable("w"+str(hiddenLayers+1), [hiddenNeurons+biasNeuronAmount, 1], \
             initializer = tf.variance_scaling_initializer(), dtype=real_type))
     bs.append(tf.get_variable("b"+str(hiddenLayers+1), [1], \
         initializer = tf.zeros_initializer(), dtype=real_type))
@@ -80,19 +100,3 @@ def vanilla_net(
     return xs, (ws, bs), zs, ys
 
 
-
-### Testing area for bias neuron
-
-# #import tensorflow as tf
-
-# # Get the weight matrix and set the initializer to the variance scaling initializer
-# weight_matrix = tf.get_variable("w"+str(hiddenLayers+1), [hiddenNeurons, 1], initializer = tf.variance_scaling_initializer())
-
-# # Create a row of zeros with the same shape as the weight matrix
-# zero_row = tf.zeros([1, weight_matrix.shape[1]])
-
-# # Create a new variable for the zero row and set it to not be trainable
-# zero_row_var = tf.Variable(zero_row, trainable=False)
-
-# # Concatenate the zero row variable to the weight matrix
-# weight_matrix = tf.concat([weight_matrix, zero_row_var], axis=0)

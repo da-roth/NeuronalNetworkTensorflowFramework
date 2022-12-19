@@ -1,11 +1,16 @@
 from vanilla_net import *
+from vanilla_net_biasNeuron import *
 from backprop import *
 
-def vanilla_training_graph(input_dim, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, seed):
+def vanilla_training_graph(input_dim, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, seed, biasNeuron = False):
     
     # net
-    inputs, weights_and_biases, layers, predictions = \
-        vanilla_net(input_dim, hiddenNeurons, hiddenLayers, activationFunctionsHidden,activationFunctionOutput , seed)
+    if biasNeuron:
+        inputs, weights_and_biases, layers, predictions = \
+            vanilla_net_biasNeuron(input_dim, hiddenNeurons, hiddenLayers, activationFunctionsHidden,activationFunctionOutput , seed)
+    else:
+        inputs, weights_and_biases, layers, predictions = \
+            vanilla_net(input_dim, hiddenNeurons, hiddenLayers, activationFunctionsHidden,activationFunctionOutput , seed)
     
     # backprop even though we are not USING differentials for training
     # we still need them to predict derivatives dy_dx 
