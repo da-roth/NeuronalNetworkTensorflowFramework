@@ -21,7 +21,7 @@ setup(
     author='Daniel Roth',
     author_email='daniel-roth@posteo.org',
 
-    packages=find_packages(),
     install_requires=install_requires,
-    include_package_data=True, # take subfolders into account.
+    include_package_data=True,
+    packages=find_packages(),
 )

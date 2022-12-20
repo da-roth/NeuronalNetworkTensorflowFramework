@@ -50,16 +50,17 @@ import os
 #sys.path.append( os.path.join(mainDirectory,'montecarlolearning','TrainingProcess') )
 #sys.path.append( os.path.join(mainDirectory,'montecarlolearning','NeuralNetworkApproximator') )
 #sys.path.append( os.path.join(mainDirectory,'src','Examples','CumulativeDensitiyFunction','4. CDF_onFly/' ))
-
+sys.path.append(os.getcwd())
+print(os.getcwd())
 # Data importation or generation classes
-from BlackScholes import *
-from DataImporter import *
-from CDF import *
+# from BlackScholes import *
+# from DataImporter import *
+# from CDF import *
 
-# Training and testing functions
-from train_and_test_with_differentials import *
-from train_and_test import *
-from TrainingMethod import *
+# # Training and testing functions
+# from train_and_test_with_differentials import *
+# from train_and_test import *
+# from TrainingMethod import *
 
-# Plot function
-from plot_results import *
+# # Plot function
+# from plot_results import *
