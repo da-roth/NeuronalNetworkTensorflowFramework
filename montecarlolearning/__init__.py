@@ -42,7 +42,7 @@ real_type = tf.float32
 
 import sys
 import os
-mainDirectory = os.path.abspath(os.path.join(os.getcwd() , '..'))
+mainDirectory = os.path.abspath(os.path.join(os.getcwd()))
 sys.path.append( os.path.join(mainDirectory,'montecarlolearning') )
 sys.path.append( os.path.join(mainDirectory,'montecarlolearning','DataImportOrGeneration') )
 sys.path.append( os.path.join(mainDirectory,'montecarlolearning','TestAndPlot') )
