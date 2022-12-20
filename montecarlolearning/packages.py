@@ -46,7 +46,6 @@ sys.path.append( os.path.join(mainDirectory,'src','Examples','CumulativeDensitiy
 # Data importation or generation classes
 from BlackScholes import *
 from DataImporter import *
-from CDF import *
 
 # Training and testing functions
 from train_and_test_with_differentials import *

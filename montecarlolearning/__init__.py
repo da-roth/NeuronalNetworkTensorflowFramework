@@ -1,4 +1,4 @@
-__version__ = 'dev'
+__version__ = '0.0.1'
 
 def hello_world():
     print("This is my first pip package!")
@@ -46,7 +46,7 @@ import os
 # Data importation or generation classes
 from montecarlolearning.BlackScholes import *
 from montecarlolearning.DataImporter import *
-from src.Examples.CumulativeDensitiyFunction.CDF import *
+#from src.Examples.CumulativeDensitiyFunction.CDF import *
 
 # # Training and testing functions
 from montecarlolearning.train_and_test_with_differentials import *
