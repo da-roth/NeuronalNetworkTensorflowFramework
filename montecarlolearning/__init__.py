@@ -42,14 +42,14 @@ real_type = tf.float32
 
 import sys
 import os
-mainDirectory = os.path.abspath(os.path.join(os.getcwd()))
-sys.path.append( os.path.join(mainDirectory,'montecarlolearning') )
-sys.path.append( os.path.join(mainDirectory,'montecarlolearning','DataImportOrGeneration') )
-sys.path.append( os.path.join(mainDirectory,'montecarlolearning','TestAndPlot') )
-sys.path.append( os.path.join(mainDirectory,'montecarlolearning','DifferentialML') )
-sys.path.append( os.path.join(mainDirectory,'montecarlolearning','TrainingProcess') )
-sys.path.append( os.path.join(mainDirectory,'montecarlolearning','NeuralNetworkApproximator') )
-sys.path.append( os.path.join(mainDirectory,'src','Examples','CumulativeDensitiyFunction','4. CDF_onFly/' ))
+#mainDirectory = os.path.abspath(os.path.join(os.getcwd()))
+#sys.path.append( os.path.join(mainDirectory,'montecarlolearning') )
+#sys.path.append( os.path.join(mainDirectory,'montecarlolearning','DataImportOrGeneration') )
+#sys.path.append( os.path.join(mainDirectory,'montecarlolearning','TestAndPlot') )
+#sys.path.append( os.path.join(mainDirectory,'montecarlolearning','DifferentialML') )
+#sys.path.append( os.path.join(mainDirectory,'montecarlolearning','TrainingProcess') )
+#sys.path.append( os.path.join(mainDirectory,'montecarlolearning','NeuralNetworkApproximator') )
+#sys.path.append( os.path.join(mainDirectory,'src','Examples','CumulativeDensitiyFunction','4. CDF_onFly/' ))
 
 # Data importation or generation classes
 from BlackScholes import *
