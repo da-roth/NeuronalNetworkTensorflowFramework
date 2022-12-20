@@ -1,6 +1,13 @@
-from Neural_Approximator import *
 import time
 
+try:
+    from TrainingMethod import *
+    from Neural_Approximator import *
+    from normalize_data import *
+except ModuleNotFoundError:
+    print("")
+    #from montecarlolearning.TrainingMethod import *
+    #from montecarlolearning.Neural_Approximator import *
 
 def train_and_test_with_differentials(generator, 
          sizes, 

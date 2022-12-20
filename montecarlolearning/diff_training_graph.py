@@ -1,4 +1,7 @@
-from backprop import *
+try:
+    from backprop import *
+except:
+    print("")
 
 def diff_training_graph(
     # same as vanilla

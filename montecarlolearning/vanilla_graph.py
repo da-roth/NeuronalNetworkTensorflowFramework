@@ -1,6 +1,10 @@
-from vanilla_net import *
-from vanilla_net_biasNeuron import *
-from backprop import *
+try:
+    from vanilla_net import *
+    from vanilla_net_biasNeuron import *
+    from backprop import *
+except:
+    print("")
+
 
 def vanilla_training_graph(input_dim, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, seed, biasNeuron = False):
     

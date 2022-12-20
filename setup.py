@@ -22,6 +22,7 @@ setup(
     author_email='daniel-roth@posteo.org',
 
     install_requires=install_requires,
-    include_package_data=True,
     packages=find_packages(),
+    include_package_data=True,
+    package_data={'': ['BlackScholes/*.py']}
 )

@@ -1,10 +1,14 @@
 ###
 ### Import packages
 ###
-from normalize_data import *
-from vanilla_graph import *
-from diff_training_graph import *
-from train import *
+try:
+    from normalize_data import *
+    from vanilla_graph import *
+    from diff_training_graph import *
+    from train import *
+except:
+    print("")
+    
 import tensorflow as tf2
 #print("TF version =", tf2.__version__)
 # we want TF 2.x

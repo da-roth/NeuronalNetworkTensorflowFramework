@@ -7,9 +7,14 @@ assert tf2.__version__ >= "2.0"
 tf = tf2.compat.v1
 tf.disable_eager_execution()
 
-from Neural_Approximator import *
-from TrainingMethod import *
-
+try:
+    from TrainingMethod import *
+    from Neural_Approximator import *
+    from normalize_data import *
+except ModuleNotFoundError:
+    #print("")
+    from montecarlolearning.TrainingMethod import *
+    #from montecarlolearning.Neural_Approximator import *
 
 def train_and_test(generator, 
          sizes, 

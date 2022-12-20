@@ -1,6 +1,10 @@
-from vanilla_graph import *
-from vanilla_train_one_epoch import *
-from diff_training_graph import *
+try:
+    from vanilla_graph import *
+    from vanilla_train_one_epoch import *
+    from diff_training_graph import *
+except:
+    print("")
+
 import numpy as np
 
 def train(description,

@@ -36,12 +36,12 @@ real_type = tf.float32
 import sys
 import os
 sys.path.append( os.path.join(mainDirectory,'montecarlolearning') )
-sys.path.append( os.path.join(mainDirectory,'montecarlolearning','DataImportOrGeneration') )
-sys.path.append( os.path.join(mainDirectory,'montecarlolearning','TestAndPlot') )
-sys.path.append( os.path.join(mainDirectory,'montecarlolearning','DifferentialML') )
-sys.path.append( os.path.join(mainDirectory,'montecarlolearning','TrainingProcess') )
-sys.path.append( os.path.join(mainDirectory,'montecarlolearning','NeuralNetworkApproximator') )
-sys.path.append( os.path.join(mainDirectory,'src','Examples','CumulativeDensitiyFunction','4. CDF_onFly/' ))
+#sys.path.append( os.path.join(mainDirectory,'montecarlolearning','DataImportOrGeneration') )
+#sys.path.append( os.path.join(mainDirectory,'montecarlolearning','TestAndPlot') )
+#sys.path.append( os.path.join(mainDirectory,'montecarlolearning','DifferentialML') )
+#sys.path.append( os.path.join(mainDirectory,'montecarlolearning','TrainingProcess') )
+#sys.path.append( os.path.join(mainDirectory,'montecarlolearning','NeuralNetworkApproximator') )
+sys.path.append( os.path.join(mainDirectory,'src','Examples','CumulativeDensitiyFunction/' ))
 
 # Data importation or generation classes
 from BlackScholes import *
@@ -55,3 +55,20 @@ from TrainingMethod import *
 
 # Plot function
 from plot_results import *
+
+from Neural_Approximator import *
+from vanilla_net import *
+from backprop import *
+from normalize_data import *
+from vanilla_graph import *
+from diff_training_graph import *
+from train import *
+from TrainingMethod import *
+from Neural_Approximator import *
+from TrainingMethod import *
+from vanilla_net import *
+from vanilla_net_biasNeuron import *
+from backprop import *
+#from vanilla_graph import *
+from vanilla_train_one_epoch import *
+#from diff_training_graph import *

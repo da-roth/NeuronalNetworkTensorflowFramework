@@ -1,5 +1,8 @@
 ###Packages
-from vanilla_net import *
+try:
+    from vanilla_net import *
+except:
+    print("")
 import tensorflow as tf2
 #print("TF version =", tf2.__version__)
 # we want TF 2.x

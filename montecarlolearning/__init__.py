@@ -42,25 +42,32 @@ real_type = tf.float32
 
 import sys
 import os
-#mainDirectory = os.path.abspath(os.path.join(os.getcwd()))
-#sys.path.append( os.path.join(mainDirectory,'montecarlolearning') )
-#sys.path.append( os.path.join(mainDirectory,'montecarlolearning','DataImportOrGeneration') )
-#sys.path.append( os.path.join(mainDirectory,'montecarlolearning','TestAndPlot') )
-#sys.path.append( os.path.join(mainDirectory,'montecarlolearning','DifferentialML') )
-#sys.path.append( os.path.join(mainDirectory,'montecarlolearning','TrainingProcess') )
-#sys.path.append( os.path.join(mainDirectory,'montecarlolearning','NeuralNetworkApproximator') )
-#sys.path.append( os.path.join(mainDirectory,'src','Examples','CumulativeDensitiyFunction','4. CDF_onFly/' ))
-sys.path.append(os.getcwd())
-print(os.getcwd())
+
 # Data importation or generation classes
-# from BlackScholes import *
-# from DataImporter import *
-# from CDF import *
+from montecarlolearning.BlackScholes import *
+from montecarlolearning.DataImporter import *
+from src.Examples.CumulativeDensitiyFunction.CDF import *
 
 # # Training and testing functions
-# from train_and_test_with_differentials import *
-# from train_and_test import *
-# from TrainingMethod import *
+from montecarlolearning.train_and_test_with_differentials import *
+from montecarlolearning.train_and_test import *
+from montecarlolearning.TrainingMethod import *
 
 # # Plot function
-# from plot_results import *
+from montecarlolearning.plot_results import *
+
+# 
+from montecarlolearning.Neural_Approximator import *
+from montecarlolearning.vanilla_net import *
+from montecarlolearning.backprop import *
+from montecarlolearning.normalize_data import *
+from montecarlolearning.vanilla_graph import *
+from montecarlolearning.diff_training_graph import *
+from montecarlolearning.train import *
+from montecarlolearning.TrainingMethod import *
+from montecarlolearning.Neural_Approximator import *
+from montecarlolearning.TrainingMethod import *
+from montecarlolearning.vanilla_net import *
+from montecarlolearning.vanilla_net_biasNeuron import *
+from montecarlolearning.backprop import *
+from montecarlolearning.TrainingMethod import *

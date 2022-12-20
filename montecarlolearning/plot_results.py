@@ -1,6 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from TrainingMethod import *
+
+
+try:
+    from montecarlolearning.TrainingMethod import *
+except ModuleNotFoundError:
+    from TrainingMethod import *
 
 def plot_results(title, 
           predictions, 
