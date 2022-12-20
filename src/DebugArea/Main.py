@@ -6,7 +6,7 @@
 ### Import framework
 import os
 mainDirectory = os.getcwd()
-packageFile = os.path.abspath(os.path.join(mainDirectory,'src', 'NNFramework', 'packages.py'))
+packageFile = os.path.abspath(os.path.join(mainDirectory, 'montecarlolearning', 'packages.py'))
 exec(open(packageFile).read())
 ### - dataSeed = seed for simulations or (for csv input) for randomization of csv
 dataSeed = 1 
