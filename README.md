@@ -13,3 +13,7 @@ https://github.com/differential-machine-learning/notebooks
 While in this work I define Monte Carlo learning as the approach of using random sampled inputs and only approximations of the output, I believe that studying this approach may help to understand neural network training in general.
 
 For high-dimensional problems, trying to first generate training data and store them in files will sooner or later lead to infeasible file sizes. Under these circumstances, it is necessary to be able to compute training data on the fly during the neural network training process.
+
+
+Tutorial used for package creation:
+https://github.com/MichaelKim0407/tutorial-pip-package
