@@ -14,7 +14,8 @@ try:
 except ModuleNotFoundError:
     #print("")
     from montecarlolearning.TrainingMethod import *
-    #from montecarlolearning.Neural_Approximator import *
+    from montecarlolearning.Neural_Approximator import *
+    from montecarlolearning.normalize_data import *
 
 def train_and_test(generator, 
          sizes, 
