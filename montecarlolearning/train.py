@@ -3,7 +3,9 @@ try:
     from vanilla_train_one_epoch import *
     from diff_training_graph import *
 except:
-    print("")
+    from montecarlolearning.vanilla_graph import *
+    from montecarlolearning.vanilla_train_one_epoch import *
+    from montecarlolearning.diff_training_graph import *
 
 import numpy as np
 

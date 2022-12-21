@@ -2,7 +2,7 @@
 try:
     from vanilla_net import *
 except:
-    print("")
+    from montecarlolearning.vanilla_net import *
 import tensorflow as tf2
 #print("TF version =", tf2.__version__)
 # we want TF 2.x

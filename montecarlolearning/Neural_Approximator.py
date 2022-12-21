@@ -7,7 +7,10 @@ try:
     from diff_training_graph import *
     from train import *
 except:
-    print("")
+    from montecarlolearning.normalize_data import *
+    from montecarlolearning.vanilla_graph import *
+    from montecarlolearning.diff_training_graph import *
+    from montecarlolearning.train import *
     
 import tensorflow as tf2
 #print("TF version =", tf2.__version__)

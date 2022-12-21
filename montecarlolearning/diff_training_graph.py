@@ -1,7 +1,7 @@
 try:
     from backprop import *
 except:
-    print("")
+    from montecarlolearning.backprop import *
 
 def diff_training_graph(
     # same as vanilla

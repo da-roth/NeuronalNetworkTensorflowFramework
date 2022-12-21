@@ -3,7 +3,9 @@ try:
     from vanilla_net_biasNeuron import *
     from backprop import *
 except:
-    print("")
+    from montecarlolearning.vanilla_net import *
+    from montecarlolearning.vanilla_net_biasNeuron import *
+    from montecarlolearning.backprop import *
 
 
 def vanilla_training_graph(input_dim, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, seed, biasNeuron = False):
