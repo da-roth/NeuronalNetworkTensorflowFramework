@@ -46,7 +46,7 @@ def vanilla_net_biasNeuron(
     ws.append(tf.get_variable("w1", [input_dim, hiddenNeurons], \
         initializer = tf.variance_scaling_initializer(), dtype=real_type))
     # Add bias neuron (weights to the neuron are all zero, but next layer will have all the inputs)
-    biasRow = tf.zeros([1,ws[1].shape[0]])
+    biasRow = tf.zeros([input_dim,1])
     biasRow = tf.Variable(biasRow, trainable=False)
     ws[1] = tf.concat([ws[1], biasRow], axis=1)
     # bias vector
