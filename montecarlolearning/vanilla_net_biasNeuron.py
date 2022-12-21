@@ -51,7 +51,7 @@ def vanilla_net_biasNeuron(
     ws[1] = tf.concat([ws[1], biasRow], axis=1)
     # bias vector
     bs.append(tf.get_variable("b1", [hiddenNeurons+biasNeuronAmount], \
-        initializer = tf.zeros_initializer(), dtype=real_type))
+        initializer = tf.variance_scaling_initializer(), dtype=real_type))
     # graph
     zs.append(zs[0] @ ws[1] + bs[1]) # eq. 3, l=1
     
@@ -78,7 +78,7 @@ def vanilla_net_biasNeuron(
         ws[l+1] = tf.concat([ws[l+1], biasRow], axis=1)
         # 
         bs.append(tf.get_variable("b%d"%(l+1), [hiddenNeurons+biasNeuronAmount], \
-            initializer = tf.zeros_initializer(), dtype=real_type))
+            initializer = tf.variance_scaling_initializer(), dtype=real_type))
         zs.append(activationFunctionHidden[l-1](zs[l]) @ ws[l+1] + bs[l+1]) # eq. 3, l=2..L-1
 
     activationFunctionOutput = activationFunctionOutput
@@ -86,7 +86,7 @@ def vanilla_net_biasNeuron(
     ws.append(tf.get_variable("w"+str(hiddenLayers+1), [hiddenNeurons+biasNeuronAmount, 1], \
             initializer = tf.variance_scaling_initializer(), dtype=real_type))
     bs.append(tf.get_variable("b"+str(hiddenLayers+1), [1], \
-        initializer = tf.zeros_initializer(), dtype=real_type))
+        initializer = tf.variance_scaling_initializer(), dtype=real_type))
     # eq. 3, l=L
     #zs.append(tf.nn.softplus(zs[hiddenLayers]) @ ws[hiddenLayers+1] + bs[hiddenLayers+1]) 
     zs.append(activationFunctionOutput(zs[hiddenLayers]) @ ws[hiddenLayers+1] + bs[hiddenLayers+1]) 
