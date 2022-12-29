@@ -46,7 +46,7 @@ import os
 # Data importation or generation classes
 from montecarlolearning.BlackScholes import *
 from montecarlolearning.DataImporter import *
-#from src.Examples.CumulativeDensitiyFunction.CDF import *
+from montecarlolearning.CDF import *
 
 # # Training and testing functions
 from montecarlolearning.train_and_test_with_differentials import *
