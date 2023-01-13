@@ -48,7 +48,7 @@ def train(description,
     #print('Training will be done with the following settings:\n')
     #print('min_batch_size: ' + str(min_batch_size))
     #print('batches per epoch: ' + str(batches_per_epoch))
-    print('Used batch_size will be: ' + str(batch_size))
+    #print('Used batch_size will be: ' + str(batch_size))
     #print('epochs: ' + str(epochs))
     #print('learning_rate_schedule: ' + str(learning_rate_schedule))
     
