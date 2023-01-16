@@ -70,7 +70,7 @@ class Neural_Approximator():
     # - Normalize data and data analytics (x_mean)
     # - Build graph
     def prepare(self, 
-                m, 
+                dataSize, 
                 differential,
                 hiddenNeurons, 
                 hiddenLayers, 
@@ -82,7 +82,7 @@ class Neural_Approximator():
 
         # Normalize dataset and cache analytics
         self.x_mean, self.x_std, self.x, self.y_mean, self.y_std, self.y, self.dy_dx, self.lambda_j = \
-            normalize_data(self.x_raw, self.y_raw, self.dydx_raw, m)
+            normalize_data(self.x_raw, self.y_raw, self.dydx_raw, dataSize)
         
         # Build tensorflow graph        
         self.m, self.n = self.x.shape        
@@ -90,10 +90,12 @@ class Neural_Approximator():
         
         
     def storeNewDataAndNormalize(self, x_raw, y_raw, dydx_raw, dataSize):
-        
+        #self.x_raw = x_raw
+        #self.y_raw = y_raw
+        #self.dydx_raw = dydx_raw
         # Normalize dataset and cache analytics
-        self.x_mean, self.x_std, self.x, self.y_mean, self.y_std, self.y, self.dy_dx, self.lambda_j = \
-            normalize_data(x_raw, y_raw, dydx_raw, dataSize)
+        self.x, self.y, self.x, self.dy_dx, self.lambda_j = \
+            normalize_data_NewData(self.x_raw, self.y_raw, self.x_mean, self.x_std, self.y_mean, self.y_std, self.dydx_raw, dataSize)
         
         
     # Build graph

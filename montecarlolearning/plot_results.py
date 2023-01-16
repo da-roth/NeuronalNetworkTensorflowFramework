@@ -3,9 +3,9 @@ import numpy as np
 
 
 try:
-    from montecarlolearning.TrainingMethod import *
+    from montecarlolearning.TrainingOptionEnums import *
 except ModuleNotFoundError:
-    from TrainingMethod import *
+    from TrainingOptionEnums import *
 
 def plot_results(title, 
           predictions, 

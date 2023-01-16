@@ -4,3 +4,4 @@ class TrainingMethod(Enum):
     Standard = 1
     GenerateDataDuringTraining = 2
     
+    

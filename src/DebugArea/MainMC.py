@@ -16,28 +16,38 @@ weightSeed = 1
 ### 1. Training data
 ###
 #from CDF import *
-generator = GBM()
-sizes = [1000,100] # [sizePerTrainingStep, trainingSteps]
+generator = GBM(GBM_Case.ClosedSolutionAddtiveNoise,noiseVariance = 100.0)
+sizes = [20000,100] # [sizePerTrainingStep, trainingSteps]
 nTest = 2000 # Test set size
+dataSeed = 1
+weightSeed = 1
 
 ###
 ### 2. Set Nueral network structure / Hyperparameters
 ### 
 
-hiddenNeurons = 20                      # we use equal neurons for each hidden layer
-hiddenLayers = 3                        # amount of hidden layers
-activationFunctionsHidden = tf.nn.tanh   # activation functions of hidden layers
-
+hiddenNeurons = 50                     # we use equal neurons for each hidden layer
+hiddenLayers = 2                      # amount of hidden layers
+activationFunctionsHidden = tf.nn.sigmoid  # activation functions of hidden layers
+learning_rate_schedule=[
+    (0.0, 0.001), 
+    (0.333, 0.01),
+    (0.666, 0.01)
+    ] 
+activationFunctionOutput = tf.nn.sigmoid
+batches_per_epoch = 1          # (min for TrainingMethod.GenerateDataDuringTraining is 1)
 ###
 ### 3. Train network
 ###
 
 trainingMethod = TrainingMethod.GenerateDataDuringTraining
-xTest, yTest, yPredicted = train_and_test(generator, sizes, nTest, dataSeed, None, weightSeed, hiddenNeurons, hiddenLayers, activationFunctionsHidden, trainingMethod = trainingMethod, batches_per_epoch = 1)
+xTest, yTest, yPredicted = train_and_test(generator, sizes, nTest, dataSeed, None, weightSeed, hiddenNeurons, hiddenLayers, activationFunctionsHidden, trainingMethod = trainingMethod, batches_per_epoch = batches_per_epoch,learning_rate_schedule=learning_rate_schedule,activationFunctionOutput=activationFunctionOutput)
     
 ###
 ### 3. Study results
 ###   
 
 # show predicitions
-plot_results("CDF random inputs", yPredicted, xTest, "x", "CDF(x)", yTest, sizes, True, False, None, trainingMethod)
+plot_results("S0", yPredicted, xTest, "x", "Call(S0)", yTest, sizes, True, False, None, trainingMethod)
+
+

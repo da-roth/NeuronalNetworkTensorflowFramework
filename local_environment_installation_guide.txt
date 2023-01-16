@@ -1,7 +1,7 @@
 ### Installation
 (Python used: Python 3.10.8)
 
-# 1. Open command prompt and naviagte to folder (e.g. C\dev\MonteCarloLearning) 
+# 1. Open command prompt and naviagte to folder (e.g. C\dev\NeuralNetworkTensorflowFramework) 
 # 2. Create virtual environment
 python -m venv .venvNN
 # 3. Activate virtual environment in Command Prompt:

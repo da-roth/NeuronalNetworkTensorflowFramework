@@ -53,7 +53,7 @@ from DataImporter import *
 # Training and testing functions
 from train_and_test_with_differentials import *
 from train_and_test import *
-from TrainingMethod import *
+from TrainingOptionEnums import *
 
 # Plot function
 from plot_results import *
@@ -65,9 +65,7 @@ from normalize_data import *
 from vanilla_graph import *
 from diff_training_graph import *
 from train import *
-from TrainingMethod import *
 from Neural_Approximator import *
-from TrainingMethod import *
 from vanilla_net import *
 from vanilla_net_biasNeuron import *
 from backprop import *

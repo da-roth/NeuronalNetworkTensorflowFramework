@@ -8,12 +8,12 @@ tf = tf2.compat.v1
 tf.disable_eager_execution()
 
 try:
-    from TrainingMethod import *
+    from TrainingOptionEnums import *
     from Neural_Approximator import *
     from normalize_data import *
 except ModuleNotFoundError:
     #print("")
-    from montecarlolearning.TrainingMethod import *
+    from montecarlolearning.TrainingOptionEnums import *
     from montecarlolearning.Neural_Approximator import *
     from montecarlolearning.normalize_data import *
 
@@ -78,9 +78,13 @@ def train_and_test(generator,
         return xTest, yTest, predvalues
          
     elif trainingMethod == TrainingMethod.GenerateDataDuringTraining:
+        # Parameters for GenerateDataDuringTraining
+        min_batch_size = 1
+        
         # 1. Simulation of initial training set
         #print("Simulating initial training set and test set")
-        xTrain, yTrain, _unused = generator.trainingSet(sizes[0], trainSeed=0)
+        initial_sample_amount = max(sizes[0],100000) # to get a proper batch normalization
+        xTrain, yTrain, _unused = generator.trainingSet(initial_sample_amount, trainSeed=0)
         xTest, yTest, _unused, _unused2 = generator.testSet(num=nTest, testSeed=testSeed)
         #print("done")
         
@@ -88,7 +92,7 @@ def train_and_test(generator,
         #print("initializing neural appropximator")
         regressor = Neural_Approximator(xTrain, yTrain)
         # Prepare: normalize dataset and initialize tf graph
-        regressor.prepare(sizes[0], False, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed=weightSeed)
+        regressor.prepare(initial_sample_amount, False, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed=weightSeed)
         #print("done")        
         
         # 3. First training step
@@ -100,11 +104,11 @@ def train_and_test(generator,
         for i in range(1,sizes[1]):
             #print('Training step ' + str(i) + ' will be done')
             xTrain, yTrain, _unused = generator.trainingSet(sizes[0], trainSeed=i)
-            regressor.storeNewDataAndNormalize(xTrain,  yTrain, _unused, sizes[0])
+            #regressor.storeNewDataAndNormalize(xTrain,  yTrain, _unused, sizes[0])
             
             # 4. Train network
             t0 = time.time()
-            regressor.train("standard training",epochs,learning_rate_schedule,batches_per_epoch,min_batch_size)
+            regressor.train("standard training",epochs,learning_rate_schedule,batches_per_epoch,min_batch_size, reinit = False)
             t1 = time.time()
             
             if i % testFrequency == 0:

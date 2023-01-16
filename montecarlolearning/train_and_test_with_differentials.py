@@ -1,12 +1,12 @@
 import time
 
 try:
-    from TrainingMethod import *
+    from TrainingOptionEnums import *
     from Neural_Approximator import *
     from normalize_data import *
 except ModuleNotFoundError:
     #print("")
-    from montecarlolearning.TrainingMethod import *
+    from montecarlolearning.TrainingOptionEnums import *
     from montecarlolearning.Neural_Approximator import *
     from montecarlolearning.normalize_data import *
 
