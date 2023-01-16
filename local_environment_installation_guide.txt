@@ -5,7 +5,8 @@
 # 2. Create virtual environment
 python -m venv .venvNN
 # 3. Activate virtual environment in Command Prompt:
-.venvNN\Scripts\activate.bat
+Windows: .venvNN\Scripts\activate.bat
+Ubuntu: source .venvNN/bin/activate
 # 4. Install packages from requirements.txt, 
 pip install -r requirements.txt
 
@@ -27,3 +28,15 @@ echo %PATH%
 c:\dev\test\.venvNN\Scripts\python.exe -m pip install --upgrade pip
 # or if Veng is activated just
 python -m pip install --upgrade pip
+
+### On Ubuntu the following was required to be able to pip install -r requirements.txt
+sudo apt-get install libfreetype6-dev
+sudo apt-get install pkg-config
+sudo apt-get install libpng12-dev
+sudo apt-get install pkg-config
+sudo apt-get install build-essential libssl-dev libffi-dev python3
+
+pip install -r requirementsUbuntu.txt
+
+# For tensorflow amd gpu
+https://docs.amd.com/bundle/ROCm-Installation-Guide-v5.4.2/page/How_to_Install_ROCm.html#_How_to_Install
