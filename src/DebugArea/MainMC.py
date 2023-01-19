@@ -16,7 +16,7 @@ weightSeed = 1
 ### 1. Training data
 ###
 #from CDF import *
-generator = GBM(GBM_Case.ClosedSolutionAddtiveNoise,noiseVariance = 100.0)
+generator = GBM(GBM_Case.VarianceReduced)
 sizes = [20000,100] # [sizePerTrainingStep, trainingSteps]
 nTest = 2000 # Test set size
 dataSeed = 1
