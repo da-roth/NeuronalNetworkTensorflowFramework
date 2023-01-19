@@ -16,8 +16,8 @@ weightSeed = 1
 ### 1. Training data
 ###
 #from CDF import *
-generator = GBM(GBM_Case.VarianceReduced)
-sizes = [20000,100] # [sizePerTrainingStep, trainingSteps]
+generator = GBM_5d(GBM_5d_Case.Standard,noiseVariance = 0.0)
+sizes = [200,1] # [sizePerTrainingStep, trainingSteps]
 nTest = 2000 # Test set size
 dataSeed = 1
 weightSeed = 1
@@ -31,8 +31,8 @@ hiddenLayers = 2                      # amount of hidden layers
 activationFunctionsHidden = tf.nn.sigmoid  # activation functions of hidden layers
 learning_rate_schedule=[
     (0.0, 0.001), 
-    (0.333, 0.01),
-    (0.666, 0.01)
+    (0.333, 0.0001),
+    (0.666, 0.0001)
     ] 
 activationFunctionOutput = tf.nn.sigmoid
 batches_per_epoch = 1          # (min for TrainingMethod.GenerateDataDuringTraining is 1)
@@ -49,5 +49,4 @@ xTest, yTest, yPredicted = train_and_test(generator, sizes, nTest, dataSeed, Non
 
 # show predicitions
 plot_results("S0", yPredicted, xTest, "x", "Call(S0)", yTest, sizes, True, False, None, trainingMethod)
-
 

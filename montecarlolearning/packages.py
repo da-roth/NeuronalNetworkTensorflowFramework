@@ -46,7 +46,7 @@ sys.path.append( os.path.join(mainDirectory,'src','Examples','CumulativeDensitiy
 # Data importation or generation classes
 from BlackScholes import *
 from CDF import *
-from EuropeanSDESingle import *
+from GBM_5d import *
 from GBM import *
 from DataImporter import *
 

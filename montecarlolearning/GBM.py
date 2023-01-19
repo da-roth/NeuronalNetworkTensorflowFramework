@@ -26,7 +26,7 @@ class GBM:
         np.random.seed(trainSeed)
            
         # 1. Input definition
-        s_0_l=118.0
+        s_0_l=110.0
         s_0_r=120.0
         s_0 = (s_0_r - s_0_l) * np.random.random_sample(m) + s_0_l
         
@@ -34,14 +34,14 @@ class GBM:
         sigma = 0.2
         mu = 0.05
         T = 1.0
-        K = 70
+        K = 110
 
 
         if (self.opt == GBM_Case.ClosedSolutionAddtiveNoise):
             d1 = (np.log(s_0[:]/K) + 0.5 * sigma * sigma * T) / sigma / np.sqrt(T)
             d2 = d1[:] - sigma * np.sqrt(T)
             z=np.random.normal(0.0, self.noiseVariance, m)
-            noisedPrice = s_0[:] * norm.cdf(d1[:]) - np.exp(-mu*T) * K * norm.cdf(d2[:]) + z
+            noisedPrice = s_0[:] * norm.cdf(d1[:]) - np.exp(-mu*T) * K * norm.cdf(d2[:]) + z[:]
             return s_0.reshape([-1,1]), noisedPrice.reshape([-1,1]), None
         
         elif (self.opt == GBM_Case.ClosedSolution):
@@ -78,7 +78,7 @@ class GBM:
 
         np.random.seed(1)
         # 1. Input definition
-        s_0_l=118.0
+        s_0_l=110.0
         s_0_r=120.0
         s_0 = (s_0_r - s_0_l) * np.random.random_sample(num) + s_0_l
         
@@ -86,7 +86,7 @@ class GBM:
         sigma = 0.2
         mu = 0.05
         T = 1.0
-        K = 70
+        K = 110
         
         # B.S. formula
         d1 = (np.log(s_0[:]/K) + 0.5 * sigma * sigma * T) / sigma / np.sqrt(T)
