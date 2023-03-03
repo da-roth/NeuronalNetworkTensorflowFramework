@@ -14,40 +14,28 @@ class DataImporter:
     randomized = None
     sep = None
 
-    df = None
-
     ###
     ### Constructor
     ###
-    def __init__(self):
-        self.trainTestRatio = 0.8
-        self.testDataPath = None
-        self.randomized = True
-        self.sep = None
+    def __init__(self, 
+                 path,
+                 inputName,
+                 outputName,
+                 trainTestRatio=0.8,
+                 testDataPath = None,
+                 randomized = True,
+                 sep = None,
+                 ):
         
-    def set_path(self, path, sep = None):
         self.path = path
-        self.sep = sep
-        self.df = pd.read_csv(path,sep)
-        self.df.head()
-
-    def set_inputName(self, inputName):
         self.inputName = inputName
-        
-    def set_outputName(self, outputName):
         self.outputName = outputName
-        
-    def set_trainTestRatio(self, trainTestRatio):
+        self.df = pd.read_csv(path,sep) 
+        self.df.head()
         self.trainTestRatio = trainTestRatio
-        
-    def set_testDataPath(self, testDataPath):
         self.testDataPath = testDataPath
-        
-    def set_randomized(self, randomized):
         self.randomized = randomized
         
-    def set_sep(self, sep):
-        self.sep = sep
 
     ###
     ### Methods
