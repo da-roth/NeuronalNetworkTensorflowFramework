@@ -6,19 +6,15 @@ class DataImporter:
     ###
     ### Attributes
     ###
-
-    # Mandatory
     path = None
     inputName = None
     outputName = None
     trainTestRatio = None
     testDataPath = None
-    trainingSetSizes = None
-    nTest = None
-    df = None
-    # Optional 
     randomized = None
+    sep = None
 
+    df = None
 
     ###
     ### Constructor
@@ -28,7 +24,6 @@ class DataImporter:
         self.testDataPath = None
         self.randomized = True
         self.sep = None
-        self.nTest = None
         
     def set_path(self, path, sep = None):
         self.path = path
@@ -51,8 +46,8 @@ class DataImporter:
     def set_randomized(self, randomized):
         self.randomized = randomized
         
-    def set_trainingSetSizes(self, trainingSetSizes):
-        self.trainingSetSizes = trainingSetSizes
+    def set_sep(self, sep):
+        self.sep = sep
 
     ###
     ### Methods
