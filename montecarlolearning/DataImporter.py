@@ -10,37 +10,37 @@ class DataImporter:
     @property
     def path(self):
         if self._path is None:
-           raise ValueError("Path attribute is not set.")
+           raise ValueError("Path attribute is not set. Please add a value for DataImporter.")
         return self._path
     
     @property
     def inputName(self):
         if self._inputName is None:
-            raise ValueError("Input name attribute is not set.")
+            raise ValueError("Input name attribute is not set. Please add a value for DataImporter.")
         return self._inputName
 
     @property
     def outputName(self):
         if self._outputName is None:
-            raise ValueError("Output name attribute is not set.")
+            raise ValueError("Output name attribute is not set. Please add a value for DataImporter.")
         return self._outputName
 
     @property
     def trainTestRatio(self):
         if self._trainTestRatio is None:
-            raise ValueError("Train-test ratio attribute is not set.")
+            raise ValueError("Train-test ratio attribute is not set. Please add a value for DataImporter.")
         return self._trainTestRatio
 
     @property
     def testDataPath(self):
         if self._testDataPath is None:
-            raise ValueError("Test data path attribute is not set.")
+            raise ValueError("Test data path attribute is not set. Please add a value for DataImporter.")
         return self._testDataPath
 
     @property
     def trainingSetSizes(self):
         if self._trainingSetSizes is None:
-            raise ValueError("Training set sizes attribute is not set.")
+            raise ValueError("Training set sizes attribute is not set. Please add a value for DataImporter.")
         return self._trainingSetSizes
 
     @property # Allowed to be None
@@ -50,25 +50,25 @@ class DataImporter:
     @property
     def df(self):
         if self._df is None:
-            raise ValueError("DataFrame attribute is not set.")
+            raise ValueError("DataFrame attribute is not set. Please add a value for DataImporter.")
         return self._df
 
     @property
     def dataSeed(self):
         if self._dataSeed is None:
-            raise ValueError("Data seed attribute is not set.")
+            raise ValueError("Data seed attribute is not set. Please add a value for DataImporter.")
         return self._dataSeed
 
     @property
     def testSeed(self):
         if self._testSeed is None:
-            raise ValueError("Test seed attribute is not set.")
+            raise ValueError("Test seed attribute is not set. Please add a value for DataImporter.")
         return self._testSeed
     
     @property
     def randomized(self):
         if self._randomized is None:
-            raise ValueError("Randomized is not set.")
+            raise ValueError("Randomized is not set. Please add a value for DataImporter.")
         return self._randomized
     
     # Mandatory
