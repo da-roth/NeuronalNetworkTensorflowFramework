@@ -4,6 +4,15 @@ from scipy.stats import norm
 # main class
 class CDF:
     
+    ###
+    ### Attributes
+    ###
+    mean = None
+    vol = None
+
+    ###
+    ### Constructor
+    ###
     def __init__(self, 
                  mean=0.0,
                  vol=1.0):

@@ -30,6 +30,12 @@ def mc_body(idx, p, N, mc_samples_ref, loop_var_mc):
     
 # main class
 class GBM_5d:
+
+    ###
+    ### Attributes
+    ###
+    opt = None
+    noiseVariance = None
     
     def __init__(self, 
                 opt = GBM_5d_Case.Standard,

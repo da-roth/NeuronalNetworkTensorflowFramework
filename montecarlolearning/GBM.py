@@ -13,6 +13,15 @@ class GBM_Case(Enum):
 # main class
 class GBM:
     
+    ###
+    ### Attributes
+    ###
+    opt = None
+    noiseVariance = None
+
+    ###
+    ### Constructor
+    ###
     def __init__(self, 
                 opt = GBM_Case.Standard,
                 noiseVariance = 0.1):

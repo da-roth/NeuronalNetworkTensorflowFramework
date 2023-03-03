@@ -3,6 +3,20 @@ import pandas as pd
 
 class DataImporter:
         
+    ###
+    ### Attributes
+    ###
+    path = None
+    inputName = None
+    outputName = None
+    trainTestRatio = None
+    testDataPath = None
+    randomized = None
+    sep = None
+
+    ###
+    ### Constructor
+    ###
     def __init__(self, 
                  path,
                  inputName,
@@ -22,7 +36,10 @@ class DataImporter:
         self.testDataPath = testDataPath
         self.randomized = randomized
         
-        
+
+    ###
+    ### Methods
+    ### 
     def trainingSet(self,m, trainSeed = None):
         if not self.testDataPath:
             if (trainSeed == None):
