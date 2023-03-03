@@ -17,9 +17,7 @@ except ModuleNotFoundError:
     from montecarlolearning.Neural_Approximator import *
     from montecarlolearning.normalize_data import *
 
-def train_and_test(generator, 
-         sizes, 
-         nTest, 
+def train_and_test(generator,  
          dataSeed=None, 
          testSeed=None, 
          weightSeed=None, 
@@ -45,8 +43,8 @@ def train_and_test(generator,
     if trainingMethod == TrainingMethod.Standard:
         # 1. Simulation of training set, but only for max(sizes), other sizes will use these
         #print("simulating training, valid and test sets")
-        xTrain, yTrain, _unused = generator.trainingSet(max(sizes), trainSeed=dataSeed)
-        xTest, yTest, _unused, _unused2 = generator.testSet(num=nTest, testSeed=testSeed)
+        xTrain, yTrain, _unused = generator.trainingSet(max(generator.trainingSetSizes), trainSeed=dataSeed)
+        xTest, yTest, _unused, _unused2 = generator.testSet(num=generator.nTest, testSeed=testSeed)
         #print("done")
 
         # 2. Neural network initialization 
@@ -57,7 +55,7 @@ def train_and_test(generator,
         predvalues = {}    
         preddeltas = {}
         ## 3. Loop over train set sizes
-        for size in sizes:         
+        for size in generator.trainingSetSizes:         
             print("\nsize %d" % size)
             
             ###
@@ -83,9 +81,9 @@ def train_and_test(generator,
         
         # 1. Simulation of initial training set
         #print("Simulating initial training set and test set")
-        initial_sample_amount = max(sizes[0],100000) # to get a proper batch normalization
+        initial_sample_amount = max(generator.trainingSetSizes[0],100000) # to get a proper batch normalization
         xTrain, yTrain, _unused = generator.trainingSet(initial_sample_amount, trainSeed=0)
-        xTest, yTest, _unused, _unused2 = generator.testSet(num=nTest, testSeed=testSeed)
+        xTest, yTest, _unused, _unused2 = generator.testSet(num=generator.nTest, testSeed=testSeed)
         #print("done")
         
         # 2. Neural network initialization 
@@ -120,7 +118,7 @@ def train_and_test(generator,
         
         # 4. Predictions on test data
         predictions = regressor.predict_values(xTest)
-        predvalues[("standard", nTest)] = predictions
+        predvalues[("standard", generator.nTest)] = predictions
         return xTest, yTest, predvalues
         
     else:
