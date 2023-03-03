@@ -32,9 +32,7 @@ class DataImporter:
         return self._trainTestRatio
 
     @property
-    def testDataPath(self):
-        if self._testDataPath is None:
-            raise ValueError("Test data path attribute is not set. Please add a value for DataImporter.")
+    def testDataPath(self): # Allowed to be None
         return self._testDataPath
 
     @property
