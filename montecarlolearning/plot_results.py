@@ -13,7 +13,7 @@ def plot_results(title,
           xAxisName, 
           yAxisName, 
           targets, 
-          sizes, 
+          generator, 
           computeRmse=False, 
           differentialML = False,
           weights=None,
@@ -26,13 +26,13 @@ def plot_results(title,
     else:
         displayResults = enumerate(["standard"])
         numCols = 1
-    numRows = len(sizes)
+    numRows = len(generator.trainingSetSizes)
     
     fig, ax = plt.subplots(numRows, numCols, squeeze=False)
     fig.set_size_inches(4 * numCols + 1.5, 4 * numRows)
     ax[0,0].set_title("standard")
 
-    for i, size in enumerate(sizes):
+    for i, size in enumerate(generator.trainingSetSizes):
         ax[i,0].annotate("size %d" % size, xy=(0, 0.5), 
           xytext=(-ax[i,0].yaxis.labelpad-5, 0),
           xycoords=ax[i,0].yaxis.label, textcoords='offset points',
@@ -46,7 +46,7 @@ def plot_results(title,
     
     if trainingMethod == TrainingMethod.Standard:
         for j, regType, in displayResults:
-            for i, size in enumerate(sizes):        
+            for i, size in enumerate(generator.trainingSetSizes):        
                 if computeRmse:
                     errors = (predictions[(regType,size)]-targets)
                     if weights is not None:
