@@ -18,8 +18,6 @@ except ModuleNotFoundError:
     from montecarlolearning.normalize_data import *
 
 def train_and_test(generator,  
-         dataSeed=None, 
-         testSeed=None, 
          weightSeed=None, 
          hiddenNeurons=20,
          hiddenLayers=2,
@@ -43,8 +41,8 @@ def train_and_test(generator,
     if trainingMethod == TrainingMethod.Standard:
         # 1. Simulation of training set, but only for max(sizes), other sizes will use these
         #print("simulating training, valid and test sets")
-        xTrain, yTrain, _unused = generator.trainingSet(max(generator.trainingSetSizes), trainSeed=dataSeed)
-        xTest, yTest, _unused, _unused2 = generator.testSet(num=generator.nTest, testSeed=testSeed)
+        xTrain, yTrain, _unused = generator.trainingSet(max(generator.trainingSetSizes), trainSeed=generator.dataSeed)
+        xTest, yTest, _unused, _unused2 = generator.testSet(num=generator.nTest, testSeed=generator.testSeed)
         #print("done")
 
         # 2. Neural network initialization 
@@ -82,8 +80,8 @@ def train_and_test(generator,
         # 1. Simulation of initial training set
         #print("Simulating initial training set and test set")
         initial_sample_amount = max(generator.trainingSetSizes[0],100000) # to get a proper batch normalization
-        xTrain, yTrain, _unused = generator.trainingSet(initial_sample_amount, trainSeed=0)
-        xTest, yTest, _unused, _unused2 = generator.testSet(num=generator.nTest, testSeed=testSeed)
+        xTrain, yTrain, _unused = generator.trainingSet(initial_sample_amount, trainSeed=generator.dataSeed)
+        xTest, yTest, _unused, _unused2 = generator.testSet(num=generator.nTest, testSeed=generator.testSeed)
         #print("done")
         
         # 2. Neural network initialization 
