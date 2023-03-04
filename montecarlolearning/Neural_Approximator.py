@@ -27,7 +27,56 @@ class Neural_Approximator():
     ###
     ### Attributes
     ###
+
+    # Store network architecture to build and reset graph
+    _differential= None        # differential or not           
+    _lam= None               # balance cost between values and derivs  
+    _hiddenNeurons= None 
+    _hiddenLayers= None 
+    _activationFunctionsHidden= None  
+    _activationFunctionOutput= None 
+    _weight_seed= None 
+    _biasNeuron= None 
+
+    # Store data generator, needed for data normalization framework and input/output dimensions
+    _generator = None
     
+    # Setter for data generator
+    def set_generator(self, generator):
+        self._generator = generator
+
+    # Setter for differential
+    def set_differential(self, differential):
+        self._differential = differential
+
+    # Setter for lam
+    def set_lam(self, lam):
+        self._lam = lam
+
+    # Setter for hiddenNeurons
+    def set_hiddenNeurons(self, hiddenNeurons):
+        self._hiddenNeurons = hiddenNeurons
+
+    # Setter for hiddenLayers
+    def set_hiddenLayers(self, hiddenLayers):
+        self._hiddenLayers = hiddenLayers
+
+    # Setter for activationFunctionsHidden
+    def set_activationFunctionsHidden(self, activationFunctionsHidden):
+        self._activationFunctionsHidden = activationFunctionsHidden
+
+    # Setter for activationFunctionOutput
+    def set_activationFunctionOutput(self, activationFunctionOutput):
+        self._activationFunctionOutput = activationFunctionOutput
+
+    # Setter for weight_seed
+    def set_weight_seed(self, weight_seed):
+        self._weight_seed = weight_seed
+
+    # Setter for biasNeuron
+    def set_biasNeuron(self, biasNeuron):
+        self._biasNeuron = biasNeuron
+
     # raw data
     x_raw = None
     y_raw = None
@@ -51,12 +100,14 @@ class Neural_Approximator():
     ### Constructor / Destructor
     ###
     
-    def __init__(self, x_raw = None, y_raw= None, 
-                dydx_raw=None):      # derivatives labels, 
-        # Raw data input
-        self.x_raw = x_raw
-        self.y_raw = y_raw
-        self.dydx_raw = dydx_raw
+    def __init__(self):      
+        self._differential = False     
+        self._lam= 1               
+        self._hiddenNeurons= 20 
+        self._hiddenLayers= 2 
+        self._activationFunctionsHidden= tf.nn.relu
+        self._activationFunctionOutput= tf.nn.relu 
+        self._biasNeuron= False 
                   
     def __del__(self):
         if self.session is not None:
@@ -65,20 +116,16 @@ class Neural_Approximator():
     ###
     ### Properties
     ###
-    
+    def initializeData(self, x_raw = None, y_raw= None,dydx_raw=None):   
+        # Raw data input
+        self.x_raw = x_raw
+        self.y_raw = y_raw
+        self.dydx_raw = dydx_raw
+        
     # Prepare:                    
     # - Normalize data and data analytics (x_mean)
     # - Build graph
-    def prepare(self, 
-                dataSize, 
-                differential,
-                hiddenNeurons, 
-                hiddenLayers, 
-                activationFunctionsHidden,
-                activationFunctionOutput = tf.nn.softplus,
-                lam=1,
-                weight_seed=None,
-                biasNeuron=False):
+    def prepare(self, dataSize):
 
         # Normalize dataset and cache analytics
         self.x_mean, self.x_std, self.x, self.y_mean, self.y_std, self.y, self.dy_dx, self.lambda_j = \
@@ -86,7 +133,7 @@ class Neural_Approximator():
         
         # Build tensorflow graph        
         self.m, self.n = self.x.shape        
-        self.build_graph(differential, lam, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed, biasNeuron)
+        self.build_graph(self._differential, self._lam, self._hiddenNeurons, self._hiddenLayers, self._activationFunctionsHidden, self._activationFunctionOutput,self._weight_seed, self._biasNeuron)
         
         
     def storeNewDataAndNormalize(self, x_raw, y_raw, dydx_raw, dataSize):
@@ -109,6 +156,15 @@ class Neural_Approximator():
                 weight_seed,
                 biasNeuron):
         
+        _differential = differential
+        _lam = lam
+        _hiddenNeurons = hiddenNeurons
+        _hiddenLayers = hiddenLayers
+        _activationFunctionsHidden = activationFunctionsHidden
+        _activationFunctionOutput = activationFunctionOutput
+        _weight_seed = weight_seed
+        _biasNeuron = biasNeuron
+
         # First, deal with tensorflow logic
         if self.session is not None:
             self.session.close()
@@ -217,3 +273,59 @@ class Neural_Approximator():
         y = self.y_mean + self.y_std * y_scaled
         dydx = self.y_std / self.x_std * dyscaled_dxscaled
         return y, dydx
+    
+    # Reset graph to initial build of build_graph
+    def reset_graph():
+        
+        # First, deal with tensorflow logic
+        if self.session is not None:
+            self.session.close()
+
+        #Print neural network settings
+        #print('Neural network initialized with the following settings:')
+        #print('Neurons per layer: ' + str(hiddenNeurons))
+        #print('Amount of hidden layers: ' +str(hiddenLayers))
+        #print('Activations functions: ' + str(activationFunctions))
+        
+        self.graph = tf.Graph()
+        
+        with self.graph.as_default():
+            
+            if not _differential:
+            # Build vanilla graph through vanilla_graph.py
+                
+                self.inputs, \
+                self.labels, \
+                self.predictions, \
+                self.derivs_predictions, \
+                self.learning_rate, \
+                self.loss, \
+                self.minimizer \
+                = vanilla_training_graph(self.n, _hiddenNeurons, _hiddenLayers, _activationFunctionsHidden, _activationFunctionOutput, _weight_seed, _biasNeuron)
+                    
+            else:
+            # Build differential graph through diff_training_graph.py
+            
+                if self.dy_dx is None:
+                    raise Exception("No differential labels for differential training graph")
+            
+                self.alpha = 1.0 / (1.0 + lam * self.n)
+                self.beta = 1.0 - self.alpha
+                
+                self.inputs, \
+                self.labels, \
+                self.derivs_labels, \
+                self.predictions, \
+                self.derivs_predictions, \
+                self.learning_rate, \
+                self.loss, \
+                self.minimizer = diff_training_graph(self.n, _hiddenNeurons, \
+                                                     _hiddenLayers, _weightSeed, \
+                                                     self.alpha, self.beta, self.lambda_j)
+        
+            # Global initializer
+            self.initializer = tf.global_variables_initializer()
+            
+        # Done building graph
+        self.graph.finalize()
+        self.session = tf.Session(graph=self.graph)

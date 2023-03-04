@@ -18,15 +18,7 @@ except ModuleNotFoundError:
     from montecarlolearning.normalize_data import *
 
 def train_and_test(generator,  
-         weightSeed=None, 
-         hiddenNeurons=20,
-         hiddenLayers=2,
-         activationFunctionsHidden=tf.nn.relu,
-         activationFunctionOutput=tf.nn.relu,
-         trainingMethod = TrainingMethod.Standard,
-         testFrequency = 1000,
-         outputDimension = 1,
-         deltidx=0,
+         regressor,
          epochs=1, 
          learning_rate_schedule=[
             (0.0, 0.01), 
@@ -38,7 +30,7 @@ def train_and_test(generator,
          min_batch_size=20,
          biasNeuron=False):
     
-    if trainingMethod == TrainingMethod.Standard:
+    if generator.TrainMethod == TrainingMethod.Standard:
         # 1. Simulation of training set, but only for max(sizes), other sizes will use these
         #print("simulating training, valid and test sets")
         xTrain, yTrain, _unused = generator.trainingSet(max(generator.trainingSetSizes), trainSeed=generator.dataSeed)
@@ -47,8 +39,9 @@ def train_and_test(generator,
 
         # 2. Neural network initialization 
         #print("initializing neural appropximator")
-        regressor = Neural_Approximator(xTrain, yTrain)
         #print("done")
+
+        regressor.initializeData(xTrain, yTrain)
         
         predvalues = {}    
         preddeltas = {}
@@ -61,7 +54,7 @@ def train_and_test(generator,
             ###
             
             # Prepare: normalize dataset and initialize tf graph
-            regressor.prepare(size, False, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed=weightSeed, biasNeuron = biasNeuron)
+            regressor.prepare(size)
             
             # 4. Train network
             t0 = time.time()
@@ -73,7 +66,7 @@ def train_and_test(generator,
             t1 = time.time()
         return xTest, yTest, predvalues
          
-    elif trainingMethod == TrainingMethod.GenerateDataDuringTraining:
+    elif generator.TrainMethod == TrainingMethod.GenerateDataDuringTraining:
         # Parameters for GenerateDataDuringTraining
         min_batch_size = 1
         
