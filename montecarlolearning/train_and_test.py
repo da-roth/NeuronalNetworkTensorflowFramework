@@ -11,24 +11,17 @@ try:
     from TrainingOptionEnums import *
     from Neural_Approximator import *
     from normalize_data import *
+    from TrainingSettings import *
 except ModuleNotFoundError:
     #print("")
     from montecarlolearning.TrainingOptionEnums import *
     from montecarlolearning.Neural_Approximator import *
     from montecarlolearning.normalize_data import *
+    from montecarlolearning.TrainingSettings import *
 
 def train_and_test(generator,  
          regressor,
-         epochs=1, 
-         learning_rate_schedule=[
-            (0.0, 0.01), 
-            (0.2, 0.001), 
-            (0.4, 0.0001), 
-            (0.6, 0.00001), 
-            (0.8, 0.000001)], 
-         batches_per_epoch=10,
-         min_batch_size=20,
-         biasNeuron=False):
+         TrainingSettings):
     
     if generator.TrainMethod == TrainingMethod.Standard:
         # 1. Simulation of training set, but only for max(sizes), other sizes will use these
@@ -58,7 +51,7 @@ def train_and_test(generator,
             
             # 4. Train network
             t0 = time.time()
-            regressor.train("standard training",epochs,learning_rate_schedule,batches_per_epoch,min_batch_size,xTest=xTest,yTest=yTest)      
+            regressor.train("standard training",TrainingSettings.epochs,TrainingSettings.learningRateSchedule,TrainingSettings.batchesPerEpoch,TrainingSettings.minBatchSize,xTest=xTest,yTest=yTest)      
             
             # 5. Predictions on test data
             predictions = regressor.predict_values(xTest)
@@ -68,7 +61,7 @@ def train_and_test(generator,
          
     elif generator.TrainMethod == TrainingMethod.GenerateDataDuringTraining:
         # Parameters for GenerateDataDuringTraining
-        min_batch_size = 1
+        TrainingSettings.minBatchSize = 1
         
         # 1. Simulation of initial training set
         #print("Simulating initial training set and test set")
@@ -85,7 +78,7 @@ def train_and_test(generator,
         #print("done")        
         
         # 3. First training step
-        regressor.train("standard training",epochs,learning_rate_schedule,batches_per_epoch,min_batch_size)
+        regressor.train("standard training",TrainingSettings.epochs,TrainingSettings.learningRateSchedule,TrainingSettings.batchesPerEpoch,TrainingSettings.minBatchSize)
         
         predvalues = {}    
         preddeltas = {}
@@ -97,7 +90,7 @@ def train_and_test(generator,
             
             # 4. Train network
             t0 = time.time()
-            regressor.train("standard training",epochs,learning_rate_schedule,batches_per_epoch,min_batch_size, reinit = False)
+            regressor.train("standard training",TrainingSettings.epochs,TrainingSettings.learningRateSchedule,TrainingSettings.batchesPerEpoch,TrainingSettings.minBatchSize, reinit = False)
             t1 = time.time()
             
             if i % testFrequency == 0:
