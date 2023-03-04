@@ -161,6 +161,7 @@ class DataImporter:
                 return xTrain.values, yTrain.values, None
                 
         else:
+            print(self.randomized)
             if self.randomized:
                 self._train_df = self._df.sample(frac=1.0, random_state=1)
                 xTrain = self._train_df.drop(self._outputName,axis=1)

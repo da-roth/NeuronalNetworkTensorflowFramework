@@ -38,12 +38,12 @@ class Neural_Approximator():
     _weight_seed= None 
     _biasNeuron= None 
 
-    # Store data Generator, needed for data normalization framework and input/output dimensions
-    _Generator = None
+    # Store data generator, needed for data normalization framework and input/output dimensions
+    _generator = None
     
-    # Setter for data Generator
-    def set_Generator(self, Generator):
-        self._Generator = Generator
+    # Setter for data generator
+    def set_generator(self, generator):
+        self._generator = generator
 
     # Setter for differential
     def set_differential(self, differential):

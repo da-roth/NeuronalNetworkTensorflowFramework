@@ -59,7 +59,6 @@ from TrainingOptionEnums import *
 from plot_results import *
 
 from Neural_Approximator import *
-from TrainingSettings import *
 from vanilla_net import *
 from backprop import *
 from normalize_data import *
