@@ -28,8 +28,7 @@ class Neural_Approximator():
     ### Attributes
     ###
 
-    # Store network architecture to build and reset graph
-    _differential= None        # differential or not           
+    # Store network architecture to build and reset graph      
     _lam= None               # balance cost between values and derivs  
     _hiddenNeurons= None 
     _hiddenLayers= None 
@@ -44,10 +43,6 @@ class Neural_Approximator():
     # Setter for data Generator
     def set_Generator(self, Generator):
         self._Generator = Generator
-
-    # Setter for differential
-    def set_differential(self, differential):
-        self._differential = differential
 
     # Setter for lam
     def set_lam(self, lam):
@@ -100,8 +95,7 @@ class Neural_Approximator():
     ### Constructor / Destructor
     ###
     
-    def __init__(self):      
-        self._differential = False     
+    def __init__(self):         
         self._lam= 1               
         self._hiddenNeurons= 20 
         self._hiddenLayers= 2 
@@ -134,7 +128,7 @@ class Neural_Approximator():
         
         # Build tensorflow graph        
         self.m, self.n = self.x.shape        
-        self.build_graph(self._differential, self._lam, self._hiddenNeurons, self._hiddenLayers, self._activationFunctionsHidden, self._activationFunctionOutput,self._weight_seed, self._biasNeuron)
+        self.build_graph(self._lam, self._hiddenNeurons, self._hiddenLayers, self._activationFunctionsHidden, self._activationFunctionOutput,self._weight_seed, self._biasNeuron)
         
         
     def storeNewDataAndNormalize(self, x_raw, y_raw, dydx_raw, dataSize):
@@ -147,8 +141,7 @@ class Neural_Approximator():
         
         
     # Build graph
-    def build_graph(self,
-                differential,       # differential or not           
+    def build_graph(self,       # differential or not           
                 lam,                # balance cost between values and derivs  
                 hiddenNeurons, 
                 hiddenLayers,
@@ -157,15 +150,6 @@ class Neural_Approximator():
                 weight_seed,
                 biasNeuron):
         
-        _differential = differential
-        _lam = lam
-        _hiddenNeurons = hiddenNeurons
-        _hiddenLayers = hiddenLayers
-        _activationFunctionsHidden = activationFunctionsHidden
-        _activationFunctionOutput = activationFunctionOutput
-        _weight_seed = weight_seed
-        _biasNeuron = biasNeuron
-
         # First, deal with tensorflow logic
         if self.session is not None:
             self.session.close()
@@ -179,11 +163,8 @@ class Neural_Approximator():
         self.graph = tf.Graph()
         
         with self.graph.as_default():
-        
-            # Build the graph, either vanilla or differential
-            self.differential = differential
             
-            if not differential:
+            if not self._Generator.Differential:
             # Build vanilla graph through vanilla_graph.py
                 
                 self.inputs, \
@@ -292,7 +273,7 @@ class Neural_Approximator():
         
         with self.graph.as_default():
             
-            if not _differential:
+            if not self._Generator.Differential:
             # Build vanilla graph through vanilla_graph.py
                 
                 self.inputs, \

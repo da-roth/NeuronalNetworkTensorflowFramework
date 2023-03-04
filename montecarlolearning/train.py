@@ -60,7 +60,7 @@ def train(description,
         learning_rate = np.interp(epoch / epochs, lr_schedule_epochs, lr_schedule_rates)
         
         # train one epoch
-        if not approximator.differential:
+        if not approximator._Generator.Differential:
         
             vanilla_train_one_epoch(
                 approximator.inputs, 

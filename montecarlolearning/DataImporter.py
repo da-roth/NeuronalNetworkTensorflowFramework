@@ -79,7 +79,12 @@ class DataImporter:
     def TrainMethod(self):
         return self._trainingMethod
     
+    @property
+    def Differential(self):
+        return self._differential
+    
     # Mandatory
+    _differential = None
     _trainingMethod = TrainingMethod.Standard
     _path = None
     _inputName = None
@@ -103,6 +108,7 @@ class DataImporter:
     ### Constructor
     ###
     def __init__(self):
+        self._differential = False
         self._trainTestRatio = 0.8
         self._testDataPath = None
         self._randomized = True
