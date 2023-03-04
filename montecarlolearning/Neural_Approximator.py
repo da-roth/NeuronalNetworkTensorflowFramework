@@ -108,6 +108,7 @@ class Neural_Approximator():
         self._activationFunctionsHidden= tf.nn.relu
         self._activationFunctionOutput= tf.nn.relu 
         self._biasNeuron= False 
+        self._weight_seed = 1
                   
     def __del__(self):
         if self.session is not None:
