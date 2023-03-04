@@ -4,6 +4,7 @@ class TrainingSettings:
     _learning_rate_schedule = None
     _batches_per_epoch = None
     _min_batch_size = None
+    _testFrequency = None # espacially for generated on the fly
 
     def __init__(self):
         self._epochs = 1
@@ -15,6 +16,7 @@ class TrainingSettings:
             (0.8, 0.000001)]
         self._batches_per_epoch = 10
         self._min_batch_size = 20
+        self._testFrequency = 1000
 
     @property
     def epochs(self):
@@ -43,3 +45,10 @@ class TrainingSettings:
 
     def set_min_batch_size(self, value):
         self._min_batch_size = value
+
+    @property
+    def testFrequency(self):
+        return self._testFrequency
+    
+    def set_test_frequency(self, value):
+        self._testFrequency = value

@@ -51,7 +51,7 @@ def train_and_test(Generator,
             
             # 4. Train network
             t0 = time.time()
-            Regressor.train("standard training",TrainingSettings.epochs,TrainingSettings.learningRateSchedule,TrainingSettings.batchesPerEpoch,TrainingSettings.minBatchSize,xTest=xTest,yTest=yTest)      
+            Regressor.train("standard training",TrainingSettings,xTest=xTest,yTest=yTest)      
             
             # 5. Predictions on test data
             predictions = Regressor.predict_values(xTest)
@@ -61,39 +61,38 @@ def train_and_test(Generator,
          
     elif Generator.TrainMethod == TrainingMethod.GenerateDataDuringTraining:
         # Parameters for GenerateDataDuringTraining
-        TrainingSettings.minBatchSize = 1
-        
+
         # 1. Simulation of initial training set
         #print("Simulating initial training set and test set")
-        initial_sample_amount = max(Generator.trainingSetSizes[0],100000) # to get a proper batch normalization
+        initial_sample_amount = max(Generator.trainingSetSizes[0],10000) # to get a proper batch normalization
         xTrain, yTrain, _unused = Generator.trainingSet(initial_sample_amount, trainSeed=Generator.dataSeed)
         xTest, yTest, _unused, _unused2 = Generator.testSet(num=Generator.nTest, testSeed=Generator.testSeed)
         #print("done")
         
         # 2. Neural network initialization 
         #print("initializing neural appropximator")
-        Regressor = Neural_Approximator(xTrain, yTrain)
+        Regressor.initializeData(xTrain, yTrain)
         # Prepare: normalize dataset and initialize tf graph
-        Regressor.prepare(initial_sample_amount, False, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed=weightSeed)
+        Regressor.prepare(initial_sample_amount)
         #print("done")        
         
         # 3. First training step
-        Regressor.train("standard training",TrainingSettings.epochs,TrainingSettings.learningRateSchedule,TrainingSettings.batchesPerEpoch,TrainingSettings.minBatchSize)
+        Regressor.train("standard training",TrainingSettings)
         
         predvalues = {}    
         preddeltas = {}
         # 4. Train loop over remaining training steps
-        for i in range(1,sizes[1]):
+        for i in range(1,Generator.trainingSetSizes[1]):
             #print('Training step ' + str(i) + ' will be done')
-            xTrain, yTrain, _unused = Generator.trainingSet(sizes[0], trainSeed=i)
+            xTrain, yTrain, _unused = Generator.trainingSet(Generator.trainingSetSizes[0], trainSeed=i)
             #Regressor.storeNewDataAndNormalize(xTrain,  yTrain, _unused, sizes[0])
             
             # 4. Train network
             t0 = time.time()
-            Regressor.train("standard training",TrainingSettings.epochs,TrainingSettings.learningRateSchedule,TrainingSettings.batchesPerEpoch,TrainingSettings.minBatchSize, reinit = False)
+            Regressor.train("standard training",TrainingSettings, reinit = False)
             t1 = time.time()
             
-            if i % testFrequency == 0:
+            if i % TrainingSettings.testFrequency == 0:
                 predictions = Regressor.predict_values(xTest)
                 errors = predictions - yTest
                 rmse = np.sqrt((errors ** 2).mean(axis=0))

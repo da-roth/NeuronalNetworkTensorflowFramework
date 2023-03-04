@@ -2,110 +2,107 @@ try:
     from vanilla_graph import *
     from vanilla_train_one_epoch import *
     from diff_training_graph import *
+    from TrainingSettings import *
 except:
     from montecarlolearning.vanilla_graph import *
     from montecarlolearning.vanilla_train_one_epoch import *
     from montecarlolearning.diff_training_graph import *
+    from montecarlolearning.TrainingSettings import *
 
 import numpy as np
 
 def train(description,
-          # neural approximator
-          approximator,              
+          # neural Regressor
+          Regressor,              
           # training params
-          epochs, 
-          # one-cycle learning rate schedule
-          learning_rate_schedule,
-          batches_per_epoch,
-          min_batch_size,
+          TrainingSettings,
           reinit=True, 
           # callback function and when to call it
           callback=None,           # arbitrary callable
-          callback_epochs=[],   # call after what epochs, e.g. [5, 20]
+          callback_epochs=[],   # call after what TrainingSettings.epochs, e.g. [5, 20]
           xTest=None,
           yTest=None
           ):     
               
     # batching
-    batch_size = max(min_batch_size, approximator.m // batches_per_epoch)
+    batch_size = max(TrainingSettings.minBatchSize, Regressor.m // TrainingSettings.batchesPerEpoch)
     
     # one-cycle learning rate sechedule
-    lr_schedule_epochs, lr_schedule_rates = zip(*learning_rate_schedule)
+    lr_schedule_epochs, lr_schedule_rates = zip(*TrainingSettings.learningRateSchedule)
             
     # reset
     if reinit:
-        approximator.session.run(approximator.initializer)
+        Regressor.session.run(Regressor.initializer)
     
     # callback on epoch 0, if requested
     if callback and 0 in callback_epochs:
-        callback(approximator, 0)
+        callback(Regressor, 0)
         
     # Frequency counter    
     i = 0
-    testFrequency = epochs/10
-    
+
     # Print training setting
     #print('Training will be done with the following settings:\n')
-    #print('min_batch_size: ' + str(min_batch_size))
-    #print('batches per epoch: ' + str(batches_per_epoch))
+    #print('TrainingSettings.minBatchSize: ' + str(TrainingSettings.minBatchSize))
+    #print('batches per epoch: ' + str(TrainingSettings.epochsTrainingSettings.learningRateScheduleTrainingSettings.batchesPerEpoch))
     #print('Used batch_size will be: ' + str(batch_size))
-    #print('epochs: ' + str(epochs))
-    #print('learning_rate_schedule: ' + str(learning_rate_schedule))
+    #print('TrainingSettings.epochs: ' + str(TrainingSettings.epochs))
+    #print('TrainingSettings.epochsTrainingSettings.learningRateSchedule: ' + str(TrainingSettings.epochsTrainingSettings.learningRateSchedule))
     
     #print('\n Train started:')
-    # loop on epochs, with progress bar (tqdm)
-    for epoch in range(epochs):
+    # loop on TrainingSettings.epochs, with progress bar (tqdm)
+    for epoch in range(TrainingSettings.epochs):
         
         # interpolate learning rate in cycle
-        learning_rate = np.interp(epoch / epochs, lr_schedule_epochs, lr_schedule_rates)
+        learning_rate = np.interp(epoch / TrainingSettings.epochs, lr_schedule_epochs, lr_schedule_rates)
         
         # train one epoch
-        if not approximator._Generator.Differential:
+        if not Regressor._Generator.Differential:
         
             vanilla_train_one_epoch(
-                approximator.inputs, 
-                approximator.labels, 
-                approximator.learning_rate, 
-                approximator.minimizer, 
-                approximator.x, 
-                approximator.y, 
+                Regressor.inputs, 
+                Regressor.labels, 
+                Regressor.learning_rate, 
+                Regressor.minimizer, 
+                Regressor.x, 
+                Regressor.y, 
                 learning_rate, 
                 batch_size, 
-                approximator.session)
+                Regressor.session)
             i = i +1
-            if i % testFrequency == 0:
+            if i % TrainingSettings.testFrequency == 0:
                 #print('learning_rate for the last epoch was' + str(learning_rate))
-                predictions = approximator.predict_values(approximator.x_raw)
-                errors = predictions - approximator.y_raw
+                predictions = Regressor.predict_values(Regressor.x_raw)
+                errors = predictions - Regressor.y_raw
                 rmse = np.sqrt((errors ** 2).mean())
-                if not (type(xTest) == None):
-                    predictionsTest = approximator.predict_values(xTest)
+                if not (xTest == None):
+                    predictionsTest = Regressor.predict_values(xTest)
                     errorsTest = predictionsTest - yTest
                     rmseTest = np.sqrt((errorsTest ** 2).mean())
-                    #print('RMSE on training data after ' + str(i) + ' epochs is '  + str(rmse) + '. RMSE on test data: ' + str(rmseTest) )
+                    #print('RMSE on training data after ' + str(i) + ' TrainingSettings.epochs is '  + str(rmse) + '. RMSE on test data: ' + str(rmseTest) )
                 #else:
-                #    #print('RMSE on training data after ' + str(i) + ' epochs is '  + str(rmse) )
+                #    #print('RMSE on training data after ' + str(i) + ' TrainingSettings.epochs is '  + str(rmse) )
         else:
         
             diff_train_one_epoch(
-                approximator.inputs, 
-                approximator.labels, 
-                approximator.derivs_labels,
-                approximator.learning_rate, 
-                approximator.minimizer, 
-                approximator.x, 
-                approximator.y, 
-                approximator.dy_dx,
+                Regressor.inputs, 
+                Regressor.labels, 
+                Regressor.derivs_labels,
+                Regressor.learning_rate, 
+                Regressor.minimizer, 
+                Regressor.x, 
+                Regressor.y, 
+                Regressor.dy_dx,
                 learning_rate, 
                 batch_size, 
-                approximator.session)
+                Regressor.session)
         
         # callback, if requested
         if callback and epoch in callback_epochs:
-            callback(approximator, epoch)
+            callback(Regressor, epoch)
 
     #print('Training done.')
     # final callback, if requested
-    if callback and epochs in callback_epochs:
-        callback(approximator, epochs)        
+    if callback and TrainingSettings.epochs in callback_epochs:
+        callback(Regressor, TrainingSettings.epochs)        
 

@@ -12,46 +12,65 @@ exec(open(packageFile).read())
 dataSeed = 1 
 weightSeed = 1 
 
+
 ###
 ### 1. Training data
 ###
+#from CDF import *
+#sizes = [1000,100] # [sizePerTrainingStep, trainingSteps]
+#nTest = 2000 # Test set size
 
-x = ['active','mean_dist_stanlag','dist_capital_stanlag','ch_dist_capital_stanlag','territorial','government','osk_a_stanlag','osk_b_stanlag','closed_aut','elect_aut','elect_dem','lib_dem','ln_brd_lag','low_intlev','high_intlev','internationalised','infmorMA_nn','frac_std','y_active_std']
-y = ['ordinal_theta']
-sizes = [544] # training set sizes. Performed one after the other and might be compared
-nTest = 0.9 # Test set is given through a ratio of 0.8 in generator
-generator = DataImporter('C:\dev\MonteCarloLearning\src\socialScience\second_NN_new.csv',x,y,nTest) 
+Generator = CDF()
+#print(Generator.path == None)
+Generator.set_inputName('x')
+Generator.set_outputName('CDF(x)')
+Generator.set_trainingSetSizes([1000,100])
+Generator.set_nTest(2000)
 
 ###
 ### 2. Set Nueral network structure / Hyperparameters
 ### 
 
+Regressor = Neural_Approximator()
+Regressor.set_Generator(Generator)
+Regressor.set_hiddenNeurons(20)
+Regressor.set_hiddenLayers(3)
+Regressor.set_activationFunctionsHidden([tf.nn.tanh])
 
-hiddenNeurons = 20               # we use equal neurons for each hidden layer
-hiddenLayers = 50              # amount of hidden layers
-activationFunctionsHidden = tf.nn.tanh   # activation functions of hidden layers
-activationFunctionOutput = tf.nn.relu
+#hiddenNeurons = 20               # we use equal neurons for each hidden layer
+#hiddenLayers = 3                # amount of hidden layers
+#activationFunctionsHidden = [tf.nn.tanh]   # activation functions of hidden layers
 
-epochs=100
-learning_rate_schedule=[
-    (0.0, 0.05), 
-    (0.2, 0.025), 
-    (0.4, 0.01), 
-    (0.6, 0.001), 
-    (0.8, 0.0001)] 
-batches_per_epoch=150
-min_batch_size=150
-
-outputDimension = 1,
-biasNeuron = True
+TrainSettings = TrainingSettings()
+TrainSettings.set_epochs(20)
+TrainSettings.set_min_batch_size(1)
 
 ###
-### 3. Train network
+### 3. Train network and Study results
+### Comment: For different trainingSetSizes the neural network reset and not saved, hence train and evaluation of yPredicted are done together currently
 ###
-trainingMethod = TrainingMethod.Standard
-xTest, yTest, yPredicted = train_and_test(generator, sizes, nTest, dataSeed, None, weightSeed, hiddenNeurons, hiddenLayers, activationFunctionsHidden, trainingMethod = trainingMethod, epochs = epochs,learning_rate_schedule=learning_rate_schedule,batches_per_epoch=batches_per_epoch,outputDimension=outputDimension,biasNeuron=biasNeuron,min_batch_size=min_batch_size,activationFunctionOutput=activationFunctionOutput)
+xTest, yTest, yPredicted = train_and_test(Generator, Regressor, TrainSettings)
+plot_results("CDF unrandomized deterministic inputs", yPredicted, xTest, yTest, Generator)
+
+# ###
+# ### 2. Set Nueral network structure / Hyperparameters
+# ### 
+
+# hiddenNeurons = 20                      # we use equal neurons for each hidden layer
+# hiddenLayers = 3                        # amount of hidden layers
+# activationFunctionsHidden = tf.nn.tanh   # activation functions of hidden layers
+# batches_per_epoch = sizes[0]
+
+# ###
+# ### 3. Train network
+# ###
+
+# trainingMethod = TrainingMethod.GenerateDataDuringTraining
+# xTest, yTest, yPredicted = train_and_test(generator, sizes, nTest, dataSeed, None, weightSeed, hiddenNeurons, hiddenLayers, activationFunctionsHidden, trainingMethod = trainingMethod, batches_per_epoch = batches_per_epoch)
     
-### 4. Study results
-###   
+# ###
+# ### 3. Study results
+# ###   
 
-plot_results("Results", yPredicted, xTest, "x", "y", yTest, sizes, True, False, None, trainingMethod)
+# # show predicitions
+# plot_results("CDF random inputs", yPredicted, xTest, "x", "CDF(x)", yTest, sizes, True, False, None, trainingMethod)

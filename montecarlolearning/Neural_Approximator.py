@@ -206,12 +206,7 @@ class Neural_Approximator():
     # Train network by calling train based on train.py
     def train(self,            
               description,
-              # training params
-              epochs, 
-              # one-cycle learning rate schedule
-              learning_rate_schedule,
-              batches_per_epoch,
-              min_batch_size,
+              TrainingSettings,
               reinit=True, 
               # callback and when to call it
               # we don't use callbacks, but this is very useful, e.g. for debugging
@@ -223,10 +218,7 @@ class Neural_Approximator():
               
         train(description, 
               self, 
-              epochs, 
-              learning_rate_schedule, 
-              batches_per_epoch, 
-              min_batch_size,
+              TrainingSettings,
               reinit, 
               callback, 
               callback_epochs,
