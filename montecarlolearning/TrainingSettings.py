@@ -1,22 +1,24 @@
 class TrainingSettings:
 
-    _epochs = None
-    _learning_rate_schedule = None
-    _batches_per_epoch = None
-    _min_batch_size = None
-    _testFrequency = None # espacially for generated on the fly
-
     def __init__(self):
-        self._epochs = 1
+        # Mandatory for all:
         self._learning_rate_schedule = [
             (0.0, 0.01), 
             (0.2, 0.001), 
             (0.4, 0.0001), 
             (0.6, 0.00001), 
             (0.8, 0.000001)]
+        
+        # 1. a) For TrainingMethod.Standard
+        self._epochs = 1
         self._batches_per_epoch = 10
         self._min_batch_size = 20
+
+        # 1. b) For TrainingMethod.GenerateDataDuringTraining
         self._testFrequency = 1000
+        self._nTest = 1000
+        self._samplesPerStep = 1000
+        self._trainingSteps = 100
 
     @property
     def epochs(self):
@@ -52,3 +54,24 @@ class TrainingSettings:
     
     def set_test_frequency(self, value):
         self._testFrequency = value
+
+    @property
+    def nTest(self):
+        return self._nTest
+
+    def set_nTest(self, value):
+        self._nTest = value
+
+    @property
+    def TrainingSteps(self):
+        return self._trainingSteps
+    
+    def set_trainingSteps(self, trainingSetSizes):
+        self._trainingSteps = trainingSetSizes
+
+    @property
+    def SamplesPerStep(self):
+        return self._samplesPerStep
+    
+    def set_samplesPerStep(self, trainingSetSizes):
+        self._samplesPerStep = trainingSetSizes

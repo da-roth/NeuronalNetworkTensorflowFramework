@@ -22,25 +22,27 @@ def plot_results(title,
     else:
         displayResults = enumerate(["standard"])
         numCols = 1
-    numRows = len(Generator.trainingSetSizes)
-    
-    fig, ax = plt.subplots(numRows, numCols, squeeze=False)
-    fig.set_size_inches(4 * numCols + 1.5, 4 * numRows)
-    ax[0,0].set_title("standard")
 
-    for i, size in enumerate(Generator.trainingSetSizes):
-        ax[i,0].annotate("size %d" % size, xy=(0, 0.5), 
-          xytext=(-ax[i,0].yaxis.labelpad-5, 0),
-          xycoords=ax[i,0].yaxis.label, textcoords='offset points',
-          ha='right', va='center')
-    
-    if Generator.Differential:
-        displayResults = enumerate(["standard", "differential"])
-        ax[0,1].set_title("differential")
-    else:
-        displayResults = enumerate(["standard"])
     
     if Generator.TrainMethod == Generator.TrainMethod.Standard:
+        numRows = len(Generator.trainingSetSizes)
+            
+        fig, ax = plt.subplots(numRows, numCols, squeeze=False)
+        fig.set_size_inches(4 * numCols + 1.5, 4 * numRows)
+        ax[0,0].set_title("standard")
+
+        for i, size in enumerate(Generator.trainingSetSizes):
+            ax[i,0].annotate("size %d" % size, xy=(0, 0.5), 
+            xytext=(-ax[i,0].yaxis.labelpad-5, 0),
+            xycoords=ax[i,0].yaxis.label, textcoords='offset points',
+            ha='right', va='center')
+        
+        if Generator.Differential:
+            displayResults = enumerate(["standard", "differential"])
+            ax[0,1].set_title("differential")
+        else:
+            displayResults = enumerate(["standard"])
+
         for j, regType, in displayResults:
             for i, size in enumerate(Generator.trainingSetSizes):        
                 if computeRmse:
@@ -64,6 +66,15 @@ def plot_results(title,
 
                 ax[i,j].legend(prop={'size': 8}, loc='upper left')
     elif Generator.TrainMethod == Generator.TrainMethod.GenerateDataDuringTraining:
+        fig, ax = plt.subplots()
+        fig.set_size_inches(4 + 1.5, 4 )
+        ax.set_title("standard")
+        ax.annotate("y-axis",xy=(0, 0.5), 
+        xytext=(-ax.yaxis.labelpad-5, 0),
+        xycoords=ax.yaxis.label, textcoords='offset points',
+        ha='right', va='center')
+
+
         for j, regType, in displayResults:     
             if computeRmse:
                 errors = yPredicted[("standard",yTest.size)]-yTest
@@ -74,14 +85,14 @@ def plot_results(title,
             else:
                 t = Generator.inputName
                 
-            ax[i,j].set_xlabel(t)            
-            ax[i,j].set_ylabel(Generator.outputName)
+            ax.set_xlabel(t)            
+            ax.set_ylabel(Generator.outputName)
 
-            ax[i,j].plot(xTest, yPredicted[("standard",yTest.size)], 'co', \
+            ax.plot(xTest, yPredicted[("standard",yTest.size)], 'co', \
                         markersize=2, markerfacecolor='white', label="predicted")
-            ax[i,j].plot(xTest, yTest, 'r.', markersize=0.5, label='yTest')
+            ax.plot(xTest, yTest, 'r.', markersize=0.5, label='yTest')
 
-            ax[i,j].legend(prop={'size': 8}, loc='upper left')
+            ax.legend(prop={'size': 8}, loc='upper left')
     else:
        print('Training method not recognized')
        

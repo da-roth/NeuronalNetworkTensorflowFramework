@@ -27,7 +27,7 @@ def train_and_test(Generator,
         # 1. Simulation of training set, but only for max(sizes), other sizes will use these
         #print("simulating training, valid and test sets")
         xTrain, yTrain, _unused = Generator.trainingSet(max(Generator.trainingSetSizes), trainSeed=Generator.dataSeed)
-        xTest, yTest, _unused, _unused2 = Generator.testSet(num=Generator.nTest, testSeed=Generator.testSeed)
+        xTest, yTest, _unused, _unused2 = Generator.testSet(num=TrainingSettings.nTest, testSeed=Generator.testSeed)
         #print("done")
 
         # 2. Neural network initialization 
@@ -64,9 +64,9 @@ def train_and_test(Generator,
 
         # 1. Simulation of initial training set
         #print("Simulating initial training set and test set")
-        initial_sample_amount = max(Generator.trainingSetSizes[0],10000) # to get a proper batch normalization
+        initial_sample_amount = max(TrainingSettings.SamplesPerStep,10000) # to get a proper batch normalization
         xTrain, yTrain, _unused = Generator.trainingSet(initial_sample_amount, trainSeed=Generator.dataSeed)
-        xTest, yTest, _unused, _unused2 = Generator.testSet(num=Generator.nTest, testSeed=Generator.testSeed)
+        xTest, yTest, _unused, _unused2 = Generator.testSet(num=TrainingSettings.nTest, testSeed=Generator.testSeed)
         #print("done")
         
         # 2. Neural network initialization 
@@ -82,9 +82,9 @@ def train_and_test(Generator,
         predvalues = {}    
         preddeltas = {}
         # 4. Train loop over remaining training steps
-        for i in range(1,Generator.trainingSetSizes[1]):
+        for i in range(1,TrainingSettings.TrainingSteps):
             #print('Training step ' + str(i) + ' will be done')
-            xTrain, yTrain, _unused = Generator.trainingSet(Generator.trainingSetSizes[0], trainSeed=i)
+            xTrain, yTrain, _unused = Generator.trainingSet(TrainingSettings.SamplesPerStep, trainSeed=i)
             #Regressor.storeNewDataAndNormalize(xTrain,  yTrain, _unused, sizes[0])
             
             # 4. Train network
@@ -101,7 +101,7 @@ def train_and_test(Generator,
         
         # 4. Predictions on test data
         predictions = Regressor.predict_values(xTest)
-        predvalues[("standard", Generator.nTest)] = predictions
+        predvalues[("standard", TrainingSettings.nTest)] = predictions
         return xTest, yTest, predvalues
         
     else:

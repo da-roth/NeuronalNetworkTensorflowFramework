@@ -10,6 +10,19 @@ except ModuleNotFoundError:
 class DataImporter:
         
     ###
+    ### Constructor
+    ###
+    def __init__(self):
+        self._trainingMethod = TrainingMethod.Standard
+        self._differential = False
+        self._trainTestRatio = 0.8
+        self._testDataPath = None
+        self._randomized = True
+        self._sep = None
+        self._dataSeed = 1 
+        self._testSeed = 0
+        
+    ###
     ### Attributes
     ###
 
@@ -82,40 +95,6 @@ class DataImporter:
     @property
     def Differential(self):
         return self._differential
-    
-    # Mandatory
-    _differential = None
-    _trainingMethod = TrainingMethod.Standard
-    _path = None
-    _inputName = None
-    _outputName = None
-    _trainTestRatio = None
-    _testDataPath = None
-    _trainingSetSizes = None
-    _nTest = None
-    _df = None
-    _dataSeed = None
-    _testSeed = None 
-
-    # Optional 
-    _randomized = None
-
-    # Training set that is created
-    _train_df = None
-
-
-    ###
-    ### Constructor
-    ###
-    def __init__(self):
-        self._differential = False
-        self._trainTestRatio = 0.8
-        self._testDataPath = None
-        self._randomized = True
-        self._sep = None
-        self._nTest = None
-        self._dataSeed = 1 
-        self._testSeed = 0
         
     def set_path(self, path, sep=None):
         self._path = path
