@@ -3,6 +3,13 @@ from scipy.stats import norm
 import scipy.stats as stats
 from enum import Enum 
 
+try:
+    from TrainingDataGenerator import *
+except ModuleNotFoundError:
+    #print("")
+    from montecarlolearning.TrainingDataGenerator import *
+
+
 class GBM_Case(Enum):
     Standard = 1                    # European call (Strike 70) and one MC sample per input
     VarianceReduced = 2             # European call (Strike 70) and one MC sample with variance reduction (importance sampling forcing to stay above K)
@@ -11,14 +18,8 @@ class GBM_Case(Enum):
     
     
 # main class
-class GBM:
+class GBM(TrainingDataGenerator):
     
-    ###
-    ### Attributes
-    ###
-    opt = None
-    noiseVariance = None
-
     ###
     ### Constructor
     ###
@@ -26,8 +27,20 @@ class GBM:
                 opt = GBM_Case.Standard,
                 noiseVariance = 0.1):
         
-        self.opt = opt
-        self.noiseVariance = noiseVariance
+        # Call the parent class's constructor using super()
+        super().__init__()
+
+        # Mandatory 
+        self._differential = False
+        
+        self._opt = opt
+        self._noiseVariance = noiseVariance
+
+    def set_noiseVariance(self, inputName):
+        self._noiseVariance = inputName
+
+    def set_trainingCase(self, inputName):
+        self._opt = inputName
                             
     # training set: returns CDF for m random inputs
     def trainingSet(self, m, trainSeed=None, approx=False):
@@ -46,20 +59,20 @@ class GBM:
         K = 110
 
 
-        if (self.opt == GBM_Case.ClosedSolutionAddtiveNoise):
+        if (self._opt == GBM_Case.ClosedSolutionAddtiveNoise):
             d1 = (np.log(s_0[:]/K) + 0.5 * sigma * sigma * T) / sigma / np.sqrt(T)
             d2 = d1[:] - sigma * np.sqrt(T)
-            z=np.random.normal(0.0, self.noiseVariance, m)
+            z=np.random.normal(0.0, self._noiseVariance, m)
             noisedPrice = s_0[:] * norm.cdf(d1[:]) - np.exp(-mu*T) * K * norm.cdf(d2[:]) + z[:]
             return s_0.reshape([-1,1]), noisedPrice.reshape([-1,1]), None
         
-        elif (self.opt == GBM_Case.ClosedSolution):
+        elif (self._opt == GBM_Case.ClosedSolution):
             d1 = (np.log(s_0[:]/K) + 0.5 * sigma * sigma * T) / sigma / np.sqrt(T)
             d2 = d1[:] - sigma * np.sqrt(T)
             price = s_0[:] * norm.cdf(d1[:]) - np.exp(-mu*T) * K * norm.cdf(d2[:])
             return s_0.reshape([-1,1]), price.reshape([-1,1]), None
 
-        elif (self.opt == GBM_Case.VarianceReduced):
+        elif (self._opt == GBM_Case.VarianceReduced):
             #3. sets of random returns
             h=T/1.0
             #z=np.random.normal(0.0,1.0,m)
@@ -72,7 +85,7 @@ class GBM:
             payoffs=np.exp(-mu * T) * (s[:]-K) * (1-p[:])
             return s_0.reshape([-1,1]) , payoffs.reshape([-1,1]), None
         
-        else: #(self.opt == GBM_Case.Standard):
+        else: #(self._opt == GBM_Case.Standard):
             #3. sets of random returns
             h=T/1.0
             z=np.random.normal(0.0,1.0,m)

@@ -2,11 +2,9 @@ import numpy as np
 from scipy.stats import norm
 
 try:
-    from TrainingOptionEnums import *
     from TrainingDataGenerator import *
 except ModuleNotFoundError:
     #print("")
-    from montecarlolearning.TrainingOptionEnums import *
     from montecarlolearning.TrainingDataGenerator import *
 
 # main class
