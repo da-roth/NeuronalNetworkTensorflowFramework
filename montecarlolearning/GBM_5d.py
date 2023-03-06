@@ -3,6 +3,12 @@ from scipy.stats import norm
 import scipy.stats as stats
 from enum import Enum 
 
+try:
+    from TrainingDataGenerator import *
+except ModuleNotFoundError:
+    #print("")
+    from montecarlolearning.TrainingDataGenerator import *
+
 class GBM_5d_Case(Enum):
     Standard = 1                    # European call (Strike 70) and one MC sample per input
     VarianceReduced = 2             # European call (Strike 70) and one MC sample with variance reduction (importance sampling forcing to stay above K)
@@ -10,7 +16,7 @@ class GBM_5d_Case(Enum):
     ClosedSolutionAddtiveNoise = 4  # European call with closed solution plus additive noise as output
 
 # helper analytics    
-#European option
+#European _option
 def phi(x,sigma,mu,T,K, axis=1):
     payoffcoarse=np.exp(-mu * T)* np.maximum(x - K, 0.)
     return payoffcoarse
@@ -29,21 +35,33 @@ def mc_body(idx, p, N, mc_samples_ref, loop_var_mc):
     return idx + 1, p + np.reduce_mean(phi(_x,_sigma,_mu,_T,_K, 2), axis=0)
     
 # main class
-class GBM_5d:
+class GBM_5d(TrainingDataGenerator):
 
     ###
     ### Attributes
     ###
-    opt = None
-    noiseVariance = None
+    _opt = None
+    _noiseVariance = None
     
     def __init__(self, 
                 opt = GBM_5d_Case.Standard,
                 noiseVariance = 0.1):
         
-        self.opt = opt
-        self.noiseVariance = noiseVariance
-                        
+        # Call the parent class's constructor using super()
+        super().__init__()
+
+        # Mandatory 
+        self._differential = False
+
+        self._opt = opt
+        self._noiseVariance = noiseVariance
+
+    def set_noiseVariance(self, inputName):
+        self._noiseVariance = inputName
+
+    def set_trainingCase(self, inputName):
+        self._opt = inputName    
+
     # training set: returns CDF for m random inputs
     def trainingSet(self, m, trainSeed=None, approx=False):
     
@@ -67,20 +85,20 @@ class GBM_5d:
         K = (K_r - K_l) * np.random.random_sample(m) + K_l
 
         
-        if (self.opt == GBM_5d_Case.ClosedSolutionAddtiveNoise):
+        if (self._opt == GBM_5d_Case.ClosedSolutionAddtiveNoise):
             d1 = (np.log(s_0[:]/K[:]) + 0.5 * sigma[:] * sigma[:] * T[:]) / sigma[:] / np.sqrt(T[:])
             d2 = d1[:] - sigma[:] * np.sqrt(T[:])
-            z=np.random.normal(0.0, self.noiseVariance, m)
+            z=np.random.normal(0.0, self._noiseVariance, m)
             noisedPrice = s_0[:] * norm.cdf(d1[:]) - np.exp(-mu[:]*T[:]) * K[:] * norm.cdf(d2[:]) + z[:]
             return np.stack((s_0,sigma,mu,T,K),axis=1), noisedPrice.reshape([-1,1]), None
         
-        elif (self.opt == GBM_5d_Case.ClosedSolution):
+        elif (self._opt == GBM_5d_Case.ClosedSolution):
             d1 = (np.log(s_0[:]/K[:]) + 0.5 * sigma[:] * sigma[:] * T[:]) / sigma[:] / np.sqrt(T[:])
             d2 = d1[:] - sigma[:] * np.sqrt(T[:])
             price = s_0[:] * norm.cdf(d1[:]) - np.exp(-mu[:] *T[:] ) * K[:] * norm.cdf(d2[:])
             return np.stack((s_0,sigma,mu,T,K),axis=1), price.reshape([-1,1]), None
 
-        elif (self.opt == GBM_5d_Case.VarianceReduced):
+        elif (self._opt == GBM_5d_Case.VarianceReduced):
             #3. sets of random returns
             h=T[:]/1.0
             #z=np.random.normal(0.0,1.0,m)
@@ -93,7 +111,7 @@ class GBM_5d:
             payoffs=np.exp(-mu[:]  * T[:] ) * (s[:]-K[:] ) * (1-p[:])
             return np.stack((s_0,sigma,mu,T,K),axis=1), payoffs.reshape([-1,1]), None
         
-        else: #(self.opt == GBM_5d_Case.Standard):
+        else: #(self._opt == GBM_5d_Case.Standard):
             #3. sets of random returns
             h=T[:] /1.0
             z=np.random.normal(0.0,1.0,m)
