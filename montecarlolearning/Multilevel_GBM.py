@@ -53,9 +53,9 @@ class Multilevel_GBM(TrainingDataGenerator):
         if (self._opt == Multilevel_Train_Case.Milstein):
  
             # 2. Compute paths
-            #h = T[:]/ self._steps
-            #z=np.random.normal(0.0, 1.0, m)
-            #s= s_0[:] + mu[:] *s_0[:] * h[:] +sigma[:] * s_0[:] *np.sqrt(h[:])*z[:] + 0.5 *sigma[:] *s_0[:] *sigma[:] * ((np.sqrt(h[:])*z[:])**2-h[:]) 
+            h = T[:]/ self._steps
+            z=np.random.normal(0.0, 1.0, m)
+            s= s_0[:] + mu[:] *s_0[:] * h[:] +sigma[:] * s_0[:] *np.sqrt(h[:])*z[:] + 0.5 *sigma[:] *s_0[:] *sigma[:] * ((np.sqrt(h[:])*z[:])**2-h[:]) 
             # 3. Calculate and return payoffs
             payoffs=np.exp(-mu[:] * T[:])* np.maximum(s[:] - K[:], 0.)
             return np.stack((s_0,sigma,mu,T,K),axis=1), payoffs.reshape([-1,1]), None
