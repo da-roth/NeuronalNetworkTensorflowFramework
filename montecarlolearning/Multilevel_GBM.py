@@ -15,7 +15,7 @@ class Multilevel_Train_Case(Enum):
 # main class
 class Multilevel_GBM(TrainingDataGenerator):
     
-    def __init__(self, opt=Multilevel_Train_Case.BS_Solution):
+    def __init__(self, opt=Multilevel_Train_Case.BS_Solution, steps = 1.0):
         
         # Call the parent class's constructor using super()
         super().__init__()
@@ -23,8 +23,9 @@ class Multilevel_GBM(TrainingDataGenerator):
         # Mandatory 
         self._differential = False
         
-        # Case definition
-        self._opt = opt
+        # Multilevel GBM specific
+        self._opt = opt # Case
+        self._steps = steps     # discretization steps (if discretization is used)
         
         # Training set definition
         self.s_0_trainInterval = [118.0, 120.0]
@@ -50,16 +51,17 @@ class Multilevel_GBM(TrainingDataGenerator):
         K = (self.K_trainInterval[1] - self.K_trainInterval[0]) * np.random.random_sample(m) + self.K_trainInterval[0]
 
         if (self._opt == Multilevel_Train_Case.Milstein):
+ 
             # 2. Compute paths
-            h=T[:]/1.0
-            z=np.random.normal(0.0, 1.0, m)
-            s= s_0[:] + mu[:] *s_0[:] * h[:] +sigma[:] * s_0[:] *np.sqrt(h[:])*z[:] + 0.5 *sigma[:] *s_0[:] *sigma[:] * ((np.sqrt(h[:])*z[:])**2-h[:]) 
+            #h = T[:]/ self._steps
+            #z=np.random.normal(0.0, 1.0, m)
+            #s= s_0[:] + mu[:] *s_0[:] * h[:] +sigma[:] * s_0[:] *np.sqrt(h[:])*z[:] + 0.5 *sigma[:] *s_0[:] *sigma[:] * ((np.sqrt(h[:])*z[:])**2-h[:]) 
             # 3. Calculate and return payoffs
             payoffs=np.exp(-mu[:] * T[:])* np.maximum(s[:] - K[:], 0.)
             return np.stack((s_0,sigma,mu,T,K),axis=1), payoffs.reshape([-1,1]), None
         if (self._opt == Multilevel_Train_Case.GBM_Path_Solution):
             #3. sets of random returns
-            h=T[:] /1.0
+            h=T[:]
             z=np.random.normal(0.0,1.0,m)
             #piecewise multiply of s= s_0[:] * np.exp((mu-sigma*sigma/2)*h+sigma*np.sqrt(h)*z[:])
             s= np.multiply(s_0[:],np.exp((mu[:] -0.5*sigma[:] *sigma[:] )*h[:] +sigma[:] *np.sqrt(h[:] )*z[:]))
@@ -94,6 +96,28 @@ class Multilevel_GBM(TrainingDataGenerator):
         price = s_0[:] * norm.cdf(d1[:]) - np.exp(-mu[:] * T[:]) * K[:] * norm.cdf(d2[:])
         return np.stack((s_0,sigma,mu,T,K),axis=1), price.reshape([-1,1]), None, None
     
+## Code in loop
+# # Convert the function and condition to NumPy functions
+# np_func = lambda i, s: my_Milstein(i, self._steps, s, mu, sigma, T, K)[1]  # keep only the second output of my_func
+# np_cond = lambda i, s: my_Cond(i, s)
+# # Create the initial input
+# i = 0
+# s = s_0
+# # Run the while loop using NumPy
+# s = np.while_loop(np_cond, np_func, [i, s])
+
+## Helper functions
+# # Define the function to be iterated
+# def my_Milstein(i, steps, s, mu, sigma, T, m):
+#     h = T[:] / steps
+#     z = np.random.normal(0.0, 1.0, m)
+#     s = s[:] + mu[:] * s[:] * h + sigma[:] * s[:] * np.sqrt(h) * z[:] + 0.5 * sigma[:] * s[:] * sigma[:] * ((np.sqrt(h) * z[:]) ** 2 - h)
+#     return i + 1, s
+
+# # Define the loop condition
+# def my_Cond(i, s):
+#     return i < s
+
 #unused helper
 # # helper analytics    
 # #European option
