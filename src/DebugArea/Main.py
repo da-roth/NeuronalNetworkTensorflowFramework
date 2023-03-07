@@ -51,26 +51,3 @@ TrainSettings.set_min_batch_size(1)
 ###
 xTest, yTest, yPredicted = train_and_test(Generator, Regressor, TrainSettings)
 plot_results("CDF unrandomized deterministic inputs", yPredicted, xTest, yTest, Generator)
-
-# ###
-# ### 2. Set Nueral network structure / Hyperparameters
-# ### 
-
-# hiddenNeurons = 20                      # we use equal neurons for each hidden layer
-# hiddenLayers = 3                        # amount of hidden layers
-# activationFunctionsHidden = tf.nn.tanh   # activation functions of hidden layers
-# batches_per_epoch = sizes[0]
-
-# ###
-# ### 3. Train network
-# ###
-
-# trainingMethod = TrainingMethod.GenerateDataDuringTraining
-# xTest, yTest, yPredicted = train_and_test(generator, sizes, nTest, dataSeed, None, weightSeed, hiddenNeurons, hiddenLayers, activationFunctionsHidden, trainingMethod = trainingMethod, batches_per_epoch = batches_per_epoch)
-    
-# ###
-# ### 3. Study results
-# ###   
-
-# # show predicitions
-# plot_results("CDF random inputs", yPredicted, xTest, "x", "CDF(x)", yTest, sizes, True, False, None, trainingMethod)
