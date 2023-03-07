@@ -12,10 +12,14 @@ class Multilevel_Train_Case(Enum):
     GBM_Path_Solution = 2    # GBM path closed solution
     Milstein = 3             # Milstein scheme
 
+class Multilevel_Train_Dimension(Enum):
+    one = 1
+    five = 2
+
 # main class
 class Multilevel_GBM(TrainingDataGenerator):
     
-    def __init__(self, opt=Multilevel_Train_Case.BS_Solution, steps = 1):
+    def __init__(self, opt=Multilevel_Train_Case.BS_Solution, steps = 1, dim = Multilevel_Train_Dimension.one):
         
         # Call the parent class's constructor using super()
         super().__init__()
@@ -26,35 +30,37 @@ class Multilevel_GBM(TrainingDataGenerator):
         # Multilevel GBM specific
         self._opt = opt # Case
         self._steps = steps     # discretization steps (if discretization is used)
+        self._dim = dim
         
-        # # Training set definition
-        # self.s_0_trainInterval = [118.0, 120.0]
-        # self.sigma_trainInterval = [0.1, 0.2]
-        # self.mu_trainInterval = [0.02, 0.05]
-        # self.T_trainInterval = [0.9, 1.0]
-        # self.K_trainInterval = [109.0, 110.0]
-        
-        # # Test set modification: (reducing test interval slightly for better testing)
-        # self.s_0_h = 0.4
-        # self.sigma_h = 0.01
-        # self.mu_h = 0.01  
-        # self.T_h = 0.01              
-        # self.K_h = 0.1
-
-        # 1d for testing
-        # Training set definition
-        self.s_0_trainInterval = [118.0, 120.0]
-        self.sigma_trainInterval = [0.2, 0.2]
-        self.mu_trainInterval = [0.05, 0.05]
-        self.T_trainInterval = [10.0, 10.0]
-        self.K_trainInterval = [410.0, 410.0]
-        
-        # Test set modification: (reducing test interval slightly for better testing)
-        self.s_0_h = 0.0
-        self.sigma_h = 0.0
-        self.mu_h = 0.0
-        self.T_h = 0.0              
-        self.K_h = 0.0
+        if(self._dim == Multilevel_Train_Dimension.five ):
+            # Training set definition
+            self.s_0_trainInterval = [118.0, 120.0]
+            self.sigma_trainInterval = [0.1, 0.2]
+            self.mu_trainInterval = [0.02, 0.05]
+            self.T_trainInterval = [0.9, 1.0]
+            self.K_trainInterval = [109.0, 110.0]
+            
+            # Test set modification: (reducing test interval slightly for better testing)
+            self.s_0_h = 0.4
+            self.sigma_h = 0.01
+            self.mu_h = 0.01  
+            self.T_h = 0.01              
+            self.K_h = 0.1
+        else:
+            # 1d for testing
+            # Training set definition
+            self.s_0_trainInterval = [118.0, 120.0]
+            self.sigma_trainInterval = [0.2, 0.2]
+            self.mu_trainInterval = [0.05, 0.05]
+            self.T_trainInterval = [10.0, 10.0]
+            self.K_trainInterval = [410.0, 410.0]
+            
+            # Test set modification: (reducing test interval slightly for better testing)
+            self.s_0_h = 0.0
+            self.sigma_h = 0.0
+            self.mu_h = 0.0
+            self.T_h = 0.0              
+            self.K_h = 0.0
         
     def trainingSet(self, m, trainSeed=None, approx=False):  
         #np.random.seed(trainSeed) 
