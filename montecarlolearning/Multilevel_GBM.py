@@ -15,7 +15,7 @@ class Multilevel_Train_Case(Enum):
 # main class
 class Multilevel_GBM(TrainingDataGenerator):
     
-    def __init__(self, opt=Multilevel_Train_Case.BS_Solution, steps = 1.0):
+    def __init__(self, opt=Multilevel_Train_Case.BS_Solution, steps = 1):
         
         # Call the parent class's constructor using super()
         super().__init__()
@@ -27,19 +27,34 @@ class Multilevel_GBM(TrainingDataGenerator):
         self._opt = opt # Case
         self._steps = steps     # discretization steps (if discretization is used)
         
+        # # Training set definition
+        # self.s_0_trainInterval = [118.0, 120.0]
+        # self.sigma_trainInterval = [0.1, 0.2]
+        # self.mu_trainInterval = [0.02, 0.05]
+        # self.T_trainInterval = [0.9, 1.0]
+        # self.K_trainInterval = [109.0, 110.0]
+        
+        # # Test set modification: (reducing test interval slightly for better testing)
+        # self.s_0_h = 0.4
+        # self.sigma_h = 0.01
+        # self.mu_h = 0.01  
+        # self.T_h = 0.01              
+        # self.K_h = 0.1
+
+        # 1d for testing
         # Training set definition
         self.s_0_trainInterval = [118.0, 120.0]
-        self.sigma_trainInterval = [0.1, 0.2]
-        self.mu_trainInterval = [0.02, 0.05]
-        self.T_trainInterval = [0.9, 1.0]
-        self.K_trainInterval = [109.0, 110.0]
+        self.sigma_trainInterval = [0.2, 0.2]
+        self.mu_trainInterval = [0.05, 0.05]
+        self.T_trainInterval = [10.0, 10.0]
+        self.K_trainInterval = [410.0, 410.0]
         
         # Test set modification: (reducing test interval slightly for better testing)
-        self.s_0_h = 0.4
-        self.sigma_h = 0.01
-        self.mu_h = 0.01  
-        self.T_h = 0.01              
-        self.K_h = 0.1
+        self.s_0_h = 0.0
+        self.sigma_h = 0.0
+        self.mu_h = 0.0
+        self.T_h = 0.0              
+        self.K_h = 0.0
         
     def trainingSet(self, m, trainSeed=None, approx=False):  
         #np.random.seed(trainSeed) 
@@ -53,13 +68,18 @@ class Multilevel_GBM(TrainingDataGenerator):
         if (self._opt == Multilevel_Train_Case.Milstein):
  
             # 2. Compute paths
+            
             h = T[:]/ self._steps
-            z=np.random.normal(0.0, 1.0, m)
-            s= s_0[:] + mu[:] *s_0[:] * h[:] +sigma[:] * s_0[:] *np.sqrt(h[:])*z[:] + 0.5 *sigma[:] *s_0[:] *sigma[:] * ((np.sqrt(h[:])*z[:])**2-h[:]) 
+            s = s_0
+            # loop through the array for 10 steps
+            for i in range(self._steps):
+                # do something with the array
+                z=np.random.normal(0.0, 1.0, m)
+                s= s[:] + mu[:] *s[:] * h[:] +sigma[:] * s[:] *np.sqrt(h[:])*z[:] + 0.5 *sigma[:] *s_0[:] *sigma[:] * ((np.sqrt(h[:])*z[:])**2-h[:]) 
             # 3. Calculate and return payoffs
             payoffs=np.exp(-mu[:] * T[:])* np.maximum(s[:] - K[:], 0.)
             return np.stack((s_0,sigma,mu,T,K),axis=1), payoffs.reshape([-1,1]), None
-        if (self._opt == Multilevel_Train_Case.GBM_Path_Solution):
+        elif (self._opt == Multilevel_Train_Case.GBM_Path_Solution):
             #3. sets of random returns
             h=T[:]
             z=np.random.normal(0.0,1.0,m)
@@ -69,13 +89,13 @@ class Multilevel_GBM(TrainingDataGenerator):
             return np.stack((s_0,sigma,mu,T,K),axis=1), payoffs.reshape([-1,1]), None
         else:
             # B.S. formula
-            d1 = (np.log(s_0[:]/K[:]) + 0.5 * sigma[:] * sigma[:] * T[:]) / sigma[:] / np.sqrt(T[:])
+            d1 = (np.log(s_0[:]/K[:]) + (mu[:] + 0.5 * sigma[:] * sigma[:]) * T[:]) / (sigma[:] * np.sqrt(T[:]))
             d2 = d1[:] - sigma[:] * np.sqrt(T[:])
             price = s_0[:] * norm.cdf(d1[:]) - np.exp(-mu[:] *T[:] ) * K[:] * norm.cdf(d2[:])
             return np.stack((s_0,sigma,mu,T,K),axis=1), price.reshape([-1,1]), None
      
     def testSet(self, num, testSeed=None):
-        np.random.seed(testSeed)
+        #np.random.seed(testSeed)
         # 0. Test interval definition
         s_0_testInterval = [self.s_0_trainInterval[0]+self.s_0_h, self.s_0_trainInterval[1]-self.s_0_h]
         sigma_testInterval = [self.sigma_trainInterval[0]+self.sigma_h, self.sigma_trainInterval[1]-self.sigma_h]
@@ -91,7 +111,7 @@ class Multilevel_GBM(TrainingDataGenerator):
         K = (K_testInterval[1] - K_testInterval[0]) * np.random.random_sample(num) + K_testInterval[0]
         
         # B.S. formula
-        d1 = (np.log(s_0[:]/K[:]) + 0.5 * sigma[:] * sigma[:] * T[:]) / sigma[:] / np.sqrt(T[:])
+        d1 = (np.log(s_0[:]/K[:]) + (mu[:] + 0.5 * sigma[:] * sigma[:]) * T[:]) / (sigma[:] * np.sqrt(T[:]))
         d2 = d1[:] - sigma[:] * np.sqrt(T[:])
         price = s_0[:] * norm.cdf(d1[:]) - np.exp(-mu[:] * T[:]) * K[:] * norm.cdf(d2[:])
         return np.stack((s_0,sigma,mu,T,K),axis=1), price.reshape([-1,1]), None, None

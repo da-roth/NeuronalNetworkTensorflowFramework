@@ -60,14 +60,14 @@ class GBM:
 
 
         if (self._opt == GBM_Case.ClosedSolutionAddtiveNoise):
-            d1 = (np.log(s_0[:]/K) + 0.5 * sigma * sigma * T) / sigma / np.sqrt(T)
+            d1 = (np.log(s_0[:]/K) + (mu + 0.5 * sigma * sigma) * T) / sigma / np.sqrt(T)
             d2 = d1[:] - sigma * np.sqrt(T)
             z=np.random.normal(0.0, self._noiseVariance, m)
             noisedPrice = s_0[:] * norm.cdf(d1[:]) - np.exp(-mu*T) * K * norm.cdf(d2[:]) + z[:]
             return s_0.reshape([-1,1]), noisedPrice.reshape([-1,1]), None
         
         elif (self._opt == GBM_Case.ClosedSolution):
-            d1 = (np.log(s_0[:]/K) + 0.5 * sigma * sigma * T) / sigma / np.sqrt(T)
+            d1 = (np.log(s_0[:]/K) +(mu + 0.5 * sigma * sigma) * T) / sigma / np.sqrt(T)
             d2 = d1[:] - sigma * np.sqrt(T)
             price = s_0[:] * norm.cdf(d1[:]) - np.exp(-mu*T) * K * norm.cdf(d2[:])
             return s_0.reshape([-1,1]), price.reshape([-1,1]), None
@@ -111,7 +111,7 @@ class GBM:
         K = 110
         
         # B.S. formula
-        d1 = (np.log(s_0[:]/K) + 0.5 * sigma * sigma * T) / sigma / np.sqrt(T)
+        d1 = (np.log(s_0[:]/K) + (mu + 0.5 * sigma * sigma) * T) / sigma / np.sqrt(T)
         d2 = d1[:] - sigma * np.sqrt(T)
         price = s_0[:] * norm.cdf(d1[:]) - np.exp(-mu*T) * K * norm.cdf(d2[:])
         return s_0.reshape([-1,1]), price.reshape([-1,1]), None, None
