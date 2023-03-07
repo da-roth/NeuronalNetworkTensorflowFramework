@@ -207,7 +207,7 @@ class Neural_Approximator():
     def train(self,            
               description,
               TrainingSettings,
-              reinit=True, 
+              reinit=True, # reset weights and biases before training
               # callback and when to call it
               # we don't use callbacks, but this is very useful, e.g. for debugging
               callback=None,           # arbitrary callable
