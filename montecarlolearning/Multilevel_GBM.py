@@ -7,10 +7,15 @@ except ModuleNotFoundError:
     #print("")
     from montecarlolearning.TrainingDataGenerator import *
         
+class Multilevel_Train_Case(Enum):
+    BS_Solution = 1          # B.S. formula
+    GBM_Path_Solution = 2    # GBM path closed solution
+    Milstein = 3             # Milstein scheme
+
 # main class
-class EuropeanSDESingle(TrainingDataGenerator):
+class Multilevel_GBM(TrainingDataGenerator):
     
-    def __init__(self):
+    def __init__(self, opt=Multilevel_Train_Case.BS_Solution):
         
         # Call the parent class's constructor using super()
         super().__init__()
@@ -18,12 +23,15 @@ class EuropeanSDESingle(TrainingDataGenerator):
         # Mandatory 
         self._differential = False
         
+        # Case definition
+        self._opt = opt
+        
         # Training set definition
         self.s_0_trainInterval = [118.0, 120.0]
         self.sigma_trainInterval = [0.1, 0.2]
         self.mu_trainInterval = [0.02, 0.05]
         self.T_trainInterval = [0.9, 1.0]
-        self.K_trainInterval = [109.0, 110.0]
+        self.K_trainInterval = [89.0, 90.0]
         
         # Test set modification: (reducing test interval slightly for better testing)
         self.s_0_h = 0.4
@@ -33,7 +41,7 @@ class EuropeanSDESingle(TrainingDataGenerator):
         self.K_h = 0.1
         
     def trainingSet(self, m, trainSeed=None, approx=False):  
-        #np.random.seed(trainSeed) 
+        np.random.seed(trainSeed) 
         # 1. Draw parameter samples for training
         s_0 = (self.s_0_trainInterval[1] - self.s_0_trainInterval[0]) * np.random.random_sample(m) + self.s_0_trainInterval[0]
         sigma = (self.sigma_trainInterval[1] - self.sigma_trainInterval[0]) * np.random.random_sample(m) + self.sigma_trainInterval[0]
@@ -41,17 +49,31 @@ class EuropeanSDESingle(TrainingDataGenerator):
         T = (self.T_trainInterval[1] - self.T_trainInterval[0]) * np.random.random_sample(m) + self.T_trainInterval[0]
         K = (self.K_trainInterval[1] - self.K_trainInterval[0]) * np.random.random_sample(m) + self.K_trainInterval[0]
 
-        # 2. Compute paths
-        h=T[:]/1.0
-        z=np.random.normal(0.0, 1.0, m)
-        s= s_0[:] + mu[:] *s_0[:] * h[:] +sigma[:] * s_0[:] *np.sqrt(h[:])*z[:] + 0.5 *sigma[:] *s_0[:] *sigma[:] * ((np.sqrt(h[:])*z[:])**2-h[:]) 
-        
-        # 3. Calculate and return payoffs
-        payoffs=np.exp(-mu[:] * T[:])* np.maximum(s[:] - K[:], 0.)
-        return np.array([s_0,sigma,mu,T,K]).reshape([-1,5]) , payoffs.reshape([-1,1]), None
+        if (self._opt == Multilevel_Train_Case.Milstein):
+            # 2. Compute paths
+            h=T[:]/1.0
+            z=np.random.normal(0.0, 1.0, m)
+            s= s_0[:] + mu[:] *s_0[:] * h[:] +sigma[:] * s_0[:] *np.sqrt(h[:])*z[:] + 0.5 *sigma[:] *s_0[:] *sigma[:] * ((np.sqrt(h[:])*z[:])**2-h[:]) 
+            # 3. Calculate and return payoffs
+            payoffs=np.exp(-mu[:] * T[:])* np.maximum(s[:] - K[:], 0.)
+            return np.array([s_0,sigma,mu,T,K]).reshape([-1,5]) , payoffs.reshape([-1,1]), None
+        if (self._opt == Multilevel_Train_Case.GBM_Path_Solution):
+            #3. sets of random returns
+            h=T[:] /1.0
+            z=np.random.normal(0.0, 1.0, m)
+            #piecewise multiply of s= s_0[:] * np.exp((mu-sigma*sigma/2)*h+sigma*np.sqrt(h)*z[:])
+            s= np.multiply(s_0[:],np.exp((mu[:] -0.5*sigma[:] *sigma[:] )*h[:] +sigma[:] *np.sqrt(h[:] )*z[:]))
+            payoffs=np.exp(-mu[:]  * T[:] ) * np.maximum(s[:] - K[:] , 0.0)
+            return np.stack((s_0,sigma,mu,T,K),axis=1), payoffs.reshape([-1,1]), None
+        else:
+            # B.S. formula
+            d1 = (np.log(s_0[:]/K[:]) + 0.5 * sigma[:] * sigma[:] * T[:]) / sigma[:] / np.sqrt(T[:])
+            d2 = d1[:] - sigma[:] * np.sqrt(T[:])
+            price = s_0[:] * norm.cdf(d1[:]) - np.exp(-mu[:] *T[:] ) * K[:] * norm.cdf(d2[:])
+            return np.stack((s_0,sigma,mu,T,K),axis=1), price.reshape([-1,1]), None
      
     def testSet(self, num, testSeed=None):
-
+        np.random.seed(testSeed)
         # 0. Test interval definition
         s_0_testInterval = [self.s_0_trainInterval[0]+self.s_0_h, self.s_0_trainInterval[1]-self.s_0_h]
         sigma_testInterval = [self.sigma_trainInterval[0]+self.sigma_h, self.sigma_trainInterval[1]-self.sigma_h]
@@ -70,7 +92,7 @@ class EuropeanSDESingle(TrainingDataGenerator):
         d1 = (np.log(s_0[:]/K[:]) + 0.5 * sigma[:] * sigma[:] * T[:]) / sigma[:] / np.sqrt(T[:])
         d2 = d1[:] - sigma[:] * np.sqrt(T[:])
         price = s_0[:] * norm.cdf(d1[:]) - np.exp(-mu[:] * T[:]) * K[:] * norm.cdf(d2[:])
-        return np.array([s_0,sigma,mu,T,K]).reshape([-1,5]), price.reshape([-1,1]), None, None
+        return np.stack((s_0,sigma,mu,T,K),axis=1), price.reshape([-1,1]), None, None
     
 #unused helper
 # # helper analytics    

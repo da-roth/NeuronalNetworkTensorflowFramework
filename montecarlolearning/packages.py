@@ -49,7 +49,7 @@ from CDF import *
 from GBM_5d import *
 from GBM import *
 from DataImporter import *
-from EuropeanSDESingle import *
+from Multilevel_GBM import *
 
 # Training and testing functions
 #from train_and_test_with_differentials import * # not used
