@@ -85,7 +85,11 @@ def train_and_test(Generator,
         for i in range(1,TrainingSettings.TrainingSteps):
             #print('Training step ' + str(i) + ' will be done')
             xTrain, yTrain, _unused = Generator.trainingSet(TrainingSettings.SamplesPerStep, trainSeed=i)
-            #Regressor.storeNewDataAndNormalize(xTrain,  yTrain, _unused, sizes[0])
+            
+            # ToDo: rethink this. It doesn't work without this, see e.g. closed path gbm. 
+            # Since data is generated each time, the first normalization is not correct later...
+            # Idea: Perhaps with max/min of intervals, to overcome border cases...?
+            Regressor.storeNewDataAndNormalize(xTrain,  yTrain, _unused, TrainingSettings.SamplesPerStep)
             
             # 4. Train network
             t0 = time.time()

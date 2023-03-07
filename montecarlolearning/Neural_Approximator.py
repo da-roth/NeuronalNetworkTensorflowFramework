@@ -132,12 +132,14 @@ class Neural_Approximator():
         
         
     def storeNewDataAndNormalize(self, x_raw, y_raw, dydx_raw, dataSize):
-        #self.x_raw = x_raw
-        #self.y_raw = y_raw
-        #self.dydx_raw = dydx_raw
+        self.x_raw = x_raw
+        self.y_raw = y_raw
+        self.dydx_raw = dydx_raw
+        self.x_mean, self.x_std, self.x, self.y_mean, self.y_std, self.y, self.dy_dx, self.lambda_j = \
+            normalize_data(self.x_raw, self.y_raw, self.dydx_raw, dataSize)
         # Normalize dataset and cache analytics
-        self.x, self.y, self.x, self.dy_dx, self.lambda_j = \
-            normalize_data_NewData(self.x_raw, self.y_raw, self.x_mean, self.x_std, self.y_mean, self.y_std, self.dydx_raw, dataSize)
+        #self.x, self.y, self.x, self.dy_dx, self.lambda_j = \
+        #    normalize_data_NewData(self.x_raw, self.y_raw, self.x_mean, self.x_std, self.y_mean, self.y_std, self.dydx_raw, dataSize)
         
         
     # Build graph
