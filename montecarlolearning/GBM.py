@@ -18,9 +18,9 @@ class GBM_Case(Enum):
     
     
 # main class
-class GBM(TrainingDataGenerator):
+class GBM:
     
-    ###
+    ###(TrainingDataGenerator)
     ### Constructor
     ###
     def __init__(self, 

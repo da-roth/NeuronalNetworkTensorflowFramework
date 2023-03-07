@@ -20,7 +20,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # make sure we have GPU support
-#print("GPU support = ", tf.test.is_gpu_available())
+print("GPU support = ", tf.test.is_gpu_available())
 
 # import other useful libs
 import numpy as np
@@ -44,14 +44,15 @@ sys.path.append( os.path.join(mainDirectory,'montecarlolearning') )
 sys.path.append( os.path.join(mainDirectory,'src','Examples','CumulativeDensitiyFunction/' ))
 
 # Data importation or generation classes
-from BlackScholes import *
+#from BlackScholes import * # not used
 from CDF import *
 from GBM_5d import *
 from GBM import *
 from DataImporter import *
+from EuropeanSDESingle import *
 
 # Training and testing functions
-from train_and_test_with_differentials import *
+#from train_and_test_with_differentials import * # not used
 from train_and_test import *
 from TrainingOptionEnums import *
 
@@ -64,7 +65,7 @@ from vanilla_net import *
 from backprop import *
 from normalize_data import *
 from vanilla_graph import *
-from diff_training_graph import *
+from diff_training_graph import * # not used
 from train import *
 from Neural_Approximator import *
 from vanilla_net import *
