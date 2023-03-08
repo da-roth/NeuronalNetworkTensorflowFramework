@@ -79,18 +79,20 @@ class Multilevel_GBM(TrainingDataGenerator):
 
 
         if (self._opt == Multilevel_Train_Case.LevelEstimator):
-            # hCoarse = T[:]/ self._steps
-            # hFine = hCoarse / 2.0
-            # sCoarse = s_0
-            # sFine = s_0
-            # for i in range(self._steps):
-            #     zFine1=np.random.normal(0.0, 1.0, m)
-            #     zFine2=np.random.normal(0.0, 1.0, m)
-            #     zCoarse=(z1+z2)/np.sqrt(2.)
-            #     sFine=sFine + mu *sFine * hFine +sigma * sFine *np.sqrt(hFine)*zFine1 + 0.5 *sigma *sFine *sigma * ((np.sqrt(hFine)*zFine1)**2-hFine)
-            #     sFine=sFine + mu *sFine * hFine +sigma * sFine *np.sqrt(hFine)*zFine2 + 0.5 *sigma *sFine *sigma * ((np.sqrt(hFine)*zFine2)**2-hFine)
-            #     sCorase=sCoarse + mu *s * hCoarse +sigma * s *np.sqrt(hCoarse)*z + 0.5 *sigma *s *sigma * ((np.sqrt(hCoarse)*z)**2-hCoarse)
-
+            hCoarse = T[:]/ self._steps
+            hFine = hCoarse / 2.0
+            sCoarse = s_0
+            sFine = s_0
+            for i in range(self._steps):
+                zFine1=np.random.normal(0.0, 1.0, m)
+                zFine2=np.random.normal(0.0, 1.0, m)
+                zCoarse=(z1+z2)/np.sqrt(2.)
+                sFine=sFine + mu *sFine * hFine +sigma * sFine *np.sqrt(hFine)*zFine1 + 0.5 *sigma *sFine *sigma * ((np.sqrt(hFine)*zFine1)**2-hFine)
+                sFine=sFine + mu *sFine * hFine +sigma * sFine *np.sqrt(hFine)*zFine2 + 0.5 *sigma *sFine *sigma * ((np.sqrt(hFine)*zFine2)**2-hFine)
+                sCoarse=sCoarse + mu *s * hCoarse +sigma * s *np.sqrt(hCoarse)*zCoarse + 0.5 *sigma *s *sigma * ((np.sqrt(hCoarse)*zCoarse)**2-hCoarse)
+            payoffsCoarse = discountedPayoff(sCoarse,mu,T,K)
+            payoffsFine = discountedPayoff(sFine,mu,T,K)
+            return payoffsFine - payoffsCoarse
             # z1 = tf.random_normal(shape=(samples, batch_size_p5_p4, 1),
             #                     stddev=1., dtype=dtype)
             # z2 = tf.random_normal(shape=(samples, batch_size_p5_p4, 1),
@@ -116,9 +118,7 @@ class Multilevel_GBM(TrainingDataGenerator):
             payoffs=discountedPayoff(s,mu,T,K)
             return np.stack((s_0,sigma,mu,T,K),axis=1), payoffs.reshape([-1,1]), None
         if (self._opt == Multilevel_Train_Case.Milstein):
- 
             # 2. Compute paths
-            
             h = T[:]/ self._steps
             s = s_0
             # loop through the array for 10 steps
