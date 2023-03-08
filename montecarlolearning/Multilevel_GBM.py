@@ -11,15 +11,20 @@ class Multilevel_Train_Case(Enum):
     BS_Solution = 1          # B.S. formula
     GBM_Path_Solution = 2    # GBM path closed solution
     Milstein = 3             # Milstein scheme
+    LevelEstimator = 4       # Multilevel level estimator P_l - P_(l-1) with self._steps equaling the coarse step (hence for steps = 1 we do one coarse step and 2 fine steps)
 
 class Multilevel_Train_Dimension(Enum):
     one = 1
     five = 2
 
+def discountedPayoff(S,r,T,K):
+    discPayoff = np.exp(-r[:] * T[:])* np.maximum(S[:] - K[:], 0.)
+    return discPayoff
+
 # main class
 class Multilevel_GBM(TrainingDataGenerator):
     
-    def __init__(self, opt=Multilevel_Train_Case.BS_Solution, steps = 1, dim = Multilevel_Train_Dimension.one):
+    def __init__(self, opt=Multilevel_Train_Case.BS_Solution, steps = 1, dim = Multilevel_Train_Dimension.five):
         
         # Call the parent class's constructor using super()
         super().__init__()
@@ -63,7 +68,8 @@ class Multilevel_GBM(TrainingDataGenerator):
             self.K_h = 0.0
         
     def trainingSet(self, m, trainSeed=None, approx=False):  
-        #np.random.seed(trainSeed) 
+        if(trainSeed != None): 
+            np.random.seed(trainSeed) 
         # 1. Draw parameter samples for training
         s_0 = (self.s_0_trainInterval[1] - self.s_0_trainInterval[0]) * np.random.random_sample(m) + self.s_0_trainInterval[0]
         sigma = (self.sigma_trainInterval[1] - self.sigma_trainInterval[0]) * np.random.random_sample(m) + self.sigma_trainInterval[0]
@@ -71,6 +77,44 @@ class Multilevel_GBM(TrainingDataGenerator):
         T = (self.T_trainInterval[1] - self.T_trainInterval[0]) * np.random.random_sample(m) + self.T_trainInterval[0]
         K = (self.K_trainInterval[1] - self.K_trainInterval[0]) * np.random.random_sample(m) + self.K_trainInterval[0]
 
+
+        if (self._opt == Multilevel_Train_Case.LevelEstimator):
+            # hCoarse = T[:]/ self._steps
+            # hFine = hCoarse / 2.0
+            # sCoarse = s_0
+            # sFine = s_0
+            # for i in range(self._steps):
+            #     zFine1=np.random.normal(0.0, 1.0, m)
+            #     zFine2=np.random.normal(0.0, 1.0, m)
+            #     zCoarse=(z1+z2)/np.sqrt(2.)
+            #     sFine=sFine + mu *sFine * hFine +sigma * sFine *np.sqrt(hFine)*zFine1 + 0.5 *sigma *sFine *sigma * ((np.sqrt(hFine)*zFine1)**2-hFine)
+            #     sFine=sFine + mu *sFine * hFine +sigma * sFine *np.sqrt(hFine)*zFine2 + 0.5 *sigma *sFine *sigma * ((np.sqrt(hFine)*zFine2)**2-hFine)
+            #     sCorase=sCoarse + mu *s * hCoarse +sigma * s *np.sqrt(hCoarse)*z + 0.5 *sigma *s *sigma * ((np.sqrt(hCoarse)*z)**2-hCoarse)
+
+            # z1 = tf.random_normal(shape=(samples, batch_size_p5_p4, 1),
+            #                     stddev=1., dtype=dtype)
+            # z2 = tf.random_normal(shape=(samples, batch_size_p5_p4, 1),
+            #                     stddev=1., dtype=dtype)
+            # z=(z1+z2)/tf.sqrt(2.)
+            # h_p5_p4_coarse=T / (N_p5_p4)
+            # h_p5_p4_fine=T / (N_p5_p4*2)
+            # hfine=h_p5_p4_fine
+            # hcoarse=h_p5_p4_coarse
+            # sfine=sfine + mu *sfine * hfine +sigma * sfine *tf.sqrt(hfine)*z1 + 0.5 *sigma *sfine *sigma * ((tf.sqrt(hfine)*z1)**2-hfine)
+            # sfine=sfine + mu *sfine * hfine +sigma * sfine *tf.sqrt(hfine)*z2 + 0.5 *sigma *sfine *sigma * ((tf.sqrt(hfine)*z2)**2-hfine)
+            # s=s + mu *s * hcoarse +sigma * s *tf.sqrt(hcoarse)*z + 0.5 *sigma *s *sigma * ((tf.sqrt(hcoarse)*z)**2-hcoarse)    
+            # return tf.add(idx, 1), s, sfine  , sigma,mu,T,K
+            #         # 2. Compute paths
+            h = T[:]/ self._steps
+            s = s_0
+            # loop through the array for 10 steps
+            for i in range(self._steps):
+                # do something with the array
+                z=np.random.normal(0.0, 1.0, m)
+                s= s[:] + mu[:] *s[:] * h[:] +sigma[:] * s[:] *np.sqrt(h[:])*z[:] + 0.5 *sigma[:] *s_0[:] *sigma[:] * ((np.sqrt(h[:])*z[:])**2-h[:]) 
+            # 3. Calculate and return payoffs
+            payoffs=discountedPayoff(s,mu,T,K)
+            return np.stack((s_0,sigma,mu,T,K),axis=1), payoffs.reshape([-1,1]), None
         if (self._opt == Multilevel_Train_Case.Milstein):
  
             # 2. Compute paths
@@ -83,7 +127,7 @@ class Multilevel_GBM(TrainingDataGenerator):
                 z=np.random.normal(0.0, 1.0, m)
                 s= s[:] + mu[:] *s[:] * h[:] +sigma[:] * s[:] *np.sqrt(h[:])*z[:] + 0.5 *sigma[:] *s_0[:] *sigma[:] * ((np.sqrt(h[:])*z[:])**2-h[:]) 
             # 3. Calculate and return payoffs
-            payoffs=np.exp(-mu[:] * T[:])* np.maximum(s[:] - K[:], 0.)
+            payoffs = discountedPayoff(s,mu,T,K)
             return np.stack((s_0,sigma,mu,T,K),axis=1), payoffs.reshape([-1,1]), None
         elif (self._opt == Multilevel_Train_Case.GBM_Path_Solution):
             #3. sets of random returns
@@ -91,7 +135,7 @@ class Multilevel_GBM(TrainingDataGenerator):
             z=np.random.normal(0.0,1.0,m)
             #piecewise multiply of s= s_0[:] * np.exp((mu-sigma*sigma/2)*h+sigma*np.sqrt(h)*z[:])
             s= np.multiply(s_0[:],np.exp((mu[:] -0.5*sigma[:] *sigma[:] )*h[:] +sigma[:] *np.sqrt(h[:] )*z[:]))
-            payoffs=np.exp(-mu[:]  * T[:] ) * np.maximum(s[:] - K[:] , 0.0)
+            payoffs=discountedPayoff(s,mu,T,K)
             return np.stack((s_0,sigma,mu,T,K),axis=1), payoffs.reshape([-1,1]), None
         else:
             # B.S. formula
@@ -147,9 +191,7 @@ class Multilevel_GBM(TrainingDataGenerator):
 #unused helper
 # # helper analytics    
 # #European option
-# def phi(x,sigma,mu,T,K, axis=1):
-#     payoffcoarse=np.exp(-mu * T)* np.maximum(x - K, 0.)
-#     return payoffcoarse
+
 # #Milstein scheme
 # def sde_body(idx, s, sigma,mu,T,K, samples, batch_size, dtype, N): 
 #     h=T/N
