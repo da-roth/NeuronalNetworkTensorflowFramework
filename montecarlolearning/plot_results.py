@@ -88,9 +88,9 @@ def plot_results(title,
             ax.set_xlabel(t)            
             ax.set_ylabel(Generator.outputName)
 
-            ax.plot(xTest, yPredicted[("standard",yTest.size)], 'co', \
+            ax.plot(xTest[:,0], yPredicted[("standard",yTest.size)], 'co', \
                         markersize=2, markerfacecolor='white', label="predicted")
-            ax.plot(xTest, yTest, 'r.', markersize=0.5, label='yTest')
+            ax.plot(xTest[:,0], yTest, 'r.', markersize=0.5, label='yTest')
 
             ax.legend(prop={'size': 8}, loc='upper left')
     else:
