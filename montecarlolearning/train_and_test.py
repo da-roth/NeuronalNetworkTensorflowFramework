@@ -82,6 +82,8 @@ def train_and_test(Generator,
         predvalues = {}    
         preddeltas = {}
         # 4. Train loop over remaining training steps
+        file_out = open('output.csv', 'w')
+        file_out.write('train_steps, RMSE, Max_Error \n ')
         for i in range(1,TrainingSettings.TrainingSteps):
             #print('Training step ' + str(i) + ' will be done')
             xTrain, yTrain, _unused = Generator.trainingSet(TrainingSettings.SamplesPerStep, trainSeed=i)
@@ -96,16 +98,30 @@ def train_and_test(Generator,
             Regressor.train("standard training",TrainingSettings, reinit = False)
             t1 = time.time()
             
-            if i % TrainingSettings.testFrequency == 0:
+            # Generate output file and print results during training
+
+            if (i+1) % TrainingSettings.testFrequency == 0:
                 predictions = Regressor.predict_values(xTest)
                 errors = predictions - yTest
-                rmse = np.sqrt((errors ** 2).mean(axis=0))
-                print('RMSE after ' + str(i) + ' training steps is ' + str(rmse) )
+                L_2 = np.sqrt((errors ** 2).mean(axis=0))
+                L_infinity = np.max(np.abs(errors))
+                print('RMSE after ' + str(i+1) + ' training steps is ' + str(L_2) )
+                file_out.write('%i, %f, %f \n' % (i+1, L_2,L_infinity)) 
+                file_out.flush()
                 
         
         # 4. Predictions on test data
         predictions = Regressor.predict_values(xTest)
         predvalues[("standard", TrainingSettings.nTest)] = predictions
+        # Last entry and print of error:
+        errors = predictions - yTest
+        L_2 = np.sqrt((errors ** 2).mean(axis=0))
+        L_infinity = np.abs(errors).max(axis=0)
+        print('RMSE after training is ' + str(L_2) )
+        print('max error  after training is ' + str(L_infinity) )
+        # file_out.write('%i, %f, %f \n' % (i+1, L_2,L_infinity)) 
+        # file_out.flush()
+                
         return xTest, yTest, predvalues
         
     else:
