@@ -11,7 +11,7 @@ class TrainingSettings:
         
         # 1. a) For TrainingMethod.Standard
         self._epochs = 1
-        self._batches_per_epoch = 10
+        self._batches_per_epoch = 1
         self._min_batch_size = 20
 
         # 1. b) For TrainingMethod.GenerateDataDuringTraining
@@ -68,6 +68,13 @@ class TrainingSettings:
     
     def set_trainingSteps(self, trainingSetSizes):
         self._trainingSteps = trainingSetSizes
+        
+    @property
+    def TrainingSteps(self):
+        return self._madeSteps
+    
+    def increaseMadeSteps(self):
+        self._madeSteps = self._madeSteps + 1
 
     @property
     def SamplesPerStep(self):

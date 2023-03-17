@@ -54,7 +54,11 @@ def train(description,
     for epoch in range(TrainingSettings.epochs):
         
         # interpolate learning rate in cycle
-        learning_rate = np.interp(epoch / TrainingSettings.epochs, lr_schedule_epochs, lr_schedule_rates)
+        if Regressor._Generator.TrainMethod == TrainingMethod.Standard:
+            learning_rate = np.interp(epoch / TrainingSettings.epochs, lr_schedule_epochs, lr_schedule_rates)
+        elif Regressor._Generator.TrainMethod == TrainingMethod.GenerateDataDuringTraining:
+            learning_rate = np.interp(TrainingSettings.madeSteps / TrainingSettings.TrainingSteps, lr_schedule_epochs, lr_schedule_rates)
+            TrainingSettings.increaseMadeSteps()
         
         # train one epoch
         if not Regressor._Generator.Differential:
