@@ -44,14 +44,17 @@ import sys
 import os
 
 # Data importation or generation classes
-from montecarlolearning.BlackScholes import *
+#from montecarlolearning.BlackScholes import *
 from montecarlolearning.DataImporter import *
 from montecarlolearning.CDF import *
+from montecarlolearning.GBM import *
+from montecarlolearning.GBM_5d import *
+from montecarlolearning.Multilevel_GBM import *
 
 # # Training and testing functions
-from montecarlolearning.train_and_test_with_differentials import *
+#from montecarlolearning.train_and_test_with_differentials import *
 from montecarlolearning.train_and_test import *
-from montecarlolearning.TrainingMethod import *
+from montecarlolearning.TrainingOptionEnums import *
 
 # # Plot function
 from montecarlolearning.plot_results import *
@@ -64,10 +67,8 @@ from montecarlolearning.normalize_data import *
 from montecarlolearning.vanilla_graph import *
 from montecarlolearning.diff_training_graph import *
 from montecarlolearning.train import *
-from montecarlolearning.TrainingMethod import *
+from montecarlolearning.TrainingOptionEnums import *
 from montecarlolearning.Neural_Approximator import *
-from montecarlolearning.TrainingMethod import *
 from montecarlolearning.vanilla_net import *
 from montecarlolearning.vanilla_net_biasNeuron import *
 from montecarlolearning.backprop import *
-from montecarlolearning.TrainingMethod import *
