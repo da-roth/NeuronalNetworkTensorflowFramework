@@ -21,13 +21,13 @@ except ModuleNotFoundError:
 
 def train_and_test(Generator,  
          Regressor,
-         TrainingSettings):
+         TrainSettings):
     
     if Generator.TrainMethod == TrainingMethod.Standard:
         # 1. Simulation of training set, but only for max(sizes), other sizes will use these
         #print("simulating training, valid and test sets")
         xTrain, yTrain, _unused = Generator.trainingSet(max(Generator.trainingSetSizes), trainSeed=Generator.dataSeed)
-        xTest, yTest, _unused, _unused2 = Generator.testSet(num=TrainingSettings.nTest, testSeed=Generator.testSeed)
+        xTest, yTest, _unused, _unused2 = Generator.testSet(num=TrainSettings.nTest, testSeed=Generator.testSeed)
         #print("done")
 
         # 2. Neural network initialization 
@@ -51,7 +51,7 @@ def train_and_test(Generator,
             
             # 4. Train network
             t0 = time.time()
-            Regressor.train("standard training",TrainingSettings,xTest=xTest,yTest=yTest)      
+            Regressor.train("standard training",TrainSettings,xTest=xTest,yTest=yTest)      
             
             # 5. Predictions on test data
             predictions = Regressor.predict_values(xTest)
@@ -64,9 +64,9 @@ def train_and_test(Generator,
 
         # 1. Simulation of initial training set
         #print("Simulating initial training set and test set")
-        initial_sample_amount = max(TrainingSettings.SamplesPerStep,10000) # to get a proper batch normalization
+        initial_sample_amount = max(TrainSettings.SamplesPerStep,10000) # to get a proper batch normalization
         xTrain, yTrain, _unused = Generator.trainingSet(initial_sample_amount, trainSeed=Generator.dataSeed)
-        xTest, yTest, _unused, _unused2 = Generator.testSet(num=TrainingSettings.nTest, testSeed=Generator.testSeed)
+        xTest, yTest, _unused, _unused2 = Generator.testSet(num=TrainSettings.nTest, testSeed=Generator.testSeed)
         #print("done")
         
         # 2. Neural network initialization 
@@ -77,30 +77,30 @@ def train_and_test(Generator,
         #print("done")        
         
         # 3. First training step
-        Regressor.train("standard training",TrainingSettings)
+        Regressor.train("standard training",TrainSettings)
         
         predvalues = {}    
         preddeltas = {}
         # 4. Train loop over remaining training steps
         file_out = open('output.csv', 'w')
         file_out.write('train_steps, RMSE, Max_Error \n ')
-        for i in range(1,TrainingSettings.TrainingSteps):
+        for i in range(1,TrainSettings.TrainingSteps):
             #print('Training step ' + str(i) + ' will be done')
-            xTrain, yTrain, _unused = Generator.trainingSet(TrainingSettings.SamplesPerStep, trainSeed=i)
+            xTrain, yTrain, _unused = Generator.trainingSet(TrainSettings.SamplesPerStep, trainSeed=i)
             
             # ToDo: rethink this. It doesn't work without this, see e.g. closed path gbm. 
             # Since data is generated each time, the first normalization is not correct later...
             # Idea: Perhaps with max/min of intervals, to overcome border cases...?
-            Regressor.storeNewDataAndNormalize(xTrain,  yTrain, _unused, TrainingSettings.SamplesPerStep)
+            Regressor.storeNewDataAndNormalize(xTrain,  yTrain, _unused, TrainSettings.SamplesPerStep)
             
             # 4. Train network
             t0 = time.time()
-            Regressor.train("standard training",TrainingSettings, reinit = False)
+            Regressor.train("standard training",TrainSettings, reinit = False)
             t1 = time.time()
             
             # Generate output file and print results during training
 
-            if (i+1) % TrainingSettings.testFrequency == 0:
+            if (i+1) % TrainSettings.testFrequency == 0:
                 predictions = Regressor.predict_values(xTest)
                 errors = predictions - yTest
                 L_2 = np.sqrt((errors ** 2).mean(axis=0))
@@ -112,7 +112,7 @@ def train_and_test(Generator,
         
         # 4. Predictions on test data
         predictions = Regressor.predict_values(xTest)
-        predvalues[("standard", TrainingSettings.nTest)] = predictions
+        predvalues[("standard", TrainSettings.nTest)] = predictions
         # Last entry and print of error:
         errors = predictions - yTest
         L_2 = np.sqrt((errors ** 2).mean(axis=0))
