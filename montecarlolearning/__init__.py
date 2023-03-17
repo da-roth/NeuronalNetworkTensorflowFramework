@@ -44,7 +44,7 @@ import sys
 import os
 
 # Data importation or generation classes
-#from montecarlolearning.BlackScholes import *
+from montecarlolearning.BlackScholes import *
 from montecarlolearning.DataImporter import *
 from montecarlolearning.CDF import *
 from montecarlolearning.GBM import *
