@@ -43,6 +43,10 @@ class Neural_Approximator():
     # Setter for data Generator
     def set_Generator(self, Generator):
         self._Generator = Generator
+        
+    @property
+    def Generator(self):
+        return self._Generator
 
     # Setter for lam
     def set_lam(self, lam):

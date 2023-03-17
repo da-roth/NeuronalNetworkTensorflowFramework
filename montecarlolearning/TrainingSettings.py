@@ -15,10 +15,43 @@ class TrainingSettings:
         self._min_batch_size = 20
 
         # 1. b) For TrainingMethod.GenerateDataDuringTraining
+        self._madeSteps = 0
         self._testFrequency = 1000
         self._nTest = 1000
         self._samplesPerStep = 1000
         self._trainingSteps = 100
+        
+        #2. Learning rate schedule
+        self._useExponentialDecay = False
+
+    @property
+    def madeSteps(self):
+        return self._madeSteps
+
+    def increaseMadeSteps(self):
+        self._madeSteps = self._madeSteps + 1
+
+    @property
+    def usingExponentialDecay(self):
+        return self._useExponentialDecay
+    
+    def useExponentialDecay(self, initial_learning_rate, decay_rate, decay_steps):
+        self._useExponentialDecay = True
+        self._initial_learning_rate = initial_learning_rate
+        self._decay_steps = decay_steps
+        self._decay_rate = decay_rate
+
+    @property
+    def InitialLearningRate(self):
+        return self._initial_learning_rate
+    
+    @property
+    def DecaySteps(self):
+        return self._decay_steps
+    
+    @property
+    def DecayRate(self):
+        return self._decay_rate
 
     @property
     def epochs(self):
@@ -68,13 +101,6 @@ class TrainingSettings:
     
     def set_trainingSteps(self, trainingSetSizes):
         self._trainingSteps = trainingSetSizes
-        
-    @property
-    def TrainingSteps(self):
-        return self._madeSteps
-    
-    def increaseMadeSteps(self):
-        self._madeSteps = self._madeSteps + 1
 
     @property
     def SamplesPerStep(self):

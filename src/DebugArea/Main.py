@@ -30,12 +30,13 @@ Regressor.set_activationFunctionOutput(tf.nn.sigmoid)
 Regressor.set_weight_seed(1)
 
 TrainSettings = TrainingSettings()
-TrainSettings.set_learning_rate_schedule( [(0.0, 0.0001),  (0.2, 0.0001),  (0.4, 0.0001), (0.6, 0.0001),  (0.8, 0.0001)] )
+#TrainSettings.set_learning_rate_schedule( [(0.0, 0.5),   (0.5, 0.1)] )
+TrainSettings.useExponentialDecay(0.1, 0.1, 5)
 TrainSettings.set_min_batch_size(1)
 TrainSettings.set_test_frequency(100)
 TrainSettings.set_nTest(100000)
 TrainSettings.set_samplesPerStep(200000)
-TrainSettings.set_trainingSteps(100)
+TrainSettings.set_trainingSteps(10)
 
 ###
 ### 3. Train network and Study results
