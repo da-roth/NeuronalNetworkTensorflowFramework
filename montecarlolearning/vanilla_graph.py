@@ -43,6 +43,7 @@ def vanilla_training_graph(input_dim, hiddenNeurons, hiddenLayers, activationFun
         inputs, weights_and_biases, layers, predictions = \
             vanilla_net_Tensor(input_Tensor, input_dim, hiddenNeurons, hiddenLayers, activationFunctionsHidden,activationFunctionOutput , seed)
 
+        derivs_predictions = backprop(weights_and_biases, layers, activationFunctionsHidden, activationFunctionOutput)
         # Define the loss using the predictions tensor and label tensor
         loss = tf.losses.mean_squared_error(label_tensor, predictions)
 
@@ -51,7 +52,7 @@ def vanilla_training_graph(input_dim, hiddenNeurons, hiddenLayers, activationFun
         optimizer = tf.train.AdamOptimizer(learning_rate = learning_rate)
         train_op = optimizer.minimize(loss)
         
-        return inputs, labels, predictions, derivs_predictions, learning_rate, loss, train_op
+        return inputs, label_tensor, predictions, derivs_predictions, learning_rate, loss, train_op
             
     
 

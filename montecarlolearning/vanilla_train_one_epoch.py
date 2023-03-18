@@ -18,8 +18,9 @@ def vanilla_train_one_epoch(# training graph from vanilla_training_graph()
     label_tensor = tf.convert_to_tensor(Regressor.y, dtype=tf.float32)
 
     # minimization loop over mini-batches
-    Regressor.session.run(Regressor.minimizer, feed_dict = {
-            Regressor.inputs: input_tensor, 
-            Regressor.labels: label_tensor,
-            Regressor.learning_rate: learning_rate
-        })
+    # Regressor.session.run(Regressor.minimizer, feed_dict = {
+    #         Regressor.inputs: input_tensor, 
+    #         Regressor.labels: label_tensor,
+    #         Regressor.learning_rate: learning_rate
+    #     })
+    Regressor.session.run(Regressor.minimizer,feed_dict = {Regressor.learning_rate: learning_rate})
