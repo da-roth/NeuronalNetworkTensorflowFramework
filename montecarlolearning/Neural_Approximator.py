@@ -115,7 +115,7 @@ class Neural_Approximator():
     ###
     ### Properties
     ###
-    def initializeData(self, x_raw = None, y_raw= None,dydx_raw=None):   
+    def initializeData(self, x_raw = None, y_raw= None,dydx_raw=None): 
         # Raw data input
         self.x_raw = x_raw
         self.y_raw = y_raw
@@ -125,7 +125,6 @@ class Neural_Approximator():
     # - Normalize data and data analytics (x_mean)
     # - Build graph
     def prepare(self, dataSize):
-
         # Normalize dataset and cache analytics
         self.x_mean, self.x_std, self.x, self.y_mean, self.y_std, self.y, self.dy_dx, self.lambda_j = \
             normalize_data(self.x_raw, self.y_raw, self.dydx_raw, dataSize)
@@ -172,15 +171,24 @@ class Neural_Approximator():
             
             if not self._Generator.Differential:
             # Build vanilla graph through vanilla_graph.py
-                
-                self.inputs, \
-                self.labels, \
-                self.predictions, \
-                self.derivs_predictions, \
-                self.learning_rate, \
-                self.loss, \
-                self.minimizer \
-                = vanilla_training_graph(self.n, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed, biasNeuron)
+                if isinstance(self.x_raw, tf.Tensor):
+                    self.inputs, \
+                    self.labels, \
+                    self.predictions, \
+                    self.derivs_predictions, \
+                    self.learning_rate, \
+                    self.loss, \
+                    self.minimizer \
+                    = vanilla_training_graph(self.n, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed, biasNeuron, self.x_raw, self.y_raw)
+                else:
+                    self.inputs, \
+                    self.labels, \
+                    self.predictions, \
+                    self.derivs_predictions, \
+                    self.learning_rate, \
+                    self.loss, \
+                    self.minimizer \
+                    = vanilla_training_graph(self.n, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed, biasNeuron)
                     
             else:
             # Build differential graph through diff_training_graph.py
@@ -273,15 +281,24 @@ class Neural_Approximator():
             
             if not self._Generator.Differential:
             # Build vanilla graph through vanilla_graph.py
-                
-                self.inputs, \
-                self.labels, \
-                self.predictions, \
-                self.derivs_predictions, \
-                self.learning_rate, \
-                self.loss, \
-                self.minimizer \
-                = vanilla_training_graph(self.n, _hiddenNeurons, _hiddenLayers, _activationFunctionsHidden, _activationFunctionOutput, _weight_seed, _biasNeuron)
+                if isinstance(self.x_raw, tf.Tensor):
+                    self.inputs, \
+                    self.labels, \
+                    self.predictions, \
+                    self.derivs_predictions, \
+                    self.learning_rate, \
+                    self.loss, \
+                    self.minimizer \
+                    = vanilla_training_graph(self.n, _hiddenNeurons, _hiddenLayers, _activationFunctionsHidden, _activationFunctionOutput, _weight_seed, _biasNeuron, self.x_raw, self.y_raw)
+                else:
+                    self.inputs, \
+                    self.labels, \
+                    self.predictions, \
+                    self.derivs_predictions, \
+                    self.learning_rate, \
+                    self.loss, \
+                    self.minimizer \
+                    = vanilla_training_graph(self.n, _hiddenNeurons, _hiddenLayers, _activationFunctionsHidden, _activationFunctionOutput, _weight_seed, _biasNeuron)
                     
             else:
             # Build differential graph through diff_training_graph.py
