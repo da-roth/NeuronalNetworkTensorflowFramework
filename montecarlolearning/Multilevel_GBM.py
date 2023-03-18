@@ -83,12 +83,17 @@ class Multilevel_GBM(TrainingDataGenerator):
     def trainingSet(self, m, trainSeed=None, approx=False):  
         if(trainSeed != None): 
             np.random.seed(trainSeed) 
-        # 1. Draw parameter samples for training
-        s_0 = (self.s_0_trainInterval[1] - self.s_0_trainInterval[0]) * np.random.random_sample(m) + self.s_0_trainInterval[0]
-        sigma = (self.sigma_trainInterval[1] - self.sigma_trainInterval[0]) * np.random.random_sample(m) + self.sigma_trainInterval[0]
-        mu = (self.mu_trainInterval[1] - self.mu_trainInterval[0]) * np.random.random_sample(m) + self.mu_trainInterval[0]
-        T = (self.T_trainInterval[1] - self.T_trainInterval[0]) * np.random.random_sample(m) + self.T_trainInterval[0]
-        K = (self.K_trainInterval[1] - self.K_trainInterval[0]) * np.random.random_sample(m) + self.K_trainInterval[0]
+        # # 1. Draw parameter samples for training
+        # s_0 = (self.s_0_trainInterval[1] - self.s_0_trainInterval[0]) * np.random.random_sample(m) + self.s_0_trainInterval[0]
+        # sigma = (self.sigma_trainInterval[1] - self.sigma_trainInterval[0]) * np.random.random_sample(m) + self.sigma_trainInterval[0]
+        # mu = (self.mu_trainInterval[1] - self.mu_trainInterval[0]) * np.random.random_sample(m) + self.mu_trainInterval[0]
+        # T = (self.T_trainInterval[1] - self.T_trainInterval[0]) * np.random.random_sample(m) + self.T_trainInterval[0]
+        # K = (self.K_trainInterval[1] - self.K_trainInterval[0]) * np.random.random_sample(m) + self.K_trainInterval[0]
+        s_0 = tf.random.uniform(shape=(m,), minval=self.s_0_trainInterval[0], maxval=self.s_0_trainInterval[1], dtype=tf.float32)
+        sigma = tf.random.uniform(shape=(m,), minval=self.sigma_trainInterval[0], maxval=self.sigma_trainInterval[1], dtype=tf.float32)
+        mu = tf.random.uniform(shape=(m,), minval=self.mu_trainInterval[0], maxval=self.mu_trainInterval[1], dtype=tf.float32)
+        T = tf.random.uniform(shape=(m,), minval=self.T_trainInterval[0], maxval=self.T_trainInterval[1], dtype=tf.float32)
+        K = tf.random.uniform(shape=(m,), minval=self.K_trainInterval[0], maxval=self.K_trainInterval[1], dtype=tf.float32)
 
 
         if (self._opt == Multilevel_Train_Case.LevelEstimator):
@@ -117,7 +122,7 @@ class Multilevel_GBM(TrainingDataGenerator):
             # loop through the array for 10 steps
             for i in range(self._steps):
                 # do something with the array
-                z=tf.random.normal([m], 0.0, 1.0, dtype=tf.float64)
+                z=tf.random.normal([m], 0.0, 1.0, dtype=tf.float32)
                 s= s[:] + mu[:] *s[:] * h[:] + sigma[:] * s[:] *tf.sqrt(h[:]) * z[:]
             # 3. Calculate and return payoffs
             payoffs = discountedPayoffTensorFlow(s,mu,T,K)

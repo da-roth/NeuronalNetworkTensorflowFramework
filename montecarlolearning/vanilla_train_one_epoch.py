@@ -1,6 +1,6 @@
 # training loop for one epoch
 def vanilla_train_one_epoch(# training graph from vanilla_training_graph()
-                            Regressor                           
+                            Regressor,                          
                             # params, left to client code
                             learning_rate, batch_size):        
     

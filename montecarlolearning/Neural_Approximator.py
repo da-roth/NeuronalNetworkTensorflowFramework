@@ -206,7 +206,7 @@ class Neural_Approximator():
             self.initializer = tf.global_variables_initializer()
             
         # Done building graph
-        self.graph.finalize()
+        #self.graph.finalize()
         self.session = tf.Session(graph=self.graph)
     
     # Train network by calling train based on train.py
