@@ -107,6 +107,7 @@ class Neural_Approximator():
         self._activationFunctionOutput= tf.nn.relu 
         self._biasNeuron= False 
         self._weight_seed = 1
+        self.graph = tf.Graph()
                   
     def __del__(self):
         if self.session is not None:
@@ -135,6 +136,7 @@ class Neural_Approximator():
         
         
     def storeNewDataAndNormalize(self, x_raw, y_raw, dydx_raw, dataSize):
+        
         self.x_raw = x_raw
         self.y_raw = y_raw
         self.dydx_raw = dydx_raw
@@ -164,9 +166,7 @@ class Neural_Approximator():
         #print('Neurons per layer: ' + str(hiddenNeurons))
         #print('Amount of hidden layers: ' +str(hiddenLayers))
         #print('Activations functions: ' + str(activationFunctions))
-        
-        self.graph = tf.Graph()
-        
+                
         with self.graph.as_default():
             
             if not self._Generator.Differential:

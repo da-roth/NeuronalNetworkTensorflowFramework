@@ -47,6 +47,7 @@ def vanilla_training_graph(input_dim, hiddenNeurons, hiddenLayers, activationFun
         loss = tf.losses.mean_squared_error(label_tensor, predictions)
 
         # Define the training operation
+        learning_rate = tf.placeholder(real_type)
         optimizer = tf.train.AdamOptimizer(learning_rate = learning_rate)
         train_op = optimizer.minimize(loss)
         

@@ -65,64 +65,65 @@ def train_and_test(Generator,
         # 1. Simulation of initial training set
         #print("Simulating initial training set and test set")
         initial_sample_amount = max(TrainSettings.SamplesPerStep,10000) # to get a proper batch normalization
-        xTrain, yTrain, _unused = Generator.trainingSet(initial_sample_amount, trainSeed=Generator.dataSeed)
-        xTest, yTest, _unused, _unused2 = Generator.testSet(num=TrainSettings.nTest, testSeed=Generator.testSeed)
-        #print("done")
-        
-        # 2. Neural network initialization 
-        #print("initializing neural appropximator")
-        Regressor.initializeData(xTrain, yTrain)
-        # Prepare: normalize dataset and initialize tf graph
-        Regressor.prepare(initial_sample_amount)
-        #print("done")        
-        
-        # 3. First training step
-        Regressor.train("standard training",TrainSettings)
-        
-        predvalues = {}    
-        preddeltas = {}
-        # 4. Train loop over remaining training steps
-        file_out = open('output.csv', 'w')
-        file_out.write('train_steps, RMSE, Max_Error \n ')
-        for i in range(1,TrainSettings.TrainingSteps):
-            #print('Training step ' + str(i) + ' will be done')
-            xTrain, yTrain, _unused = Generator.trainingSet(TrainSettings.SamplesPerStep, trainSeed=i)
+        with Regressor.graph.as_default():
+            xTrain, yTrain, _unused = Generator.trainingSet(initial_sample_amount, trainSeed=Generator.dataSeed)
+            xTest, yTest, _unused, _unused2 = Generator.testSet(num=TrainSettings.nTest, testSeed=Generator.testSeed)
+            #print("done")
             
-            # ToDo: rethink this. It doesn't work without this, see e.g. closed path gbm. 
-            # Since data is generated each time, the first normalization is not correct later...
-            # Idea: Perhaps with max/min of intervals, to overcome border cases...?
-            Regressor.storeNewDataAndNormalize(xTrain,  yTrain, _unused, TrainSettings.SamplesPerStep)
+            # 2. Neural network initialization 
+            #print("initializing neural appropximator")
+            Regressor.initializeData(xTrain, yTrain)
+            # Prepare: normalize dataset and initialize tf graph
+            Regressor.prepare(initial_sample_amount)
+            #print("done")        
             
-            # 4. Train network
-            t0 = time.time()
-            Regressor.train("standard training",TrainSettings, reinit = False)
-            t1 = time.time()
+            # 3. First training step
+            Regressor.train("standard training",TrainSettings)
             
-            # Generate output file and print results during training
+            predvalues = {}    
+            preddeltas = {}
+            # 4. Train loop over remaining training steps
+            file_out = open('output.csv', 'w')
+            file_out.write('train_steps, RMSE, Max_Error \n ')
+            for i in range(1,TrainSettings.TrainingSteps):
+                #print('Training step ' + str(i) + ' will be done')
+                xTrain, yTrain, _unused = Generator.trainingSet(TrainSettings.SamplesPerStep, trainSeed=i)
+                
+                # ToDo: rethink this. It doesn't work without this, see e.g. closed path gbm. 
+                # Since data is generated each time, the first normalization is not correct later...
+                # Idea: Perhaps with max/min of intervals, to overcome border cases...?
+                Regressor.storeNewDataAndNormalize(xTrain,  yTrain, _unused, TrainSettings.SamplesPerStep)
+                
+                # 4. Train network
+                t0 = time.time()
+                Regressor.train("standard training",TrainSettings, reinit = False)
+                t1 = time.time()
+                
+                # Generate output file and print results during training
 
-            if (i+1) % TrainSettings.testFrequency == 0:
-                predictions = Regressor.predict_values(xTest)
-                errors = predictions - yTest
-                L_2 = np.sqrt((errors ** 2).mean(axis=0))
-                L_infinity = np.max(np.abs(errors))
-                print('RMSE after ' + str(i+1) + ' training steps is ' + str(L_2) )
-                file_out.write('%i, %f, %f \n' % (i+1, L_2,L_infinity)) 
-                file_out.flush()
-                
-        
-        # 4. Predictions on test data
-        predictions = Regressor.predict_values(xTest)
-        predvalues[("standard", TrainSettings.nTest)] = predictions
-        # Last entry and print of error:
-        errors = predictions - yTest
-        L_2 = np.sqrt((errors ** 2).mean(axis=0))
-        L_infinity = np.abs(errors).max(axis=0)
-        print('RMSE after training is ' + str(L_2) )
-        print('max error  after training is ' + str(L_infinity) )
-        # file_out.write('%i, %f, %f \n' % (i+1, L_2,L_infinity)) 
-        # file_out.flush()
-                
-        return xTest, yTest, predvalues
+                if (i+1) % TrainSettings.testFrequency == 0:
+                    predictions = Regressor.predict_values(xTest)
+                    errors = predictions - yTest
+                    L_2 = np.sqrt((errors ** 2).mean(axis=0))
+                    L_infinity = np.max(np.abs(errors))
+                    print('RMSE after ' + str(i+1) + ' training steps is ' + str(L_2) )
+                    file_out.write('%i, %f, %f \n' % (i+1, L_2,L_infinity)) 
+                    file_out.flush()
+                    
+            
+            # 4. Predictions on test data
+            predictions = Regressor.predict_values(xTest)
+            predvalues[("standard", TrainSettings.nTest)] = predictions
+            # Last entry and print of error:
+            errors = predictions - yTest
+            L_2 = np.sqrt((errors ** 2).mean(axis=0))
+            L_infinity = np.abs(errors).max(axis=0)
+            print('RMSE after training is ' + str(L_2) )
+            print('max error  after training is ' + str(L_infinity) )
+            # file_out.write('%i, %f, %f \n' % (i+1, L_2,L_infinity)) 
+            # file_out.flush()
+                    
+            return xTest, yTest, predvalues
         
     else:
        print('Training method not recognized')
