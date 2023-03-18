@@ -104,6 +104,7 @@ def train_and_test(Generator,
                 if (i+1) % TrainSettings.testFrequency == 0:
                     predictions = Regressor.predict_values(xTest)
                     errors = predictions - yTest
+                    errors = errors.eval(session=Regressor.session)
                     L_2 = np.sqrt((errors ** 2).mean(axis=0))
                     L_infinity = np.max(np.abs(errors))
                     print('RMSE after ' + str(i+1) + ' training steps is ' + str(L_2) )
@@ -116,6 +117,7 @@ def train_and_test(Generator,
             predvalues[("standard", TrainSettings.nTest)] = predictions
             # Last entry and print of error:
             errors = predictions - yTest
+            errors = errors.eval(session=Regressor.session)
             L_2 = np.sqrt((errors ** 2).mean(axis=0))
             L_infinity = np.abs(errors).max(axis=0)
             print('RMSE after training is ' + str(L_2) )
