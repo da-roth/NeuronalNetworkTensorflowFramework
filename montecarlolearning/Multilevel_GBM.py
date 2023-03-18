@@ -1,6 +1,14 @@
 import numpy as np
 from scipy.stats import norm
 
+import tensorflow as tf2
+#print("TF version =", tf2.__version__)
+# we want TF 2.x
+assert tf2.__version__ >= "2.0"
+# disable eager execution etc
+tf = tf2.compat.v1
+tf.disable_eager_execution()
+
 try:
     from TrainingDataGenerator import *
 except ModuleNotFoundError:
@@ -20,6 +28,10 @@ class Multilevel_Train_Dimension(Enum):
 
 def discountedPayoff(S,r,T,K):
     discPayoff = np.exp(-r[:] * T[:])* np.maximum(S[:] - K[:], 0.)
+    return discPayoff
+
+def discountedPayoffTensorFlow(S, r, T, K):
+    discPayoff = tf.math.exp(-r * T) * tf.maximum(S - K, 0.)
     return discPayoff
 
 # main class
@@ -80,34 +92,36 @@ class Multilevel_GBM(TrainingDataGenerator):
 
 
         if (self._opt == Multilevel_Train_Case.LevelEstimator):
-            hCoarse = T[:]/ self._steps
-            hFine = hCoarse / 2.0
-            sCoarse = s_0
-            sFine = s_0
+            hCoarse = tf.divide(T[:], self._steps)
+            hFine = tf.divide(hCoarse, 2.0)
+            sCoarse = tf.constant(s_0, dtype=tf.float32)
+            sFine = tf.constant(s_0, dtype=tf.float32)
+
             # 2. Compute paths
             for i in range(self._steps):
-                zFine1=np.random.normal(0.0, 1.0, m)
-                zFine2=np.random.normal(0.0, 1.0, m)
-                zCoarse=(zFine1+zFine2)/np.sqrt(2.)
-                sFine=sFine + mu *sFine * hFine +sigma * sFine *np.sqrt(hFine)*zFine1 + 0.5 *sigma *sFine *sigma * ((np.sqrt(hFine)*zFine1)**2-hFine)
-                sFine=sFine + mu *sFine * hFine +sigma * sFine *np.sqrt(hFine)*zFine2 + 0.5 *sigma *sFine *sigma * ((np.sqrt(hFine)*zFine2)**2-hFine)
-                sCoarse=sCoarse + mu *sCoarse * hCoarse +sigma * sCoarse *np.sqrt(hCoarse)*zCoarse + 0.5 *sigma *sCoarse *sigma * ((np.sqrt(hCoarse)*zCoarse)**2-hCoarse)
-            payoffsCoarse = discountedPayoff(sCoarse,mu,T,K)
-            payoffsFine = discountedPayoff(sFine,mu,T,K)
-            payoffs = payoffsFine - payoffsCoarse
-            return np.stack((s_0,sigma,mu,T,K),axis=1), payoffs.reshape([-1,1]), None
+                zFine1 = tf.random.normal([m], mean=0.0, stddev=1.0, dtype=tf.float32)
+                zFine2 = tf.random.normal([m], mean=0.0, stddev=1.0, dtype=tf.float32)
+                zCoarse = tf.divide(tf.add(zFine1, zFine2), tf.sqrt(2.0))
+                sFine = sFine + mu * sFine * hFine + sigma * sFine * tf.sqrt(hFine) * zFine1 + 0.5 * sigma * sFine * sigma * ((tf.sqrt(hFine) * zFine1)**2 - hFine)
+                sFine = sFine + mu * sFine * hFine + sigma * sFine * tf.sqrt(hFine) * zFine2 + 0.5 * sigma * sFine * sigma * ((tf.sqrt(hFine) * zFine2)**2 - hFine)
+                sCoarse = sCoarse + mu * sCoarse * hCoarse + sigma * sCoarse * tf.sqrt(hCoarse) * zCoarse + 0.5 * sigma * sCoarse * sigma * ((tf.sqrt(hCoarse) * zCoarse)**2 - hCoarse)
+                
+            payoffsCoarse = discountedPayoffTensorFlow(sCoarse, mu, T, K)
+            payoffsFine = discountedPayoffTensorFlow(sFine, mu, T, K)
+            payoffs = tf.reshape(tf.subtract(payoffsFine, payoffsCoarse), [-1, 1])
+            output_tensor = tf.stack((s_0, sigma, mu, T, K), axis=1)
         elif (self._opt == Multilevel_Train_Case.Euler):
             # 2. Compute paths
-            h = T[:]/ self._steps
+            h = tf.divide(T[:], self._steps)
             s = s_0
             # loop through the array for 10 steps
             for i in range(self._steps):
                 # do something with the array
-                z=np.random.normal(0.0, 1.0, m)
-                s= s[:] + mu[:] *s[:] * h[:] + sigma[:] * s[:] *np.sqrt(h[:]) * z[:]
+                z=tf.random.normal([m], 0.0, 1.0, dtype=tf.float64)
+                s= s[:] + mu[:] *s[:] * h[:] + sigma[:] * s[:] *tf.sqrt(h[:]) * z[:]
             # 3. Calculate and return payoffs
-            payoffs = discountedPayoff(s,mu,T,K)
-            return np.stack((s_0,sigma,mu,T,K),axis=1), payoffs.reshape([-1,1]), None
+            payoffs = discountedPayoffTensorFlow(s,mu,T,K)
+            return tf.stack((s_0,sigma,mu,T,K),axis=1), tf.reshape(payoffs, [-1,1]), None
         elif (self._opt == Multilevel_Train_Case.Milstein):
             # 2. Compute paths
             h = T[:]/ self._steps

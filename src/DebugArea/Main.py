@@ -13,7 +13,7 @@ exec(open(packageFile).read())
 ### 1. Training data
 ###
 #from CDF import *
-Generator = Multilevel_GBM(Multilevel_Train_Case.GBM_Path_Solution )
+Generator = Multilevel_GBM(Multilevel_Train_Case.Euler, 1 ,Multilevel_Train_Dimension.one )
 Generator.set_inputName('S')
 Generator.set_outputName('EuropeanCallPrice(S)')
 
