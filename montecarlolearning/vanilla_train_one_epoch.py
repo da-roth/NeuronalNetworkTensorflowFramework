@@ -6,6 +6,8 @@ assert tf2.__version__ >= "2.0"
 tf = tf2.compat.v1
 tf.disable_eager_execution()
 
+import numpy as np
+
 # training loop for one epoch
 def vanilla_train_one_epoch(# training graph from vanilla_training_graph()
                             Regressor,                          
@@ -23,4 +25,4 @@ def vanilla_train_one_epoch(# training graph from vanilla_training_graph()
     #         Regressor.labels: label_tensor,
     #         Regressor.learning_rate: learning_rate
     #     })
-    Regressor.session.run(Regressor.minimizer,feed_dict = {Regressor.learning_rate: learning_rate})
+    Regressor.session.run(Regressor.minimizer,feed_dict = {Regressor.learning_rate: learning_rate, Regressor.predictionsTest: np.random.rand(1, 5), Regressor.isTraining: True})

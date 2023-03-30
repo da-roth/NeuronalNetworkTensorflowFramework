@@ -10,16 +10,16 @@ except:
     from montecarlolearning.vanilla_net_Tensor import *
 
 
-def vanilla_training_graph(input_dim, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, seed, biasNeuron = False, input_Tensor = None, label_tensor = None, graph = None):
+def vanilla_training_graph(trainingDim, testDim, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, seed, biasNeuron = False, input_Tensor = None, label_tensor = None, graph = None):
     
     if (input_Tensor is None):
         # net
         if biasNeuron:
-            inputs, weights_and_biases, layers, predictions = \
-                vanilla_net_biasNeuron(input_dim, hiddenNeurons, hiddenLayers, activationFunctionsHidden,activationFunctionOutput , seed)
+            inputs, weights_and_biases, layers, predictions, isTraining = \
+                vanilla_net_biasNeuron(trainingDim, hiddenNeurons, hiddenLayers, activationFunctionsHidden,activationFunctionOutput , seed)
         else:
-            inputs, weights_and_biases, layers, predictions = \
-                vanilla_net(input_dim, hiddenNeurons, hiddenLayers, activationFunctionsHidden,activationFunctionOutput , seed)
+            inputs, weights_and_biases, layers, predictions, isTraining = \
+                vanilla_net(trainingDim, hiddenNeurons, hiddenLayers, activationFunctionsHidden,activationFunctionOutput , seed)
         
         # backprop even though we are not USING differentials for training
         # we still need them to predict derivatives dy_dx 
@@ -36,12 +36,14 @@ def vanilla_training_graph(input_dim, hiddenNeurons, hiddenLayers, activationFun
         learning_rate = tf.placeholder(real_type)
         optimizer = tf.train.AdamOptimizer(learning_rate = learning_rate)
         #optimizer = tf.train.AdamOptimizer()
+
+        predictionsTest = tf.placeholder(shape=[None, trainingDim], dtype=real_type)
         
-        return inputs, labels, predictions, derivs_predictions, learning_rate, loss, optimizer.minimize(loss)
+        return inputs, labels, predictions, derivs_predictions, learning_rate, loss, optimizer.minimize(loss), isTraining, predictionsTest
     
     else:
-        inputs, weights_and_biases, layers, predictions = \
-            vanilla_net_Tensor(input_Tensor, input_dim, hiddenNeurons, hiddenLayers, activationFunctionsHidden,activationFunctionOutput , seed)
+        inputs, weights_and_biases, layers, predictions, isTraining, predictionsTest = \
+            vanilla_net_Tensor(input_Tensor, trainingDim, hiddenNeurons, hiddenLayers, activationFunctionsHidden,activationFunctionOutput , seed)
 
         derivs_predictions = backprop(weights_and_biases, layers, activationFunctionsHidden, activationFunctionOutput)
         # Define the loss using the predictions tensor and label tensor
@@ -51,8 +53,10 @@ def vanilla_training_graph(input_dim, hiddenNeurons, hiddenLayers, activationFun
         learning_rate = tf.placeholder(real_type)
         optimizer = tf.train.AdamOptimizer(learning_rate = learning_rate)
         train_op = optimizer.minimize(loss)
+
+        #predictionsTest = tf.placeholder(shape=[None, trainingDim], dtype=real_type)
         
-        return inputs, label_tensor, predictions, derivs_predictions, learning_rate, loss, train_op
+        return inputs, label_tensor, predictions, derivs_predictions, learning_rate, loss, train_op, isTraining, predictionsTest
             
     
 

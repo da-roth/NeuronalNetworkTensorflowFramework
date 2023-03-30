@@ -107,12 +107,19 @@ class Neural_Approximator():
         self._activationFunctionOutput= tf.nn.relu 
         self._biasNeuron= False 
         self._weight_seed = 1
-        self.graph = tf.Graph()
+        #self.graph = tf.Graph()
                   
     def __del__(self):
         if self.session is not None:
             self.session.close()
         
+    ###
+    ### Initialize or reset Graph
+    ###
+    def initializeAndResetGraph(self): 
+        self.graph = tf.Graph()
+        print(self.graph)
+
     ###
     ### Properties
     ###
@@ -125,14 +132,20 @@ class Neural_Approximator():
     # Prepare:                    
     # - Normalize data and data analytics (x_mean)
     # - Build graph
-    def prepare(self, dataSize):
+    def prepare(self, dataSize, nTest = None):
         # Normalize dataset and cache analytics
         self.x_mean, self.x_std, self.x, self.y_mean, self.y_std, self.y, self.dy_dx, self.lambda_j = \
             normalize_data(self.x_raw, self.y_raw, self.dydx_raw, dataSize)
         
         # Build tensorflow graph        
-        self.m, self.n = self.x.shape        
+        self.m, self.n = self.x.shape 
+        if nTest == None:
+            self.nTest = self.n     
+        else:
+            self.nTest = nTest
         self.build_graph(self._lam, self._hiddenNeurons, self._hiddenLayers, self._activationFunctionsHidden, self._activationFunctionOutput,self._weight_seed, self._biasNeuron)
+
+        
         
         
     def storeNewDataAndNormalize(self, x_raw, y_raw, dydx_raw, dataSize):
@@ -178,8 +191,10 @@ class Neural_Approximator():
                     self.derivs_predictions, \
                     self.learning_rate, \
                     self.loss, \
-                    self.minimizer \
-                    = vanilla_training_graph(self.n, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed, biasNeuron, self.x_raw, self.y_raw)
+                    self.minimizer, \
+                    self.isTraining, \
+                    self.predictionsTest \
+                    = vanilla_training_graph(self.n, self.nTest, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed, biasNeuron, self.x_raw, self.y_raw)
                 else:
                     self.inputs, \
                     self.labels, \
@@ -187,8 +202,10 @@ class Neural_Approximator():
                     self.derivs_predictions, \
                     self.learning_rate, \
                     self.loss, \
-                    self.minimizer \
-                    = vanilla_training_graph(self.n, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed, biasNeuron)
+                    self.minimizer, \
+                    self.isTraining, \
+                    self.predictionsTest \
+                    = vanilla_training_graph(self.n, self.nTest, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed, biasNeuron)
                     
             else:
             # Build differential graph through diff_training_graph.py
@@ -206,9 +223,12 @@ class Neural_Approximator():
                 self.derivs_predictions, \
                 self.learning_rate, \
                 self.loss, \
-                self.minimizer = diff_training_graph(self.n, hidden_units, \
-                                                     hidden_layers, weight_seed, \
-                                                     self.alpha, self.beta, self.lambda_j)
+                self.minimizer , \
+                self.isTraining, \
+                self.predictionsTest \
+                    = diff_training_graph(self.n, self.nTest, hidden_units, \
+                                                hidden_layers, weight_seed, \
+                                                self.alpha, self.beta, self.lambda_j)
         
             # Global initializer
             self.initializer = tf.global_variables_initializer()
@@ -240,14 +260,18 @@ class Neural_Approximator():
               yTest)
      
     # Predict values
-    def predict_values(self, x):
+    def predict_values(self, x, isTraining = True):
         # scale
-        x_scaled = (x-self.x_mean) / self.x_std 
+        #x_scaled = (x-self.x_mean) / self.x_std 
         # predict scaled
         if isinstance(self.x_raw, tf.Tensor):
-            y_scaled = self.session.run(self.predictions)
+             x_scaled = (x-self.session.run(self.x_mean)) / self.session.run(self.x_std)
         else:
-            y_scaled = self.session.run(self.predictions, feed_dict = {self.inputs: x_scaled})
+            x_scaled = (x-self.x_mean) / self.x_std 
+        if isTraining:
+            y_scaled = self.session.run(self.predictions, feed_dict = {self.inputs: x_scaled, self.isTraining: isTraining })
+        else:
+            y_scaled = self.session.run(self.predictions, feed_dict = {self.predictionsTest: x_scaled, self.isTraining: isTraining })
         # unscale
         y = self.y_mean + self.y_std * y_scaled
         return y
@@ -259,73 +283,8 @@ class Neural_Approximator():
         # predict scaled
         y_scaled, dyscaled_dxscaled = self.session.run(
             [self.predictions, self.derivs_predictions], 
-            feed_dict = {self.inputs: x_scaled})
+            feed_dict = {self.inputs: x_scaled, self.isTraining: True})
         # unscale
         y = self.y_mean + self.y_std * y_scaled
         dydx = self.y_std / self.x_std * dyscaled_dxscaled
         return y, dydx
-    
-    # Reset graph to initial build of build_graph
-    def reset_graph():
-        
-        # First, deal with tensorflow logic
-        if self.session is not None:
-            self.session.close()
-
-        #Print neural network settings
-        #print('Neural network initialized with the following settings:')
-        #print('Neurons per layer: ' + str(hiddenNeurons))
-        #print('Amount of hidden layers: ' +str(hiddenLayers))
-        #print('Activations functions: ' + str(activationFunctions))
-        
-        self.graph = tf.Graph()
-        
-        with self.graph.as_default():
-            
-            if not self._Generator.Differential:
-            # Build vanilla graph through vanilla_graph.py
-                if isinstance(self.x_raw, tf.Tensor):
-                    self.inputs, \
-                    self.labels, \
-                    self.predictions, \
-                    self.derivs_predictions, \
-                    self.learning_rate, \
-                    self.loss, \
-                    self.minimizer \
-                    = vanilla_training_graph(self.n, _hiddenNeurons, _hiddenLayers, _activationFunctionsHidden, _activationFunctionOutput, _weight_seed, _biasNeuron, self.x_raw, self.y_raw)
-                else:
-                    self.inputs, \
-                    self.labels, \
-                    self.predictions, \
-                    self.derivs_predictions, \
-                    self.learning_rate, \
-                    self.loss, \
-                    self.minimizer \
-                    = vanilla_training_graph(self.n, _hiddenNeurons, _hiddenLayers, _activationFunctionsHidden, _activationFunctionOutput, _weight_seed, _biasNeuron)
-                    
-            else:
-            # Build differential graph through diff_training_graph.py
-            
-                if self.dy_dx is None:
-                    raise Exception("No differential labels for differential training graph")
-            
-                self.alpha = 1.0 / (1.0 + lam * self.n)
-                self.beta = 1.0 - self.alpha
-                
-                self.inputs, \
-                self.labels, \
-                self.derivs_labels, \
-                self.predictions, \
-                self.derivs_predictions, \
-                self.learning_rate, \
-                self.loss, \
-                self.minimizer = diff_training_graph(self.n, _hiddenNeurons, \
-                                                     _hiddenLayers, _weightSeed, \
-                                                     self.alpha, self.beta, self.lambda_j)
-        
-            # Global initializer
-            self.initializer = tf.global_variables_initializer()
-            
-        # Done building graph
-        self.graph.finalize()
-        self.session = tf.Session(graph=self.graph)

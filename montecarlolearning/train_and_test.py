@@ -65,7 +65,9 @@ def train_and_test(Generator,
         # 1. Simulation of initial training set
         #print("Simulating initial training set and test set")
         initial_sample_amount = max(TrainSettings.SamplesPerStep,10000) # to get a proper batch normalization
-        with Regressor.graph.as_default():
+        
+        Regressor.initializeAndResetGraph()
+        with Regressor.graph.as_default():  
             xTrain, yTrain, _unused = Generator.trainingSet(initial_sample_amount, trainSeed=Generator.dataSeed)
             xTest, yTest, _unused, _unused2 = Generator.testSet(num=TrainSettings.nTest, testSeed=Generator.testSeed)
             #print("done")
@@ -74,9 +76,9 @@ def train_and_test(Generator,
             #print("initializing neural appropximator")
             Regressor.initializeData(xTrain, yTrain)
             # Prepare: normalize dataset and initialize tf graph
-            Regressor.prepare(initial_sample_amount)
+            Regressor.prepare(initial_sample_amount, TrainSettings.nTest)
             #print("done")        
-            
+          
             # 3. First training step
             Regressor.train("standard training",TrainSettings)
             
@@ -102,7 +104,8 @@ def train_and_test(Generator,
                 # Generate output file and print results during training
 
                 if (i+1) % TrainSettings.testFrequency == 0:
-                    predictions = Regressor.predict_values(xTest)
+                    isTraining = False
+                    predictions = Regressor.predict_values(xTest, isTraining)
                     errors = predictions - yTest
                     if isinstance(errors, tf.Tensor):
                         errors = errors.eval(session=Regressor.session)
@@ -114,7 +117,8 @@ def train_and_test(Generator,
                     
             
             # 4. Predictions on test data
-            predictions = Regressor.predict_values(xTest)
+            isTraining = False
+            predictions = Regressor.predict_values(xTest, isTraining)
             predvalues[("standard", TrainSettings.nTest)] = predictions
             # Last entry and print of error:
             errors = predictions - yTest

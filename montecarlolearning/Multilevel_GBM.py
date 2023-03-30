@@ -82,7 +82,7 @@ class Multilevel_GBM(TrainingDataGenerator):
         
     def trainingSet(self, m, trainSeed=None, approx=False):  
         if(trainSeed != None): 
-            np.random.seed(trainSeed) 
+            tf.set_random_seed(trainSeed)
         # # 1. Draw parameter samples for training
         # s_0 = (self.s_0_trainInterval[1] - self.s_0_trainInterval[0]) * np.random.random_sample(m) + self.s_0_trainInterval[0]
         # sigma = (self.sigma_trainInterval[1] - self.sigma_trainInterval[0]) * np.random.random_sample(m) + self.sigma_trainInterval[0]
@@ -99,8 +99,8 @@ class Multilevel_GBM(TrainingDataGenerator):
         if (self._opt == Multilevel_Train_Case.LevelEstimator):
             hCoarse = tf.divide(T[:], self._steps)
             hFine = tf.divide(hCoarse, 2.0)
-            sCoarse = tf.constant(s_0, dtype=tf.float32)
-            sFine = tf.constant(s_0, dtype=tf.float32)
+            sCoarse = s_0
+            sFine = s_0
 
             # 2. Compute paths
             for i in range(self._steps):
@@ -114,7 +114,7 @@ class Multilevel_GBM(TrainingDataGenerator):
             payoffsCoarse = discountedPayoffTensorFlow(sCoarse, mu, T, K)
             payoffsFine = discountedPayoffTensorFlow(sFine, mu, T, K)
             payoffs = tf.reshape(tf.subtract(payoffsFine, payoffsCoarse), [-1, 1])
-            output_tensor = tf.stack((s_0, sigma, mu, T, K), axis=1)
+            return tf.stack((s_0,sigma,mu,T,K),axis=1), tf.reshape(payoffs, [-1,1]), None
         elif (self._opt == Multilevel_Train_Case.Euler):
             # 2. Compute paths
             h = tf.divide(T[:], self._steps)
@@ -129,40 +129,61 @@ class Multilevel_GBM(TrainingDataGenerator):
             return tf.stack((s_0,sigma,mu,T,K),axis=1), tf.reshape(payoffs, [-1,1]), None
         elif (self._opt == Multilevel_Train_Case.Milstein):
             # 2. Compute paths
-            h = T[:]/ self._steps
+            h = tf.divide(T[:], self._steps)
             s = s_0
             # loop through the array for 10 steps
             for i in range(self._steps):
                 # do something with the array
-                z=np.random.normal(0.0, 1.0, m)
-                s= s[:] + mu[:] *s[:] * h[:] + sigma[:] * s[:] *np.sqrt(h[:])* z[:] + 0.5 * sigma[:] * s_0[:] * sigma[:] * ((np.sqrt(h[:])* z[:])**2-h[:]) 
+                z=tf.random.normal([m], 0.0, 1.0, dtype=tf.float32)
+                s= s[:] + mu[:] *s[:] * h[:] + sigma[:] * s[:] *tf.sqrt(h[:])* z[:] + 0.5 * sigma[:] * s_0[:] * sigma[:] * ((tf.sqrt(h[:])* z[:])**2-h[:]) 
             # 3. Calculate and return payoffs
-            payoffs = discountedPayoff(s,mu,T,K)
-            return np.stack((s_0,sigma,mu,T,K),axis=1), payoffs.reshape([-1,1]), None
+            payoffs = discountedPayoffTensorFlow(s,mu,T,K)
+            return tf.stack((s_0,sigma,mu,T,K),axis=1), tf.reshape(payoffs, [-1,1]), None
         elif (self._opt == Multilevel_Train_Case.GBM_Path_Solution):
-            #3. sets of random returns
-            h=T[:]
-            z=np.random.normal(0.0,1.0,m)
-            #piecewise multiply of s= s_0[:] * np.exp((mu-sigma*sigma/2)*h+sigma*np.sqrt(h)*z[:])
-            s= np.multiply(s_0[:],np.exp((mu[:] -0.5*sigma[:] *sigma[:] )*h[:] +sigma[:] *np.sqrt(h[:] )*z[:]))
-            payoffs=discountedPayoff(s,mu,T,K)
-            return np.stack((s_0,sigma,mu,T,K),axis=1), payoffs.reshape([-1,1]), None
+            # 3. sets of random returns
+            h = tf.divide(T[:], self._steps)
+            z = tf.random.normal([m, 1], 0.0, 1.0, dtype=tf.float32)
+            # piecewise multiply of s= s_0[:] * np.exp((mu-sigma*sigma/2)*h+sigma*np.sqrt(h)*z[:])
+            s = tf.multiply(s_0, tf.exp((mu - 0.5*sigma**2) * h + sigma * tf.sqrt(h) * z))
+            payoffs = discountedPayoffTensorFlow(s, mu, T, K)
+            return tf.stack([s_0, sigma, mu, T, K], axis=1), payoffs, None
         else:
             # B.S. formula
-            d1 = (np.log(s_0[:]/K[:]) + (mu[:] + 0.5 * sigma[:] * sigma[:]) * T[:]) / (sigma[:] * np.sqrt(T[:]))
-            d2 = d1[:] - sigma[:] * np.sqrt(T[:])
-            price = s_0[:] * norm.cdf(d1[:]) - np.exp(-mu[:] *T[:] ) * K[:] * norm.cdf(d2[:])
-            return np.stack((s_0,sigma,mu,T,K),axis=1), price.reshape([-1,1]), None
+            d1 = (tf.math.log(s_0/K) + (mu + 0.5 * sigma * sigma) * T) / (sigma * tf.math.sqrt(T))
+            d2 = d1 - sigma * tf.math.sqrt(T)
+            price = s_0 * norm.cdf(d1) - tf.math.exp(-mu * T) * K * norm.cdf(d2)
+            return tf.stack((s_0, sigma, mu, T, K), axis=1), tf.reshape(price, [-1, 1]), None
      
-    def testSet(self, num, testSeed=None):
-        np.random.seed(0)
+    # def testSet(self, num, testSeed=0):
+    #     tf.set_random_seed(testSeed)
+    #     # 0. Test interval definition
+    #     s_0_testInterval = [self.s_0_trainInterval[0]+self.s_0_h, self.s_0_trainInterval[1]-self.s_0_h]
+    #     sigma_testInterval = [self.sigma_trainInterval[0]+self.sigma_h, self.sigma_trainInterval[1]-self.sigma_h]
+    #     mu_testInterval = [self.mu_trainInterval[0]+self.mu_h, self.mu_trainInterval[1]-self.mu_h]
+    #     T_testInterval = [self.T_trainInterval[0]+self.T_h, self.T_trainInterval[1]-self.T_h]
+    #     K_testInterval = [self.K_trainInterval[0]+self.K_h, self.K_trainInterval[1]-self.K_h]
+
+    #     # 1. Draw parameter samples for test
+    #     s_0 = tf.random.uniform(shape=[num], minval=s_0_testInterval[0], maxval=s_0_testInterval[1])
+    #     sigma = tf.random.uniform(shape=[num], minval=sigma_testInterval[0], maxval=sigma_testInterval[1])
+    #     mu = tf.random.uniform(shape=[num], minval=mu_testInterval[0], maxval=mu_testInterval[1])
+    #     T = tf.random.uniform(shape=[num], minval=T_testInterval[0], maxval=T_testInterval[1])
+    #     K = tf.random.uniform(shape=[num], minval=K_testInterval[0], maxval=K_testInterval[1])
+
+    #     # B.S. formula
+    #     d1 = (tf.math.log(s_0/K) + (mu + 0.5 * sigma * sigma) * T) / (sigma * tf.math.sqrt(T))
+    #     d2 = d1 - sigma * tf.math.sqrt(T)
+    #     price = s_0 * tf.math.erf(d1/tf.math.sqrt(2.0)) - tf.math.exp(-mu * T) * K * tf.math.erf(d2/tf.math.sqrt(2.0))
+    #     return tf.stack((s_0, sigma, mu, T, K), axis=1), tf.reshape(price, [-1, 1]), None, None
+    
+    def testSet(self, num, testSeed=0):
+        np.random.seed(testSeed)
         # 0. Test interval definition
         s_0_testInterval = [self.s_0_trainInterval[0]+self.s_0_h, self.s_0_trainInterval[1]-self.s_0_h]
         sigma_testInterval = [self.sigma_trainInterval[0]+self.sigma_h, self.sigma_trainInterval[1]-self.sigma_h]
         mu_testInterval = [self.mu_trainInterval[0]+self.mu_h, self.mu_trainInterval[1]-self.mu_h]
         T_testInterval = [self.T_trainInterval[0]+self.T_h, self.T_trainInterval[1]-self.T_h]
         K_testInterval = [self.K_trainInterval[0]+self.K_h, self.K_trainInterval[1]-self.K_h]
-
         # 1. Draw parameter samples for test
         s_0 = (s_0_testInterval[1] - s_0_testInterval[0]) * np.random.random_sample(num) + s_0_testInterval[0]
         sigma = (sigma_testInterval[1] - sigma_testInterval[0]) * np.random.random_sample(num) + sigma_testInterval[0]

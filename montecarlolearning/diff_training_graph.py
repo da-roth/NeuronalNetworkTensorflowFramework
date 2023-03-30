@@ -5,7 +5,8 @@ except:
 
 def diff_training_graph(
     # same as vanilla
-    input_dim, 
+    trainingDim, 
+    testDim,
     hidden_units, 
     hidden_layers, 
     seed, 
@@ -14,10 +15,11 @@ def diff_training_graph(
     # see online appendix
     alpha, 
     beta,
-    lambda_j):
+    lambda_j,
+    isTraining = True):
     
     # net, now a twin
-    inputs, predictions, derivs_predictions = twin_net(input_dim, hidden_units, hidden_layers, seed)
+    inputs, predictions, derivs_predictions = twin_net(trainingDim, hidden_units, hidden_layers, seed)
     
     # placeholder for labels, now also derivs labels
     labels = tf.placeholder(shape=[None, 1], dtype=real_type)
@@ -34,7 +36,7 @@ def diff_training_graph(
     # return all necessary tensors, including derivatives
     # predictions and labels
     return inputs, labels, derivs_labels, predictions, derivs_predictions, \
-            learning_rate, loss, optimizer.minimize(loss)
+            learning_rate, loss, optimizer.minimize(loss), isTraining
 
 def diff_train_one_epoch(inputs, labels, derivs_labels, 
                          # graph
