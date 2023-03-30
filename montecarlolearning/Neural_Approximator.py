@@ -264,13 +264,15 @@ class Neural_Approximator():
         #x_scaled = (x-self.x_mean) / self.x_std 
         # predict scaled
         if isinstance(self.x_raw, tf.Tensor):
-             x_scaled = (x-self.session.run(self.x_mean)) / self.session.run(self.x_std)
+            x_scaled = (x-self.session.run(self.x_mean)) / self.session.run(self.x_std)
+            if isTraining:
+                y_scaled = self.session.run(self.predictions, feed_dict = {self.inputs: x_scaled, self.isTraining: isTraining })
+            else:
+                y_scaled = self.session.run(self.predictions, feed_dict = {self.predictionsTest: x_scaled, self.isTraining: isTraining })
         else:
             x_scaled = (x-self.x_mean) / self.x_std 
-        if isTraining:
-            y_scaled = self.session.run(self.predictions, feed_dict = {self.inputs: x_scaled, self.isTraining: isTraining })
-        else:
-            y_scaled = self.session.run(self.predictions, feed_dict = {self.predictionsTest: x_scaled, self.isTraining: isTraining })
+            y_scaled = self.session.run(self.predictions, feed_dict = {self.inputs: x_scaled})
+
         # unscale
         y = self.y_mean + self.y_std * y_scaled
         return y
