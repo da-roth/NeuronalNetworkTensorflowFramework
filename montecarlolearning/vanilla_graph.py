@@ -39,7 +39,7 @@ def vanilla_training_graph(trainingDim, testDim, hiddenNeurons, hiddenLayers, ac
 
         predictionsTest = tf.placeholder(shape=[None, trainingDim], dtype=real_type)
         
-        return inputs, labels, predictions, derivs_predictions, learning_rate, loss, optimizer.minimize(loss), isTraining, predictionsTest
+        return inputs, labels, predictions, derivs_predictions, learning_rate, loss, optimizer.minimize(loss), isTraining#, predictionsTest
     
     else:
         inputs, weights_and_biases, layers, predictions, isTraining, predictionsTest = \

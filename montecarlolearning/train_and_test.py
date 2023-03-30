@@ -47,6 +47,7 @@ def train_and_test(Generator,
             ###
             
             # Prepare: normalize dataset and initialize tf graph
+            Regressor.initializeAndResetGraph()
             Regressor.prepare(size)
             
             # 4. Train network

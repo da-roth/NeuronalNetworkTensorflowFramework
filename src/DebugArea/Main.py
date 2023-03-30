@@ -17,26 +17,15 @@ exec(open(packageFile).read())
 ### 1. Training data
 ###
 #from CDF import *
-Generator = Multilevel_GBM(Multilevel_Train_Case.Milstein, 0, Multilevel_Train_Dimension.one)
-Generator.set_inputName('S')
-Generator.set_outputName('P_0')
-
-GeneratorLevel1 = Multilevel_GBM(Multilevel_Train_Case.LevelEstimator, 0, Multilevel_Train_Dimension.one)
-GeneratorLevel1 .set_inputName('x')
-GeneratorLevel1 .set_outputName('P_1-P_0')
-
-GeneratorLevel2 = Multilevel_GBM(Multilevel_Train_Case.LevelEstimator, 1, Multilevel_Train_Dimension.one)
-GeneratorLevel2 .set_inputName('x')
-GeneratorLevel2 .set_outputName('P_2-P_1')
-
-GeneratorLevel3 = Multilevel_GBM(Multilevel_Train_Case.LevelEstimator, 2, Multilevel_Train_Dimension.one)
-GeneratorLevel3 .set_inputName('x')
-GeneratorLevel3 .set_outputName('P_3-P_2')
-
-GeneratorLevel4 = Multilevel_GBM(Multilevel_Train_Case.LevelEstimator, 3, Multilevel_Train_Dimension.one)
-GeneratorLevel4 .set_inputName('x')
-GeneratorLevel4 .set_outputName('P_4-P_3')
-
+Generator = DataImporter()
+# 10^4 data data points
+Generator.set_path(os.path.join(mainDirectory, 'src', 'Examples', 'CumulativeDensitiyFunction', 'cdf_deterministic_data.csv'))
+Generator.set_inputName('x')
+Generator.set_outputName('CDF(x)')
+Generator.set_trainTestRatio(0.8)
+Generator.set_randomized(False)
+Generator.set_trainingSetSizes([100,1000,10000])
+Generator.set_dataSeed(1)
 
 ###
 ### 2. Set Nueral network structure / Hyperparameters
@@ -45,24 +34,19 @@ GeneratorLevel4 .set_outputName('P_4-P_3')
 Regressor = Neural_Approximator()
 Regressor.set_Generator(Generator)
 Regressor.set_hiddenNeurons(20)
-Regressor.set_hiddenLayers(2)
-Regressor.set_activationFunctionsHidden(tf.nn.sigmoid)
-Regressor.set_activationFunctionOutput(tf.nn.sigmoid)
+Regressor.set_hiddenLayers(3)
+Regressor.set_activationFunctionsHidden([tf.nn.tanh])
 Regressor.set_weight_seed(1)
 
+###
+### 3. Training settings
+### 
+
 TrainSettings = TrainingSettings()
-TrainSettings.set_learning_rate_schedule=([(0.0, 0.0001),  (0.2, 0.0001),  (0.4, 0.0001), (0.6, 0.0001),  (0.8, 0.0001)] )
-TrainSettings.set_min_batch_size(1)
-TrainSettings.set_test_frequency(10)
-TrainSettings.set_nTest(100000)
-TrainSettings.set_samplesPerStep(20000)
-TrainSettings.set_trainingSteps(20)
+TrainSettings.set_epochs(20)
 
 ###
-### 3. Train network and Study results
-### Comment: For different trainingSetSizes the neural network reset and not saved, hence train and evaluation of yPredicted are done together currently
+### 4. Train and evaluate
 ###
-
 xTest, yTest, yPredicted = train_and_test(Generator, Regressor, TrainSettings)
-TrainSettings.set_samplesPerStep(100000)
-xTest2, yTest2, yPredictedLevel1 = train_and_test(GeneratorLevel1, Regressor, TrainSettings)
+plot_results("CDF unrandomized deterministic inputs", yPredicted, xTest, yTest, Generator)

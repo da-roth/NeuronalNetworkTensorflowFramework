@@ -203,8 +203,7 @@ class Neural_Approximator():
                     self.learning_rate, \
                     self.loss, \
                     self.minimizer, \
-                    self.isTraining, \
-                    self.predictionsTest \
+                    self.isTraining \
                     = vanilla_training_graph(self.n, self.nTest, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed, biasNeuron)
                     
             else:
