@@ -2,12 +2,12 @@ class TrainingSettings:
 
     def __init__(self):
         # Mandatory for all:
-        self._learning_rate_schedule = [
-            (0.0, 0.01), 
-            (0.2, 0.001), 
-            (0.4, 0.0001), 
-            (0.6, 0.00001), 
-            (0.8, 0.000001)]
+        # self._learning_rate_schedule = [
+        #     (0.0, 0.01), 
+        #     (0.2, 0.001), 
+        #     (0.4, 0.0001), 
+        #     (0.6, 0.00001), 
+        #     (0.8, 0.000001)]
         
         # 1. a) For TrainingMethod.Standard
         self._epochs = 1

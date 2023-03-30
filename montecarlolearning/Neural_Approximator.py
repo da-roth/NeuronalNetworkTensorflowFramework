@@ -161,17 +161,14 @@ class Neural_Approximator():
         if self.session is not None:
             self.session.close()
 
-        if self.graph is not None:
-            tf.reset_default_graph()
-            
         #Print neural network settings
         #print('Neural network initialized with the following settings:')
         #print('Neurons per layer: ' + str(hiddenNeurons))
         #print('Amount of hidden layers: ' +str(hiddenLayers))
         #print('Activations functions: ' + str(activationFunctions))
                 
-        with tf.Graph().as_default() as graph:
-            self.graph = graph
+        with self.graph.as_default():
+            
             if not self._Generator.Differential:
             # Build vanilla graph through vanilla_graph.py
                 if isinstance(self.x_raw, tf.Tensor):
