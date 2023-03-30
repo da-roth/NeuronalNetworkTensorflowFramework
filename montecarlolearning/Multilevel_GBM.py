@@ -37,7 +37,7 @@ def discountedPayoffTensorFlow(S, r, T, K):
 # main class
 class Multilevel_GBM(TrainingDataGenerator):
     
-    def __init__(self, opt=Multilevel_Train_Case.BS_Solution, steps = 0, dim = Multilevel_Train_Dimension.five):
+    def __init__(self, opt=Multilevel_Train_Case.BS_Solution, steps = 0, dim = Multilevel_Train_Dimension.five, useTensorFlowMath = False):
         
         # Call the parent class's constructor using super()
         super().__init__()
@@ -45,6 +45,9 @@ class Multilevel_GBM(TrainingDataGenerator):
         # Mandatory 
         self._differential = False
         
+        # Experimental: use Tensorflow math and arrays instead of nummpy
+        self._useTensorFlowMath = useTensorFlowMath
+
         # Multilevel GBM specific
         self._opt = opt # Case
         self._steps = np.power(2,steps)     # discretization steps (if discretization is used)
@@ -80,8 +83,8 @@ class Multilevel_GBM(TrainingDataGenerator):
             self.T_h = 0.0              
             self.K_h = 0.0
         
-    def trainingSet(self, m, trainSeed=None, approx=False, useNumpyGenerator = False):  
-        if useNumpyGenerator == True:
+    def trainingSet(self, m, trainSeed=None, approx=False):  
+        if self._useTensorFlowMath != True:
             if(trainSeed != None): 
                 np.random.seed(trainSeed) 
             # 1. Draw parameter samples for training
