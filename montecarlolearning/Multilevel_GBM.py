@@ -55,7 +55,7 @@ class Multilevel_GBM(TrainingDataGenerator):
         
         if(self._dim == Multilevel_Train_Dimension.five):
             # Training set definition
-            self.s_0_trainInterval = [118.0, 120.0]
+            self.s_0_trainInterval = [80.0, 120.0]
             self.sigma_trainInterval = [0.1, 0.2]
             self.mu_trainInterval = [0.02, 0.05]
             self.T_trainInterval = [0.9, 1.0]
