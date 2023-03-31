@@ -3,13 +3,11 @@ try:
     from vanilla_train_one_epoch import *
     from diff_training_graph import *
     from TrainingSettings import *
-    from TrainingOptionEnums import *
 except:
     from montecarlolearning.vanilla_graph import *
     from montecarlolearning.vanilla_train_one_epoch import *
     from montecarlolearning.diff_training_graph import *
     from montecarlolearning.TrainingSettings import *
-    from montecarlolearning.TrainingOptionEnums import *
 
 import numpy as np
 
@@ -28,18 +26,10 @@ def train(description,
               
     # batching
     batch_size = max(TrainingSettings.minBatchSize, Regressor.m // TrainingSettings.batchesPerEpoch)
-           
+    
     # one-cycle learning rate sechedule
-    if TrainingSettings.usingExponentialDecay: 
-        # The non-staircase version of the exponential decay learning rate schedule
-        #lr_schedule_rates = [TrainingSettings.InitialLearningRate * TrainingSettings.DecayRate ** (i / TrainingSettings.DecaySteps) for i in range(TrainingSettings.TrainingSteps+1)]
-        # The staircase version of the exponential decay learning rate schedule
-        lr_schedule_rates = [TrainingSettings.InitialLearningRate * TrainingSettings.DecayRate ** (i // ( TrainingSettings.DecaySteps)) for i in range(TrainingSettings.TrainingSteps+1)]
-        lr_schedule_epochs = np.linspace(0, 1, TrainingSettings.TrainingSteps+1)
-    else:    
-        lr_schedule_epochs, lr_schedule_rates = zip(*TrainingSettings.learningRateSchedule)
+    lr_schedule_epochs, lr_schedule_rates = zip(*TrainingSettings.learningRateSchedule)
             
-
     # reset
     if reinit:
         Regressor.session.run(Regressor.initializer)
@@ -64,9 +54,9 @@ def train(description,
     for epoch in range(TrainingSettings.epochs):
         
         # interpolate learning rate in cycle
-        if Regressor.Generator.TrainMethod == TrainingMethod.Standard:
+        if Regressor._Generator.TrainMethod == TrainingMethod.Standard:
             learning_rate = np.interp(epoch / TrainingSettings.epochs, lr_schedule_epochs, lr_schedule_rates)
-        elif Regressor.Generator.TrainMethod == TrainingMethod.GenerateDataDuringTraining:
+        elif Regressor._Generator.TrainMethod == TrainingMethod.GenerateDataDuringTraining:
             learning_rate = np.interp(TrainingSettings.madeSteps / TrainingSettings.TrainingSteps, lr_schedule_epochs, lr_schedule_rates)
             TrainingSettings.increaseMadeSteps()
         
