@@ -13,9 +13,19 @@ exec(open(packageFile).read())
 ### 1. Training data
 ###
 #from CDF import *
-Generator = Multilevel_GBM(Multilevel_Train_Case.GBM_Path_Solution )
-Generator.set_inputName('S')
-Generator.set_outputName('EuropeanCallPrice(S)')
+###
+### 1. Training data
+###
+#from CDF import *
+Generator = DataImporter()
+# 10^4 data data points
+Generator.set_path(os.path.join(mainDirectory, 'src', 'Examples', 'CumulativeDensitiyFunction', 'cdf_deterministic_data.csv'))
+Generator.set_inputName('x')
+Generator.set_outputName('CDF(x)')
+Generator.set_trainTestRatio(0.8)
+Generator.set_randomized(False)
+Generator.set_trainingSetSizes([100,1000,10000])
+Generator.set_dataSeed(1)
 
 ###
 ### 2. Set Nueral network structure / Hyperparameters
@@ -24,24 +34,19 @@ Generator.set_outputName('EuropeanCallPrice(S)')
 Regressor = Neural_Approximator()
 Regressor.set_Generator(Generator)
 Regressor.set_hiddenNeurons(20)
-Regressor.set_hiddenLayers(2)
-Regressor.set_activationFunctionsHidden(tf.nn.sigmoid)
-Regressor.set_activationFunctionOutput(tf.nn.sigmoid)
+Regressor.set_hiddenLayers(3)
+Regressor.set_activationFunctionsHidden([tf.nn.tanh])
 Regressor.set_weight_seed(1)
 
+###
+### 3. Training settings
+### 
+
 TrainSettings = TrainingSettings()
-#TrainSettings.set_learning_rate_schedule( [(0.0, 0.5),   (0.5, 0.1)] )
-TrainSettings.useExponentialDecay(0.1, 0.1, 5)
-TrainSettings.set_min_batch_size(1)
-TrainSettings.set_test_frequency(100)
-TrainSettings.set_nTest(100000)
-TrainSettings.set_samplesPerStep(200000)
-TrainSettings.set_trainingSteps(10)
+TrainSettings.set_epochs(20)
 
 ###
-### 3. Train network and Study results
-### Comment: For different trainingSetSizes the neural network reset and not saved, hence train and evaluation of yPredicted are done together currently
+### 4. Train and evaluate
 ###
-
 xTest, yTest, yPredicted = train_and_test(Generator, Regressor, TrainSettings)
-plot_results("predicted vs. expected", yPredicted, xTest, yTest, Generator)
+plot_results("CDF unrandomized deterministic inputs", yPredicted, xTest, yTest, Generator)

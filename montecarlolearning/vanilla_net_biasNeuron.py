@@ -28,6 +28,8 @@ def vanilla_net_biasNeuron(
     ws = [None]
     bs = [None]
     # layer 0 (input) has no parameters
+
+    isTraining = tf.placeholder(tf.bool, [])
     
     # layer 0 = input layer
     zs = [xs] # eq.3, l=0
@@ -97,6 +99,6 @@ def vanilla_net_biasNeuron(
     
     # return input layer, (parameters = weight matrices and bias vectors), 
     # [all layers] and output layer
-    return xs, (ws, bs), zs, ys
+    return xs, (ws, bs), zs, ys, isTraining
 
 

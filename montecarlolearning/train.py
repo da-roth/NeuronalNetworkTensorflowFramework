@@ -74,15 +74,9 @@ def train(description,
         if not Regressor._Generator.Differential:
         
             vanilla_train_one_epoch(
-                Regressor.inputs, 
-                Regressor.labels, 
-                Regressor.learning_rate, 
-                Regressor.minimizer, 
-                Regressor.x, 
-                Regressor.y, 
+                Regressor, 
                 learning_rate, 
-                batch_size, 
-                Regressor.session)
+                batch_size)
             i = i +1
             if i % TrainingSettings.testFrequency == 0:
                 #print('learning_rate for the last epoch was' + str(learning_rate))

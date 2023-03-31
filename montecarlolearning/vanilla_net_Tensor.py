@@ -10,29 +10,45 @@ tf.disable_eager_execution()
 
 real_type = tf.float32
 
-def vanilla_net(
+def vanilla_net_Tensor(
+    input_tensor,
     input_dim,                  # dimension of inputs, e.g. 10
     hiddenNeurons,              # units in hidden layers, assumed constant, e.g. 20
     hiddenLayers,               # number of hidden layers, e.g. 4
     activationFunctionsHidden,  # tensorflow activation functions for hidden layer
     activationFunctionOutput,  # tensorflow activation functions for the output layer
-    seed):                      # seed for initialization or None for random
-    
+    seed,
+    test_tensor_shape=None):                      # seed for initialization or None for random
     # set seed
     tf.set_random_seed(seed)
     
-    # input layer
-    xs = tf.placeholder(shape=[None, input_dim], dtype=real_type)
+
+    isTraining = tf.placeholder(tf.bool, [])
     
+    #xs = tf.placeholder(dtype=real_type)
+    # input layer
+    xs = input_tensor
+    # testTensor = tf.placeholder(shape=[None, input_dim], dtype=real_type)
+
+    #else:
+    #xs = tf.placeholder(dtype=real_type)
+    # If training, we use the shape of the input tensor as the shape of the test tensor
+    testTensor = tf.placeholder(shape=test_tensor_shape, dtype=real_type)  
+
     # connection weights and biases of hidden layers
     ws = [None]
     bs = [None]
     # layer 0 (input) has no parameters
 
-    isTraining = tf.placeholder(tf.bool, [])
+    zs = [tf.cond(isTraining, lambda: xs, lambda: testTensor)]
     
-    # layer 0 = input layer
-    zs = [xs] # eq.3, l=0
+    #zs = [testTensor if not isTraining else xs]
+    
+    # # layer 0 = input layer
+    # if isTraining == True:
+    #     zs = [xs] # eq.3, l=0
+    # else:
+    #     zs = [testTensor]
     
     # first hidden layer (index 1)
     # weight matrix
@@ -79,7 +95,7 @@ def vanilla_net(
     
     # return input layer, (parameters = weight matrices and bias vectors), 
     # [all layers] and output layer
-    return xs, (ws, bs), zs, ys, isTraining
+    return xs, (ws, bs), zs, ys, isTraining, testTensor
 
 
 
