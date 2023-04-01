@@ -9,7 +9,7 @@ def get_encoding(file):
     with open(file, 'rb') as f:
         return chardet.detect(f.read())['encoding']
 
-encoding = get_encoding('requirements.txt')
+encoding = get_encoding('requirementsColab.txt')
 install_requires = codecs.open('requirements.txt', 'r', encoding=encoding).read().splitlines()
 
 # Package information
