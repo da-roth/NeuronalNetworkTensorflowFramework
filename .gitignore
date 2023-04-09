@@ -1,5 +1,8 @@
 # Output files of trainings
 output.csv
+multi-introductory-new.csv
+multi-introductory.csv
+single-introductury.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
