@@ -17,7 +17,8 @@ class TrainingSettings:
         # 1. b) For TrainingMethod.GenerateDataDuringTraining
         self._madeSteps = 0
         self._testFrequency = 1000
-        self._nTest = 1000
+        self._nTest = 1000              # batch_size_approx
+        self._mcRounds = 1              # How many rounds with "Samples for testing"
         self._samplesPerStep = 1000
         self._trainingSteps = 100
         
@@ -94,6 +95,13 @@ class TrainingSettings:
 
     def set_nTest(self, value):
         self._nTest = value
+
+    @property
+    def mcRounds(self):
+        return self._mcRounds
+
+    def set_mcRounds(self, value):
+        self._mcRounds = value
 
     @property
     def TrainingSteps(self):
