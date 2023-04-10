@@ -10,7 +10,8 @@ from tensorflow.python.training.moving_averages import assign_moving_average
 
 class GBM_Multilevel:
     def __init__(self):
-        pass
+        self._stepsInitialLevel = 1
+        
     def set_batch_sizes(self, value):
         self._batch_sizes = value
 
@@ -25,6 +26,13 @@ class GBM_Multilevel:
 
     def set_loop_var_mc(self, value):
         self._loop_var_mc = value
+
+    @property
+    def StepsInitialLevel(self):
+        return self._stepsInitialLevel
+
+    def set_stepsInitialLevel(self, value):
+        self._stepsInitialLevel = value
 
     @staticmethod
     def phi(x,sigma,mu,T,K, axis=1):

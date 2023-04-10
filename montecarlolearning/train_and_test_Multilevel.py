@@ -110,9 +110,10 @@ def train_and_test_Multilevel(Generator, Regressor, TrainSettings):
             batch_size_approx= TrainSettings.nTest# original 2000000
             d = 5
             # Level adaptation parameter: steps = M ^ l
+            N = Generator.StepsInitialLevel
             M = 2
             maximumLevel = len(batch_sizes) - 1 # P_0 + P_1-P_0, here 1 is the maximumLevel
-            stepsPerLevel = [M**i for i in range(maximumLevel)]
+            stepsPerLevel = [(M**i)*N for i in range(maximumLevel)]
             Generator.set_stepsPerLevel(stepsPerLevel )
 
             neurons = [Regressor.HiddenNeurons for _ in range(Regressor.HiddenLayers)] + [1]
