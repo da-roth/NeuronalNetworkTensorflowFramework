@@ -11,7 +11,7 @@ from tensorflow.python.training.moving_averages import assign_moving_average
 
 def train_and_test_Multilevel(Generator, Regressor, TrainSettings):
 
-    def train_and_test_MultilevelIntern(Regressor, TrainSettings, xi_list, phi_list, xi_approx, u_reference_GBM, u_reference_list, neurons, file_name, dtype=tf.float32):
+    def train_and_test_MultilevelIntern(Regressor, TrainSettings, xi_list, phi_list, xi_approx, u_reference_GBM, u_reference_list, neurons, dtype=tf.float32):
     
         def _approximate_errors():
             gs_lr = sess.run([global_step[i] for i in range(amountNetworks)] + [learning_rate[i] for i in range(amountNetworks)])
@@ -66,7 +66,7 @@ def train_and_test_Multilevel(Generator, Regressor, TrainSettings):
             with tf.control_dependencies(update_ops[i]):
                 train_op.append(optimizer[i].minimize(loss[i], global_step[i])) 
                 
-        file_out = open(file_name, 'w')
+        file_out = open(TrainSettings.FileName, 'w')
         file_out.write('step,li_err, learning_rate, time_train, time_mc  \n ')
             
         with tf.Session() as sess:
@@ -226,4 +226,4 @@ def train_and_test_Multilevel(Generator, Regressor, TrainSettings):
             u_reference_list.append(xi_approx*0.)
 
         #Start training and testing                        
-        train_and_test_MultilevelIntern(Regressor, TrainSettings,xi_list, phi_list, xi_approx, u_reference, u_reference_list, neurons, 'multi-introductory-new-2.csv', dtype)        
+        train_and_test_MultilevelIntern(Regressor, TrainSettings,xi_list, phi_list, xi_approx, u_reference, u_reference_list, neurons, dtype)        
