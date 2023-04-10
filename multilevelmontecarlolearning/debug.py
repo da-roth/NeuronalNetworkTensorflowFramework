@@ -40,6 +40,7 @@ class GBM_Multilevel:
     def set_loop_var_mc(self, value):
         self._loop_var_mc = value
 
+    @staticmethod
     def phi(x,sigma,mu,T,K, axis=1):
         payoff=tf.exp(-mu * T)* tf.maximum(x - K, 0.)
         return payoff
@@ -57,7 +58,7 @@ class GBM_Multilevel:
                             lambda _idx, s, sigma,mu,T,K: self.Milstein_level0(_idx, s, sigma,mu,T,K,
                                                     self._mc_samples_ref),
                                                     self._loop_var_mc[0])
-        return idx + 1, p + tf.reduce_mean(self.phi(_x,_sigma,_mu,_T,_K, 2), axis=0)  
+        return idx + 1, p + tf.reduce_mean(GBM_Multilevel.phi(_x,_sigma,_mu,_T,_K, 2), axis=0)  
         
     #Multilevel Monte Carlo level estimators
     def Milstein_levelEstimator(self, idx, s, sfine, sigma, mu, T, K, samples, level): 
@@ -79,7 +80,7 @@ class GBM_Multilevel:
         _, _xcoarse, _xfine, sigma, mu, T, K = tf.while_loop(lambda _idx, s, xfine, sigma, mu, T, K: _idx < amountSteps,
                                                             lambda _idx, s, xfine, sigma, mu, T, K: self.Milstein_levelEstimator(_idx, s, xfine, sigma, mu, T, K, self._mc_samples_ref, level),
                                                             self._loop_var_mc[level])
-        return idx + 1, p + tf.reduce_mean(self.phi(_xfine, sigma, mu, T, K, 2) - self.phi(_xcoarse, sigma, mu, T, K, 2), axis=0)
+        return idx + 1, p + tf.reduce_mean(GBM_Multilevel.phi(_xfine, sigma, mu, T, K, 2) - GBM_Multilevel.phi(_xcoarse, sigma, mu, T, K, 2), axis=0)
 
 
 class Neural_Approximator_Multilevel:
@@ -225,9 +226,8 @@ TrainSettings.set_trainingSteps(150000)
 def train_and_test_Multilevel(Generator, Regressor, TrainSettings):
 
     Generator.set_batch_sizes(TrainSettings.SamplesPerStep)
-    Generator.set_stepsPerLevel(TrainSettings.TrainingSteps)
+    
     Generator.set_dtype(tf.float32)
-    Generator.set_mc_samples_ref(TrainSettings.nTest)
 
     #Model and training parameter specification  
     for i in range(1,2):
@@ -244,6 +244,7 @@ def train_and_test_Multilevel(Generator, Regressor, TrainSettings):
             M = 2
             maximumLevel = len(batch_sizes) - 1 # P_0 + P_1-P_0, here 1 is the maximumLevel
             stepsPerLevel = [M**i for i in range(maximumLevel)]
+            Generator.set_stepsPerLevel(stepsPerLevel )
 
             neurons = [Regressor.HiddenNeurons for _ in range(Regressor.HiddenLayers)] + [1]
             train_steps = TrainSettings.TrainingSteps # original 150000
@@ -253,6 +254,7 @@ def train_and_test_Multilevel(Generator, Regressor, TrainSettings):
             mc_rounds, mc_freq = TrainSettings.mcRounds, TrainSettings.testFrequency # original  100, 10
 
             mc_samples_ref, mc_rounds_ref_p0, mc_rounds_ref_p1_p0 = 1, 1000000,1000000
+            Generator.set_mc_samples_ref(mc_samples_ref)
 
             # Define the intervals for the parameters
             s_0_l = 80.0
