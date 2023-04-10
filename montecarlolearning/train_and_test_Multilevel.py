@@ -70,15 +70,26 @@ def train_and_test_Multilevel(Generator, Regressor, TrainSettings):
         file_out.write('step,li_err, learning_rate, time_train, time_mc  \n ')
             
         with tf.Session() as sess:
-            sess.run(tf.global_variables_initializer())
-            
-            for step in range(1,TrainSettings.TrainingSteps):
-                if step % TrainSettings.testFrequency == 0:
-                    print(step)
-                    t1_train = time.time()
-                    _approximate_errors()
-                    t0_train = time.time()      
-            sess.run(train_op, feed_dict={is_training:True})
+            if isinstance(TrainSettings.TrainingSteps, list) and len(TrainSettings.TrainingSteps) > 1:
+                sess.run(tf.global_variables_initializer())
+                for step in range(1,max(TrainSettings.TrainingSteps)):
+                    if step % TrainSettings.testFrequency == 0:
+                        print(step)
+                        t1_train = time.time()
+                        _approximate_errors()
+                        t0_train = time.time()     
+                    StillTrained = [x > step for x in TrainSettings.TrainingSteps]
+                    train_op_updated = [train_op[i] for i in range(len(StillTrained)) if StillTrained[i]]
+                    sess.run(train_op_updated, feed_dict={is_training:True})
+            else:
+                sess.run(tf.global_variables_initializer())
+                for step in range(1,TrainSettings.TrainingSteps):
+                    if step % TrainSettings.testFrequency == 0:
+                        print(step)
+                        t1_train = time.time()
+                        _approximate_errors()
+                        t0_train = time.time()    
+                    sess.run(train_op, feed_dict={is_training:True})
             t1_train = time.time()
             _approximate_errors()
         file_out.close()
