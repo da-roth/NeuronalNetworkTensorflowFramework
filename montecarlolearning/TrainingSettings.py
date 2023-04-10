@@ -62,6 +62,14 @@ class TrainingSettings:
         self._epochs = value
 
     @property
+    def FileName(self):
+        return self._fileName
+
+    def set_fileName(self, value):
+        self._fileName = value
+
+
+    @property
     def learningRateSchedule(self):
         return self._learning_rate_schedule
 
