@@ -111,8 +111,10 @@ def train_and_test_Multilevel(Generator, Regressor, TrainSettings):
             # How many networks will be trained:
             if isinstance(TrainSettings.TrainingSteps, list) and len(TrainSettings.TrainingSteps) > 1:
                 amountNetworks = len(TrainSettings.TrainingSteps)
+                firstBatchSize = batch_sizes[0]
             else:
                 amountNetworks = 1
+                firstBatchSize = batch_sizes
             batch_size_approx= TrainSettings.nTest# original 2000000
             d = 5
             # Level adaptation parameter: steps = M ^ l
@@ -163,25 +165,25 @@ def train_and_test_Multilevel(Generator, Regressor, TrainSettings):
             K_l_approx = K_l + K_modifier
             K_r_approx = K_r - K_modifier
 
-            # Training intervals
-            s0 = tf.random_uniform((batch_sizes[0],1), minval=s_0_l,
+            # Training intervals 
+            s0 = tf.random_uniform((firstBatchSize,1), minval=s_0_l,
                                             maxval=s_0_r, dtype=dtype)
-            sigma=tf.random_uniform((batch_sizes[0],1),
+            sigma=tf.random_uniform((firstBatchSize,1),
                                         minval=sigma_l,maxval=sigma_r, dtype=dtype)
-            mu=tf.random_uniform((batch_sizes[0],1),
+            mu=tf.random_uniform((firstBatchSize,1),
                                         minval=mu_l,maxval=mu_r, dtype=dtype)
-            T=tf.random_uniform((batch_sizes[0],1),
+            T=tf.random_uniform((firstBatchSize,1),
                                         minval=T_l,maxval=T_r, dtype=dtype)
-            K=tf.random_uniform((batch_sizes[0],1),
+            K=tf.random_uniform((firstBatchSize,1),
                                 minval=K_l,maxval=K_r, dtype=dtype)
             
-            xi_level0=tf.reshape(tf.stack([s0,sigma,mu,T,K], axis=2), (batch_sizes[0],d))
+            xi_level0=tf.reshape(tf.stack([s0,sigma,mu,T,K], axis=2), (firstBatchSize,d))
 
             xi_list = []
             xi_list.append(xi_level0)
 
             loop_var_mc = []
-            loop_var_mc.append((tf.constant(0),tf.ones((mc_samples_ref,batch_sizes[0], 1), dtype) * s0, tf.ones((mc_samples_ref,batch_sizes[0], 1), dtype) * sigma,tf.ones((mc_samples_ref,batch_sizes[0], 1), dtype) * mu,tf.ones((mc_samples_ref,batch_sizes[0], 1), dtype) * T,tf.ones((mc_samples_ref,batch_sizes[0], 1), dtype) * K))
+            loop_var_mc.append((tf.constant(0),tf.ones((mc_samples_ref,firstBatchSize, 1), dtype) * s0, tf.ones((mc_samples_ref,firstBatchSize, 1), dtype) * sigma,tf.ones((mc_samples_ref,firstBatchSize, 1), dtype) * mu,tf.ones((mc_samples_ref,firstBatchSize, 1), dtype) * T,tf.ones((mc_samples_ref,firstBatchSize, 1), dtype) * K))
             
             Generator.set_loop_var_mc(loop_var_mc)
 
@@ -222,7 +224,7 @@ def train_and_test_Multilevel(Generator, Regressor, TrainSettings):
         phi_list = []
         u_reference_list =[]
 
-        u_list.append(tf.while_loop(lambda idx, p: idx < 1, Generator.MonteCarlo_loop_level0,(tf.constant(0), tf.zeros((batch_sizes[0], 1), dtype)))[1])
+        u_list.append(tf.while_loop(lambda idx, p: idx < 1, Generator.MonteCarlo_loop_level0,(tf.constant(0), tf.zeros((firstBatchSize, 1), dtype)))[1])
         phi_list.append(u_list[0] / tf.cast(1, tf.float32))
         u_reference_list.append(tf.multiply(s0_approx,(dist.cdf(d1)))-K_approx*tf.exp(-mu_approx*T_approx)*(dist.cdf(d2)))
 
