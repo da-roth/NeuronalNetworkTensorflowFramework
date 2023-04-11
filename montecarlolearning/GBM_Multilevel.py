@@ -41,14 +41,24 @@ class GBM_Multilevel:
     
     # First level: actually just P_0 without level estimator
     def Milstein_level0(self, idx, s,sigma,mu,T,K, samples): 
-        z = tf.random_normal(shape=(samples, self._batch_sizes[0], 1),
+        if isinstance(self._stepsPerLevel, list):
+            batchSizeFirstLevel = self._batch_sizes[0]
+            stepsForFirstLevel = self._stepsPerLevel[0]
+        else:
+            batchSizeFirstLevel = self._batch_sizes
+            stepsForFirstLevel = self._stepsPerLeve
+        z = tf.random_normal(shape=(samples, batchSizeFirstLevel, 1),
                             stddev=1., dtype=self._dtype)
-        h=T/self._stepsPerLevel[0]
+        h=T/stepsForFirstLevel
         s=s + mu *s * h +sigma * s *tf.sqrt(h)*z + 0.5 *sigma *s *sigma * ((tf.sqrt(h)*z)**2-h)
         return tf.add(idx, 1), s, sigma,mu,T,K
     
     def MonteCarlo_loop_level0(self, idx, p):
-        _, _x, _sigma,_mu,_T,_K = tf.while_loop(lambda _idx, s, sigma,mu,T,K: _idx < self._stepsPerLevel[0],
+        if isinstance(self._stepsPerLevel, list):
+            stepsForFirstLevel = self._stepsPerLevel[0]
+        else:
+            stepsForFirstLevel = self._stepsPerLevel
+        _, _x, _sigma,_mu,_T,_K = tf.while_loop(lambda _idx, s, sigma,mu,T,K: _idx < stepsForFirstLevel,
                             lambda _idx, s, sigma,mu,T,K: self.Milstein_level0(_idx, s, sigma,mu,T,K,
                                                     self._mc_samples_ref),
                                                     self._loop_var_mc[0])
