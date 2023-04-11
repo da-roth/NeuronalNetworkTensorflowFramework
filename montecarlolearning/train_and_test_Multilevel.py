@@ -107,12 +107,18 @@ def train_and_test_Multilevel(Generator, Regressor, TrainSettings):
             dtype = tf.float32
             #Set network and training parameter (same number of training steps for each network)
             batch_sizes = TrainSettings.SamplesPerStep # original [75000, 1817, 690, 264, 93, 33, 12, 5]
+            amountNetworks = 0
+            # How many networks will be trained:
+            if isinstance(TrainSettings.TrainingSteps, list) and len(TrainSettings.TrainingSteps) > 1:
+                amountNetworks = len(TrainSettings.TrainingSteps)
+            else:
+                amountNetworks = 1
             batch_size_approx= TrainSettings.nTest# original 2000000
             d = 5
             # Level adaptation parameter: steps = M ^ l
             N = Generator.StepsInitialLevel
             M = 2
-            maximumLevel = len(batch_sizes) - 1 # P_0 + P_1-P_0, here 1 is the maximumLevel
+            maximumLevel = amountNetworks - 1 # P_0 + P_1-P_0, here 1 is the maximumLevel
             stepsPerLevel = [(M**i)*N for i in range(maximumLevel)]
             Generator.set_stepsPerLevel(stepsPerLevel )
 
@@ -179,7 +185,7 @@ def train_and_test_Multilevel(Generator, Regressor, TrainSettings):
             
             Generator.set_loop_var_mc(loop_var_mc)
 
-            for i in range(1,len(batch_sizes)):
+            for i in range(1,amountNetworks):
                 s0_level_estimator = tf.stack((tf.random_uniform((batch_sizes[i],1), minval=s_0_l, maxval=s_0_r, dtype=dtype)))
                 sigma_level_estimator = tf.random_uniform((batch_sizes[i],1), minval=sigma_l, maxval=sigma_r, dtype=dtype)
                 mu_level_estimator = tf.random_uniform((batch_sizes[i],1), minval=mu_l, maxval=mu_r, dtype=dtype)
@@ -221,7 +227,7 @@ def train_and_test_Multilevel(Generator, Regressor, TrainSettings):
         u_reference_list.append(tf.multiply(s0_approx,(dist.cdf(d1)))-K_approx*tf.exp(-mu_approx*T_approx)*(dist.cdf(d2)))
 
 
-        for i in range(1,len(batch_sizes)):
+        for i in range(1,amountNetworks):
             u_list.append(tf.while_loop(lambda idx, p: idx < 1, lambda idx, p: Generator.MonteCarlo_loop_levelEstimator(idx, p, i), (tf.constant(0), tf.zeros((batch_sizes[i], 1), dtype)))[1])
             phi_list.append(u_list[i] / tf.cast(1, tf.float32))
             u_reference_list.append(xi_approx*0.)
