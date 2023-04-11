@@ -122,7 +122,10 @@ def train_and_test_Multilevel(Generator, Regressor, TrainSettings):
             M = 2
             maximumLevel = amountNetworks - 1 # P_0 + P_1-P_0, here 1 is the maximumLevel
             stepsPerLevel = [(M**i)*N for i in range(maximumLevel)]
-            Generator.set_stepsPerLevel(stepsPerLevel )
+            if isinstance(TrainSettings.TrainingSteps, list) and len(TrainSettings.TrainingSteps) > 1:
+                Generator.set_stepsPerLevel(stepsPerLevel)
+            else:
+                Generator.set_stepsPerLevel(Generator.StepsInitialLevel)
 
             neurons = [Regressor.HiddenNeurons for _ in range(Regressor.HiddenLayers)] + [1]
             train_steps = TrainSettings.TrainingSteps # original 150000

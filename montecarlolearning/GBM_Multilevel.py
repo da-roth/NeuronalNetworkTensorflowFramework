@@ -46,7 +46,7 @@ class GBM_Multilevel:
             stepsForFirstLevel = self._stepsPerLevel[0]
         else:
             batchSizeFirstLevel = self._batch_sizes
-            stepsForFirstLevel = self._stepsPerLeve
+            stepsForFirstLevel = self._stepsPerLevel
         z = tf.random_normal(shape=(samples, batchSizeFirstLevel, 1),
                             stddev=1., dtype=self._dtype)
         h=T/stepsForFirstLevel
