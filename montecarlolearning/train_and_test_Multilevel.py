@@ -9,7 +9,7 @@ from tensorflow.python.ops import init_ops
 from tensorflow.python.training.moving_averages import assign_moving_average
 
 
-def train_and_test_Multilevel(Generator, Regressor, TrainSettings):
+def train_and_test_Multilevel(Generator, Regressor, TrainSettings, randomSeed = 0):
 
     def train_and_test_MultilevelIntern(Regressor, TrainSettings, xi_list, phi_list, xi_approx, u_reference_GBM, u_reference_list, neurons, dtype=tf.float32):
     
@@ -102,7 +102,7 @@ def train_and_test_Multilevel(Generator, Regressor, TrainSettings):
     for i in range(1,2):
         #print(i)
         tf.reset_default_graph()
-        tf.random.set_random_seed(i)
+        tf.random.set_random_seed(randomSeed)
         with tf.Session()  as sess:
             dtype = tf.float32
             #Set network and training parameter (same number of training steps for each network)
