@@ -20,14 +20,6 @@ The project is divided into two main components:
    - Individual functions for on-the-fly data generation during training
 2. Investigation of neural networks' properties with respect to Monte Carlo learning techniques.
 
-## Features
-
-- Flexible neural network training framework
-- Support for different data input/generation methods
-- Monte Carlo learning techniques for continuous input evaluation
-- Example implementations with increasing complexity
-- Thorough documentation and explanations
-
 ## Installation
 
 To set up the environment and install the required dependencies, please follow these steps (see [here](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/local_environment_installation_guide.txt) for more detailed instructions):
@@ -53,7 +45,7 @@ pip install -r requirements.txt
 
 ## Usage
 
-After installing the required dependencies, you can run the example files in the `src/Examples` directory. The main framework is located in the `src/Framework` directory.
+After installing the required dependencies, you can run the example files in the `src/Examples` directory. The main framework is located in the `montecarlolearning` directory.
 
 To use the framework in your own projects, simply import the required modules and functions.
 
@@ -72,26 +64,17 @@ We welcome contributions and suggestions to improve the framework. Please feel f
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 
+## Extension: Multilevel Monte Carlo Learning
 
+This repository has been extended to include an implementation of the methods presented in the preprint "Multilevel Monte Carlo Learning", which can be found [here](https://arxiv.org/abs/2102.08734). The article focuses on the approximation of expected values of functional quantities on the solution of a stochastic differential equation (SDE) using multilevel Monte Carlo learning techniques.
 
-# Monte Carlo Learning
+The main contributions and features of this extension are:
 
-- The first goal of this repo is to provide a flexible neural network training framework, not only able to handle the usual case of fixed inputs (through e.g. .csv files), but to allow data generation (on the fly during the training process) through self-written functions. 
+- Implementation of the multilevel approach for neural network training, as described in the "Multilevel Monte Carlo Learning" article
+- Reduction of variance in the training process by shifting computational workload to training neural nets at coarse levels
+- A complexity theorem demonstrating the reduction of computational complexity using the multilevel idea
+- Example outputs and Colab executables, as used in the article, demonstrating the effectiveness of the methods and generating the article's results
 
-- The second goal is to give an introduction to neural network regression from the Monte Carlo point of view. The first section of the Monte Carlo learning documentation: https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/documentation.pdf
-will investigate the following three topics:
-    1. Random selection and random inputs as training data
-    2. Curse of dimensionality within the loss function approximation
-    3. Approximation of outputs as training data
-Therefore, we implemented examples from scratch, for which little prior knowledge is necessary.
+The code for this extension can be found in the `multilevelmontecarlolearning` directory. Additionally, Colab executables and all output .csv used to calculate the results from the "Multilevel Monte Carlo Learning" article are available in the `multilevelmontecarlolearning/numericalresults` directory.
 
-# Multilevel Monte Carlo learning
-
-The idea to study the different data generation approaches stems from
-https://arxiv.org/abs/2102.08734v1
-
-The basis of the code base which will be modified continuously stems from
-https://github.com/differential-machine-learning/notebooks
-
-Tutorial used for package creation:
-https://github.com/MichaelKim0407/tutorial-pip-package
+Furthermore, we have included a fast-computable proof-of-concept [example](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/multilevelmontecarlolearning/proof-of-concept.ipynb) alongside the [examples](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/multilevelmontecarlolearning/examples-article.ipynb) from the article. By exploring these examples, we hope to facilitate a deeper understanding of the techniques and results presented in the article, enabling you to apply the multilevel Monte Carlo learning approach to your own projects effectively.
