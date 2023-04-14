@@ -30,7 +30,7 @@ The project is divided into two main components:
 
 ## Installation
 
-To set up the environment and install the required dependencies, please follow these steps (see [here](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/local_environment_installation_guide.txt) for a more detailed instructions):
+To set up the environment and install the required dependencies, please follow these steps (see [here](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/local_environment_installation_guide.txt) for more detailed instructions):
 
 1. Open command prompt and naviagte to folder (e.g. C\dev\NeuralNetworkTensorflowFramework) 
 2. Create virtual environment
