@@ -66,26 +66,24 @@ This installation method makes use of the provided `setup.py` file, allowing for
 
 After installing the required dependencies, you can run the example files in the `src/Examples` directory. The main framework is located in the `montecarlolearning` directory.
 
-The workflow of the framework consists of mainly four steps for the training and the evaluation. We want to roughly present the usage of these for your own project on simple examples.
+To use this framework for your own project, follow the steps below:
 
-1. Specify the Generator using a training data generator or importer. There are two possible options:
-    1. Use the provided DataImporter class that imports data from files. 
+1. Specify the training data generator or importer. There are two options available:
+    1. Use the DataImporter class provided in the framework to import data from files. For example:
     ```
     Generator = DataImporter()
     Generator.set_path(pathOfFile)
     ```
-    2. Create data during training through the TrainingDataGenerator class. Here, the framework allows to simply overwrite the methods 
+    2. Create your own data generator by inheriting from the **TrainingDataGenerator** abstract class provided in the framework. You can then override the **trainingSet** and **testSet** methods to generate your own custom training data. For example:
         ```
-        def trainingSet(...):
-        ```
-        and
-        ```
-        def testSet(...):
-        ```
-        with individual implementations, as e.g. done [here](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/montecarlolearning/CDF.py)
-        and use it as the data generator through e.g.
-        ```
-        Generator = CDF()
+        class MyDataGenerator(TrainingDataGenerator):
+          def trainingSet(self, m, trainSeed=None):
+              # custom implementation for generating training data
+              pass
+          def testSet(self, num, testSeed=None):
+              # custom implementation for generating test data
+              pass
+        Generator = MyDataGenerator()
         ```
     
 2. Set Neural network structure. Example: 
@@ -104,6 +102,7 @@ The workflow of the framework consists of mainly four steps for the training and
     ```
     train_and_test(Generator, Regressor, TrainSettings)
     ```
+
 
 
 ## Examples
