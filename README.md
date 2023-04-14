@@ -77,7 +77,7 @@ Refer to the [documentation](https://github.com/da-roth/NeuronalNetworkTensorflo
 ### Cumulative Density Function Training Examples
 
 - [Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples/CumulativeDensitiyFunction/Implementation.ipynb)
-- [Colab Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/ExamplesColab/CumulativeDensitiyFunction/ImplementationTogether.ipynb)
+- [Colab Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples_Colab/CumulativeDensitiyFunction/ImplementationTogether.ipynb)
 
 ### Geometric Brownian Motion European Option Training Examples
 
