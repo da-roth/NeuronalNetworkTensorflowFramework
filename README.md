@@ -1,6 +1,6 @@
 # Neural Network Regression Framework with Monte Carlo Learning
 
-This repository contains a flexible neural network framework for regression-based training tasks, focusing on the exploration and understanding of Monte Carlo learning techniques. The primary goal is to investigate the impact of using sampled or approximated results as labels for randomly selected inputs during training. By leveraging the Monte Carlo approach, the framework can generate an unlimited amount of data, allowing neural networks to be evaluated on a continuous range of inputs.
+This framework is designed for regression-based neural network training tasks, with a focus on Monte Carlo learning. The aim is to provide a flexible and customizable environment for experimenting with neural networks and their application to various types of data input/generation methods. The repository contains a series of examples that demonstrate the core concepts, with increasing levels of complexity.
 
 ## Table of Contents
 
@@ -19,6 +19,11 @@ The project is divided into two main components:
    - General file inputs for precomputed data usage
    - Individual functions for on-the-fly data generation during training
 2. Investigation of neural networks' properties with respect to Monte Carlo learning techniques.
+
+In addition to the provided examples, there is an [introduction PDF](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/documentation.pdf) that delves into the mathematical background of Monte Carlo learning. This document guides you through the examples and presents the techniques and concepts in a clear and structured manner, starting from simple scenarios and gradually increasing in complexity. By studying the introduction and exploring the examples, you will gain a comprehensive understanding of Monte Carlo learning and its potential applications in neural network training tasks.
+
+The repository also includes an extension that demonstrates the application of multilevel neural network training for the approximation of expected values of functional quantities on the solution of a stochastic differential equation (SDE), as described in the "Multilevel Monte Carlo Learning" article.
+
 
 ## Installation
 
