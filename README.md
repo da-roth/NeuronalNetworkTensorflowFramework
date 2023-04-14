@@ -24,7 +24,7 @@ The project is divided into two main components:
    - Individual functions for on-the-fly data generation during training
 2. Investigation of neural networks' properties with respect to Monte Carlo learning techniques.
 
-The repository also includes an extension that demonstrates the application of multilevel neural network training for the approximation of expected values of functional quantities on the solution of a stochastic differential equation (SDE), as described in the "Multilevel Monte Carlo Learning" article.
+The repository also includes an extension that demonstrates the application of multilevel neural network training for the approximation of expected values of functional quantities on the solution of a stochastic differential equation (SDE), as described in the ["Multilevel Monte Carlo Learning"](https://arxiv.org/abs/2102.08734) article.
 
 
 ## Installation
@@ -89,7 +89,7 @@ Refer to the [documentation](https://github.com/da-roth/NeuronalNetworkTensorflo
 
 ## Multilevel Monte Carlo Learning
 
-This repository has been extended to include an implementation of the methods presented in the preprint "Multilevel Monte Carlo Learning", which can be found [here](https://arxiv.org/abs/2102.08734). The article focuses on the approximation of expected values of functional quantities on the solution of a stochastic differential equation (SDE) using multilevel Monte Carlo learning techniques.
+This repository has been extended to include an implementation of the methods presented in the preprint ["Multilevel Monte Carlo Learning"](https://arxiv.org/abs/2102.08734). The article focuses on the approximation of expected values of functional quantities on the solution of a stochastic differential equation (SDE) using multilevel Monte Carlo learning techniques.
 
 The main contributions and features of this extension are:
 
