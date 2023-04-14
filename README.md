@@ -69,11 +69,11 @@ After installing the required dependencies, you can run the example files in the
 To use this framework for your own project, follow the steps below:
 
 1. Specify the training data generator or importer. There are two options available:
-    1. Use the DataImporter class provided in the framework to import data from files. For example:
-    ```
-    Generator = DataImporter()
-    Generator.set_path(pathOfFile)
-    ```
+    1. Use the **DataImporter** class provided in the framework to import data from files. For example:
+      ```
+      Generator = DataImporter()
+      Generator.set_path(pathOfFile)
+      ```
     2. Create your own data generator by inheriting from the **TrainingDataGenerator** abstract class provided in the framework. You can then override the **trainingSet** and **testSet** methods to generate your own custom training data. For example:
         ```
         class MyDataGenerator(TrainingDataGenerator):
@@ -86,13 +86,13 @@ To use this framework for your own project, follow the steps below:
         Generator = MyDataGenerator()
         ```
     
-2. Set Neural network structure. Example: 
+2. Initialize the **Neural_Approximator** specify the neural network structure. Example: 
     ```
     Regressor = Neural_Approximator()
     Regressor.set_hiddenNeurons(20)
     Regressor.set_hiddenLayers(3)
     ```
-3. Specify the training settings. Example:
+3. Initialize the and specify **TrainingSettings**. Example:
     ```
     TrainSettings = TrainingSettings()
     TrainSettings.set_epochs(20)
