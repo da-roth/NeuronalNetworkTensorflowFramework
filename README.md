@@ -32,6 +32,27 @@ The project is divided into two main components:
 
 To set up the environment and install the required dependencies, please follow these steps:
 
+1. Open command prompt and naviagte to folder (e.g. C\dev\NeuralNetworkTensorflowFramework) 
+
+2. Create virtual environment
+```
+python -m venv .venvNN
+```
+3. Activate virtual environment in Command Prompt:
+- For Windows:
+```
+ .venvNN\Scripts\activate.bat
+ ```
+- For Linux/Mac:
+```
+ source .venvNN/bin/activate
+ ```
+
+4. Install packages from requirements.txt, 
+```
+pip install -r requirements.txt
+```
+
 1. Clone the repository:
 ```
 git clone https://github.com/da-roth/NeuronalNetworkTensorflowFramework.git
