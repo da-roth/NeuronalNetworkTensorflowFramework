@@ -1,5 +1,9 @@
 # Neural Network Regression Framework with Monte Carlo Learning
 
+This framework is designed for regression-based neural network training tasks, with a focus on Monte Carlo learning. The aim is to provide a flexible and customizable environment for experimenting with neural networks and their application to various types of data input/generation methods. The repository contains a series of examples that demonstrate the core concepts, with increasing levels of complexity.
+
+In addition to the provided examples, there is an [introduction PDF](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/documentation.pdf) that delves into the mathematical background of Monte Carlo learning.
+
 ## Table of Contents
 
 - [Overview](#overview)
@@ -12,9 +16,7 @@
 
 ## Overview
 
-This framework is designed for regression-based neural network training tasks, with a focus on Monte Carlo learning. The aim is to provide a flexible and customizable environment for experimenting with neural networks and their application to various types of data input/generation methods. The repository contains a series of examples that demonstrate the core concepts, with increasing levels of complexity.
-
-In addition to the provided examples, there is an [introduction PDF](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/documentation.pdf) that delves into the mathematical background of Monte Carlo learning. This document guides you through the examples and presents the techniques and concepts in a clear and structured manner, starting from simple scenarios and gradually increasing in complexity. By studying the introduction and exploring the examples, you will gain a comprehensive understanding of Monte Carlo learning and its potential applications in neural network training tasks.
+The documentation ([link](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/documentation.pdf)) guides you through the examples and presents the techniques and concepts in a clear and structured manner, starting from simple scenarios and gradually increasing in complexity. By studying the introduction and exploring the examples, you will gain a comprehensive understanding of Monte Carlo learning and its potential applications in neural network training tasks.
 
 The project is divided into two main components:
 1. Development of a flexible framework for regression-based neural network training tasks using two primary classes of data input/generation methods:
