@@ -33,17 +33,17 @@ The project is divided into two main components:
 To set up the environment and install the required dependencies, please follow these steps:
 
 1. Clone the repository:
-
+```
 git clone https://github.com/da-roth/NeuronalNetworkTensorflowFramework.git
-
+```
 2. Change into the repository directory:
-
+```
 cd NeuronalNetworkTensorflowFramework
-
+```
 3. Create a virtual environment:
-
+```
 python3 -m venv venv
-
+```
 
 4. Activate the virtual environment:
 - For Windows:
@@ -56,9 +56,9 @@ python3 -m venv venv
   ```
 
 5. Install the required dependencies:
-
+```
 pip install -r requirements.txt
-
+```
 
 ## Usage
 
