@@ -70,9 +70,23 @@ To use the framework in your own projects, simply import the required modules an
 
 ## Examples
 
-Several examples have been provided in the `src/Examples` directory, demonstrating the framework's capabilities and usage. A Google Colab executable link with all examples is also available [here](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples_Colab/CumulativeDensitiyFunction/ImplementationTogether.ipynb).
+Several examples have been provided in the `src/Examples` directory, demonstrating the framework's capabilities and usage. A Google Colab executable link with all examples is also available and will be linked below.
 
 Refer to the [documentation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/documentation.pdf) for detailed explanations of the examples and code.
+
+### Cumulative Density Function Training Examples
+
+- [Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples/CumulativeDensitiyFunction/Implementation.ipynb)
+- [Colab Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/ExamplesColab/CumulativeDensitiyFunction/ImplementationTogether.ipynb)
+
+### Geometric Brownian Motion European Option Training Examples
+
+One-dimensional: Closed solution with and without noise
+    - [Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples/MonteCarloLearning/Implementation_GBM_ClosedSolution.ipynb)
+One-dimensional: Monte Carlo simulation
+    - [Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples/MonteCarloLearning/Implementation_GBM_MC.ipynb)
+Five-dimensional: Monte Carlo simulation
+    - [Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples/MonteCarloLearning/Implementation_GBM_5d.ipynb)
 
 ## Multilevel Monte Carlo Learning
 
