@@ -99,7 +99,6 @@ The workflow of the framework consists of mainly four steps for the training and
     TrainSettings = TrainingSettings()
     TrainSettings.set_epochs(20)
     TrainSettings.set_batches_per_epoch(10)
-    train_and_test(Generator, Regressor, TrainSettings)
     ```
 4. Train and evaluate. Example:
     ```
