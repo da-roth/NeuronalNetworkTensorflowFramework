@@ -79,7 +79,7 @@ Refer to the [documentation](https://github.com/da-roth/NeuronalNetworkTensorflo
 - [Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples/CumulativeDensitiyFunction/Implementation_CDF.ipynb)
 - [Colab Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples_Colab/CumulativeDensitiyFunction/Implementation_CDF.ipynb)
 
-### Montte Carlo Learning
+### Using Approximations As Training Data Examples
 
 - One-dimensional geometric Brownian motion and the Black-Scholes closed solution for a European call option:
     - [Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples/MonteCarloLearning/Implementation_GBM_ClosedSolution.ipynb)
