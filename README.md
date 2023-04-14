@@ -75,18 +75,18 @@ The workflow of the framework consists of mainly four steps for the training and
     Generator.set_path(pathOfFile)
     ```
     2. Create data during training through the TrainingDataGenerator class. Here, the framework allows to simply overwrite the methods 
-      ```
-      def trainingSet(...):
-      ```
-      and
-      ```
-      def testSet(...):
-      ```
-      with individual implementations, as e.g. done [here](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/montecarlolearning/CDF.py)
-      and use it as the data generator through e.g.
-      ```
-      Generator = CDF()
-      ```
+        ```
+        def trainingSet(...):
+        ```
+        and
+        ```
+        def testSet(...):
+        ```
+        with individual implementations, as e.g. done [here](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/montecarlolearning/CDF.py)
+        and use it as the data generator through e.g.
+        ```
+        Generator = CDF()
+        ```
     
 2. Set Neural network structure. Example: 
     ```
