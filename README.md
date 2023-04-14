@@ -83,8 +83,10 @@ Refer to the [documentation](https://github.com/da-roth/NeuronalNetworkTensorflo
 
 One-dimensional: Closed solution with and without noise
     - [Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples/MonteCarloLearning/Implementation_GBM_ClosedSolution.ipynb)
+
 One-dimensional: Monte Carlo simulation
     - [Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples/MonteCarloLearning/Implementation_GBM_MC.ipynb)
+    
 Five-dimensional: Monte Carlo simulation
     - [Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples/MonteCarloLearning/Implementation_GBM_5d.ipynb)
 
