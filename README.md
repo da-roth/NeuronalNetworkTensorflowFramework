@@ -30,6 +30,58 @@ The project is divided into two main components:
 
 ## Installation
 
+To set up the environment and install the required dependencies, please follow these steps:
+
+1. Clone the repository:
+
+git clone https://github.com/da-roth/NeuronalNetworkTensorflowFramework.git
+
+2. Change into the repository directory:
+
+cd NeuronalNetworkTensorflowFramework
+
+3. Create a virtual environment:
+
+python3 -m venv venv
+
+
+4. Activate the virtual environment:
+- For Windows:
+  ```
+  venv\Scripts\activate
+  ```
+- For Linux/Mac:
+  ```
+  source venv/bin/activate
+  ```
+
+5. Install the required dependencies:
+
+pip install -r requirements.txt
+
+
+## Usage
+
+After installing the required dependencies, you can run the example files in the `src/Examples` directory. The main framework is located in the `src/Framework` directory.
+
+To use the framework in your own projects, simply import the required modules and functions.
+
+## Examples
+
+Several examples have been provided in the `src/Examples` directory, demonstrating the framework's capabilities and usage. A Google Colab executable link with all examples is also available [here](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples_Colab/CumulativeDensitiyFunction/ImplementationTogether.ipynb).
+
+Refer to the [documentation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/documentation.pdf) for detailed explanations of the examples and code.
+
+## Contributing
+
+We welcome contributions and suggestions to improve the framework. Please feel free to open an issue or submit a pull request with your proposed changes.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+
+
 
 # Monte Carlo Learning
 
