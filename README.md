@@ -111,7 +111,21 @@ The main contributions and features of this extension are:
 
 The code for this extension can be found in the `multilevelmontecarlolearning` directory. Additionally, Colab executables and all output .csv used to calculate the results from the "Multilevel Monte Carlo Learning" article are available in the `multilevelmontecarlolearning/numericalresults` directory.
 
-Furthermore, we have included a fast-computable proof-of-concept [example](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/multilevelmontecarlolearning/proof-of-concept.ipynb) alongside the [examples](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/multilevelmontecarlolearning/examples-article.ipynb) studied in the article. By exploring these examples, we hope to facilitate a deeper understanding of the techniques and results presented in the article, enabling you to apply the multilevel Monte Carlo learning approach to your own projects effectively.
+While, the fast-computable proof-of-concept [example](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples/MonteCarloLearning/Implementation_Multilevel_POC.ipynb) was already mentioned above, the codes for the examples studied in the article can be found in the following files:
+
+- Introductory example: single-level and multi-level
+    - [Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/multilevelmontecarlolearning/IntroductoryExample/introductory_example.ipynb)
+    - [Colab Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/multilevelmontecarlolearning/IntroductoryExample/introductory_example_Colab.ipynb)
+    - [single-level results](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/tree/main/src/multilevelmontecarlolearning/IntroductoryExample/single-introductory-outputs)
+    - [multi-level results](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/tree/main/src/multilevelmontecarlolearning/IntroductoryExample/multi-introductory-outputs)
+  
+- Multilevel example
+    - [Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/multilevelmontecarlolearning/MultilevelExample/individual_steps_example.ipynb)
+    - [Colab Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/multilevelmontecarlolearning/MultilevelExample/individual_steps_example_colab.ipynb)
+    - [results](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/tree/main/src/multilevelmontecarlolearning/MultilevelExample/multilevel-example-outputs)
+
+
+By exploring these examples, we hope to facilitate a deeper understanding of the techniques and results presented in the article, enabling you to apply the multilevel Monte Carlo learning approach to your own projects effectively.
 
 
 ## Contributing
