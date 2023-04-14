@@ -22,6 +22,10 @@ The project is divided into two main components:
 
 ## Installation
 
+There are two ways to set up the environment and install the required dependencies:
+
+### 1. Manual Installation
+
 To set up the environment and install the required dependencies, please follow these steps (see [here](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/local_environment_installation_guide.txt) for more detailed instructions):
 
 1. Open command prompt and naviagte to folder (e.g. C\dev\NeuralNetworkTensorflowFramework) 
@@ -42,6 +46,14 @@ python -m venv .venvNN
 ```
 pip install -r requirements.txt
 ```
+### 2. Package Installation
+Alternatively, you can install the package through pip, which includes the required dependencies:
+```
+pip install git+https://github.com/da-roth/NeuronalNetworkTensorflowFramework#montecarlolearning
+```
+
+This installation method makes use of the provided `setup.py` file, allowing for a more streamlined installation process. This approach is particularly useful for running the example files in Google Colab, as it enables a seamless and efficient execution of the examples without the need for manual installation steps. By using this package installation method, you can quickly set up the environment and focus on exploring the examples and their outputs.
+
 
 ## Usage
 
