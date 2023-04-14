@@ -103,7 +103,7 @@ To use this framework for your own project, follow the steps below:
     train_and_test(Generator, Regressor, TrainSettings)
     ```
 
-The supported functions, specifications and further details are provided in the [documenttation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/documentation.pdf).
+The supported functions, specifications and further details are provided in the [documentation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/documentation.pdf).
 
 
 ## Examples
