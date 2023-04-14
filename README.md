@@ -5,10 +5,10 @@ This repository contains a flexible neural network framework for regression-base
 ## Table of Contents
 
 - [Overview](#overview)
-- [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Examples](#examples)
+- [Multilevel Monte Carlo Learning](#multilevel-monte-carlo-learning)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -55,16 +55,7 @@ Several examples have been provided in the `src/Examples` directory, demonstrati
 
 Refer to the [documentation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/documentation.pdf) for detailed explanations of the examples and code.
 
-## Contributing
-
-We welcome contributions and suggestions to improve the framework. Please feel free to open an issue or submit a pull request with your proposed changes.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-
-## Extension: Multilevel Monte Carlo Learning
+## Multilevel Monte Carlo Learning
 
 This repository has been extended to include an implementation of the methods presented in the preprint "Multilevel Monte Carlo Learning", which can be found [here](https://arxiv.org/abs/2102.08734). The article focuses on the approximation of expected values of functional quantities on the solution of a stochastic differential equation (SDE) using multilevel Monte Carlo learning techniques.
 
@@ -78,3 +69,12 @@ The main contributions and features of this extension are:
 The code for this extension can be found in the `multilevelmontecarlolearning` directory. Additionally, Colab executables and all output .csv used to calculate the results from the "Multilevel Monte Carlo Learning" article are available in the `multilevelmontecarlolearning/numericalresults` directory.
 
 Furthermore, we have included a fast-computable proof-of-concept [example](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/multilevelmontecarlolearning/proof-of-concept.ipynb) alongside the [examples](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/multilevelmontecarlolearning/examples-article.ipynb) from the article. By exploring these examples, we hope to facilitate a deeper understanding of the techniques and results presented in the article, enabling you to apply the multilevel Monte Carlo learning approach to your own projects effectively.
+
+
+## Contributing
+
+We welcome contributions and suggestions to improve the framework. Please feel free to open an issue or submit a pull request with your proposed changes.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
