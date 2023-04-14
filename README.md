@@ -66,7 +66,46 @@ This installation method makes use of the provided `setup.py` file, allowing for
 
 After installing the required dependencies, you can run the example files in the `src/Examples` directory. The main framework is located in the `montecarlolearning` directory.
 
-To use the framework in your own projects, simply import the required modules and functions.
+The workflow of the framework consists of mainly four steps for the training and the evaluation. We want to roughly present the usage of these for your own project on simple examples.
+
+1. Specify the Generator using a training data generator or importer. There are two possible options:
+    1. Use the provided DataImporter class that imports data from files. 
+    ```
+    Generator = DataImporter()
+    Generator.set_path(pathOfFile)
+    ```
+    2. Create data during training through the TrainingDataGenerator class. Here, the framework allows to simply overwrite the methods 
+      ```
+      def trainingSet(...):
+      ```
+      and
+      ```
+      def testSet(...):
+      ```
+      with individual implementations, as e.g. done [here](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/montecarlolearning/CDF.py)
+      and use it as the data generator through e.g.
+      ```
+      Generator = CDF()
+      ```
+    
+2. Set Neural network structure. Example: 
+    ```
+    Regressor = Neural_Approximator()
+    Regressor.set_hiddenNeurons(20)
+    Regressor.set_hiddenLayers(3)
+    ```
+3. Specify the training settings. Example:
+    ```
+    TrainSettings = TrainingSettings()
+    TrainSettings.set_epochs(20)
+    TrainSettings.set_batches_per_epoch(10)
+    train_and_test(Generator, Regressor, TrainSettings)
+    ```
+4. Train and evaluate. Example:
+    ```
+    train_and_test(Generator, Regressor, TrainSettings)
+    ```
+
 
 ## Examples
 
