@@ -37,7 +37,7 @@ def discountedPayoffTensorFlow(S, r, T, K):
 # main class
 class Multilevel_GBM(TrainingDataGenerator):
     
-    def __init__(self, opt=Multilevel_Train_Case.BS_Solution, steps = 0, dim = Multilevel_Train_Dimension.five, useTensorFlowMath = False):
+    def __init__(self, opt=Multilevel_Train_Case.BS_Solution, steps = 0, dim = Multilevel_Train_Dimension.one, useTensorFlowMath = False):
         
         # Call the parent class's constructor using super()
         super().__init__()
