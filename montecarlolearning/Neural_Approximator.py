@@ -118,7 +118,7 @@ class Neural_Approximator():
     ###
     def initializeAndResetGraph(self): 
         self.graph = tf.Graph()
-        print(self.graph)
+        #print(self.graph)
 
     ###
     ### Properties
