@@ -9,7 +9,26 @@ except ModuleNotFoundError:
 
 # main class
 class TrainingDataGenerator:
-    
+    """
+    A class for generating training and test data for the cumulative distribution function (CDF).
+
+    Attributes:
+    ----------
+    _trainingMethod (TrainingMethod): The method used for generating the training data.
+    _differential (bool): A flag indicating whether or not to use differential training.
+    _trainTestRatio (float): The ratio of training data to test data.
+
+    Methods:
+    --------
+    set_nTest(value): Set the number of test data points.
+    set_inputName(inputName): Set the name of the input variable.
+    set_outputName(outputName): Set the name of the output variable.
+    set_dataSeed(dataSeed): Set the random seed for generating the training data.
+    set_testSeed(testSeed): Set the random seed for generating the test data.
+    trainingSet(m, trainSeed=None): Generate a training set of m random inputs.
+    testSet(num, testSeed=None): Generate a test set of num uniform spots.
+    """
+
 
 
     ###

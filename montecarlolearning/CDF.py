@@ -9,6 +9,25 @@ except ModuleNotFoundError:
 
 # main class
 class CDF(TrainingDataGenerator):
+    """
+    A class for generating training and test data for the cumulative distribution function (CDF).
+
+    Attributes:
+    ----------
+    _lam (float): Balance cost between values and derivatives.
+    _hiddenNeurons (int): Number of neurons in each hidden layer.
+    _hiddenLayers (int): Number of hidden layers.
+    _activationFunctionsHidden: Activation function used in hidden layers.
+    _activationFunctionOutput: Activation function used in the output layer.
+    _weight_seed (int): Random seed for initializing weights.
+
+    Methods:
+    -------
+    trainingSet(m, trainSeed = None):
+        Generates a training set of a given size.
+    testSet(num, testSeed = None):
+        Generates a test set of a given size.
+    """
     
     ###
     ### Constructor

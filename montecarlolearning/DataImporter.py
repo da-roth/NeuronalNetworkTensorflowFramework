@@ -8,7 +8,52 @@ except ModuleNotFoundError:
     from montecarlolearning.TrainingOptionEnums import *
 
 class DataImporter:
-        
+    """
+    A class for importing and preprocessing training and test data for machine learning models.
+
+    Attributes:
+    ----------
+    _trainingMethod (TrainingMethod): The method used for generating the training data.
+    _differential (bool): A flag indicating whether or not to use differential training.
+    _trainTestRatio (float): The ratio of training data to test data.
+    _testDataPath (str): The path to the test data file.
+    _randomized (bool): Whether or not to randomize the order of the training data.
+    _sep (str): The delimiter used in the input data file.
+    _dataSeed (int): The random seed used for generating the training data.
+    _testSeed (int): The random seed used for generating the test data.
+    _path (str): The path to the input data file.
+    _inputName (str): The name of the input variable.
+    _outputName (str): The name of the output variable.
+    _trainingSetSizes (list): A list of training set sizes.
+    _nTest (int): The number of test samples.
+    _df (DataFrame): The Pandas DataFrame object containing the input data.
+    
+    Methods:
+    -------
+    set_path(path, sep=None):
+        Set the path to the input data file.
+    set_inputName(inputName):
+        Set the name of the input variable.
+    set_outputName(outputName):
+        Set the name of the output variable.
+    set_trainTestRatio(trainTestRatio):
+        Set the ratio of training data to test data.
+    set_testDataPath(testDataPath):
+        Set the path to the test data file.
+    set_randomized(randomized):
+        Set whether or not to randomize the order of the training data.
+    set_trainingSetSizes(trainingSetSizes):
+        Set a list of training set sizes.
+    set_dataSeed(dataSeed):
+        Set the random seed used for generating the training data.
+    set_testSeed(testSeed):
+        Set the random seed used for generating the test data.
+    trainingSet(m, trainSeed=None):
+        Generate a training set of a given size.
+    testSet(num, testSeed=None):
+        Generate a test set of a given size.    
+    """
+    
     ###
     ### Constructor
     ###

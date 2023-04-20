@@ -24,6 +24,50 @@ tf.disable_eager_execution()
 ### Neural network class
 ###
 class Neural_Approximator():
+    """
+    A class for creating, preparing, building, and training a neural network for function approximation.
+
+    Attributes:
+        _lam (float): Balance cost between values and derivatives.
+        _hiddenNeurons (int): Number of neurons in each hidden layer.
+        _hiddenLayers (int): Number of hidden layers.
+        _activationFunctionsHidden: Activation function used in hidden layers.
+        _activationFunctionOutput: Activation function used in the output layer.
+        _weight_seed (int): Random seed for initializing weights.
+        _biasNeuron (bool): Whether to use a bias neuron.
+        _Generator (object): Data generator object used for normalization.
+        x_raw (ndarray): Raw input data for training.
+        y_raw (ndarray): Raw output data for training.
+        dydx_raw (ndarray): Raw derivative data for training.
+        graph (object): Tensorflow graph object for building the neural network.
+        session (object): Tensorflow session object for running the graph.
+        x (ndarray): Normalized input data for training.
+        y (ndarray): Normalized output data for training.
+        x_mean (ndarray): Mean of input data for normalization.
+        y_mean (ndarray): Mean of output data for normalization.
+        x_std (ndarray): Standard deviation of input data for normalization.
+        y_std (ndarray): Standard deviation of output data for normalization.
+        dy_dx (ndarray): Normalized derivative data for training.
+        lambda_j (ndarray): Lambda value for differential training.
+
+    Methods:
+        set_Generator(Generator): Set data generator for normalization.
+        set_lam(lam): Set balance cost between values and derivatives.
+        set_hiddenNeurons(hiddenNeurons): Set number of neurons in each hidden layer.
+        set_hiddenLayers(hiddenLayers): Set number of hidden layers.
+        set_activationFunctionsHidden(activationFunctionsHidden): Set activation function for hidden layers.
+        set_activationFunctionOutput(activationFunctionOutput): Set activation function for output layer.
+        set_weight_seed(weight_seed): Set random seed for initializing weights.
+        set_biasNeuron(biasNeuron): Set whether to use a bias neuron.
+        initializeAndResetGraph(): Initialize or reset Tensorflow graph object.
+        initializeData(x_raw, y_raw, dydx_raw): Initialize raw input, output, and derivative data.
+        prepare(dataSize, nTest): Normalize dataset and build Tensorflow graph.
+        storeNewDataAndNormalize(x_raw, y_raw, dydx_raw, dataSize): Store new raw input, output, and derivative data and normalize it.
+        build_graph(lam, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed, biasNeuron): Build Tensorflow graph for the neural network.
+        train(description, TrainingSettings, reinit, callback, callback_epochs, xTest, yTest): Train the neural network.
+        predict_values(x, isTraining): Predict values for input data x based on the trained neural network.
+        predict_values_and_derivs(x): Predict values and derivatives for input data x based on the trained neural network.
+    """
     ###
     ### Attributes
     ###

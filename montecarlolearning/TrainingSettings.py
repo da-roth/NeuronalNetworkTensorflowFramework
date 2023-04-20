@@ -1,4 +1,40 @@
 class TrainingSettings:
+    
+    """
+    A class for storing training settings.
+
+    Attributes:
+    ----------
+    _learning_rate_schedule (list): A list of tuples representing the learning rate schedule.
+    _epochs (int): The number of epochs for standard training.
+    _batches_per_epoch (int): The number of batches per epoch for standard training.
+    _min_batch_size (int): The minimum batch size for standard training.
+    _madeSteps (int): The number of training steps made for generate data during training method.
+    _testFrequency (int): The frequency of testing during generate data during training method.
+    _nTest (int): The number of test cases during generate data during training method.
+    _mcRounds (int): The number of Monte Carlo rounds during generate data during training method.
+    _samplesPerStep (int): The number of samples per step during generate data during training method.
+    _trainingSteps (int): The number of training steps during generate data during training method.
+    _useExponentialDecay (bool): A flag indicating whether or not to use exponential decay.
+    _initial_learning_rate (float): The initial learning rate for exponential decay.
+    _decay_steps (int): The number of decay steps for exponential decay.
+    _decay_rate (float): The decay rate for exponential decay.
+
+    Methods:
+    -------
+    increaseMadeSteps(): Increases the made steps.
+    useExponentialDecay(initial_learning_rate, decay_rate, decay_steps): Sets up the exponential decay.
+    set_epochs(value): Sets the number of epochs.
+    set_fileName(value): Sets the file name.
+    set_learning_rate_schedule(value): Sets the learning rate schedule.
+    set_batches_per_epoch(value): Sets the number of batches per epoch.
+    set_min_batch_size(value): Sets the minimum batch size.
+    set_test_frequency(value): Sets the test frequency.
+    set_nTest(value): Sets the number of test cases.
+    set_mcRounds(value): Sets the number of Monte Carlo rounds.
+    set_trainingSteps(trainingSetSizes): Sets the number of training steps.
+    set_samplesPerStep(trainingSetSizes): Sets the number of samples per step.
+    """
 
     def __init__(self):
         # Mandatory for all:
