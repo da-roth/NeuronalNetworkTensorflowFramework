@@ -74,7 +74,7 @@ class Multilevel_GBM(TrainingDataGenerator):
             self.sigma_trainInterval = [0.2, 0.2]
             self.mu_trainInterval = [0.05, 0.05]
             self.T_trainInterval = [5.0, 5.0]
-            self.K_trainInterval = [210.0, 210.0]
+            self.K_trainInterval = [150.0, 150.0]
             
             # Test set modification: (reducing test interval slightly for better testing)
             self.s_0_h = 0.01
