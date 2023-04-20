@@ -163,12 +163,12 @@ While, the fast-computable proof-of-concept [example](https://github.com/da-roth
     - [results](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/tree/main/src/multilevelmontecarlolearning/MultilevelExample/multilevel-example-outputs)
 
 
-By exploring these examples, we hope to facilitate a deeper understanding of the techniques and results presented in the article, enabling you to apply the multilevel Monte Carlo learning approach to your own projects effectively.
+By exploring these examples, the goal is to facilitate a deeper understanding of the techniques and results presented in the article, enabling you to apply the multilevel Monte Carlo learning approach to your own projects effectively.
 
 
 ## Contributing
 
-We welcome contributions and suggestions to improve the framework. Please feel free to open an issue or submit a pull request with your proposed changes.
+I welcome contributions and suggestions to improve the framework. Please feel free to open an issue or submit a pull request with your proposed changes.
 
 ## License
 
