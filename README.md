@@ -165,6 +165,17 @@ While, the fast-computable proof-of-concept [example](https://github.com/da-roth
 
 By exploring these examples, the goal is to facilitate a deeper understanding of the techniques and results presented in the article, enabling you to apply the multilevel Monte Carlo learning approach to your own projects effectively.
 
+## Related Works
+
+This repository is inspired by and builds upon various works from the literature:
+
+- **Multilevel Monte Carlo Learning**: Gerstner, T., Harrach, B., Roth, D., & Simon, M. (2021). [Multilevel Monte Carlo Learning](https://arxiv.org/abs/2102.08734). *arXiv preprint arXiv:2102.08734*. This article introduces a novel approach to solving partial/stochastic differential equations (PDEs/SDEs) using a combination of deep learning and multilevel Monte Carlo methods. The authors use multiple neural networks to learn the solution of the SDEs level estimators.
+
+- **Solving Stochastic Differential Equations and Kolmogorov Equations by Means of Deep Learning**: Beck, C., Becker, S., Grohs, P., Jaafari, N., & Jentzen, A. (2018). [Solving Stochastic Differential Equations and Kolmogorov Equations by Means of Deep Learning](https://arxiv.org/abs/1806.00421). *arXiv preprint arXiv:1806.00421*. The authors propose a method based on deep neural networks to solve both stochastic differential equations. This work introduced the underlying idea of using deep learning to solve PDEs.
+
+- **Differential Machine Learning**: The code structure of classes used in this framework was adapted from the [GitHub repository](https://github.com/differential-machine-learning/notebooks) by Huge and Savine, which provides a collection of Jupyter notebooks illustrating various aspects of differential machine learning. The code was modified and extended to suit the specific needs of this project.
+
+
 
 ## Contributing
 
