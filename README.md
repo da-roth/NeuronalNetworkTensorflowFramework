@@ -12,6 +12,7 @@ In addition to the provided examples, there is an [introduction PDF](https://git
 - [Examples](#examples)
 - [Multilevel Monte Carlo Learning](#multilevel-monte-carlo-learning)
 - [Related Works](#related-works)
+- [Future Work](#future-work)
 - [Contributing](#contributing)
 - [License](#license)
 
