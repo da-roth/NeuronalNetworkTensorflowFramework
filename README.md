@@ -11,6 +11,7 @@ In addition to the provided examples, there is an [introduction PDF](https://git
 - [Usage](#usage)
 - [Examples](#examples)
 - [Multilevel Monte Carlo Learning](#multilevel-monte-carlo-learning)
+- [Related Works](#related-works)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -174,8 +175,6 @@ This repository is inspired by and builds upon various works from the literature
 - **Solving Stochastic Differential Equations and Kolmogorov Equations by Means of Deep Learning**: Beck, C., Becker, S., Grohs, P., Jaafari, N., & Jentzen, A. (2018). [Solving Stochastic Differential Equations and Kolmogorov Equations by Means of Deep Learning](https://arxiv.org/abs/1806.00421). *arXiv preprint arXiv:1806.00421*. The authors propose a method based on deep neural networks to solve both stochastic differential equations. This work introduced the underlying idea of using deep learning to solve PDEs.
 
 - **Differential Machine Learning**: The code structure of classes used in this framework was adapted from the [GitHub repository](https://github.com/differential-machine-learning/notebooks) by Huge and Savine, which provides a collection of Jupyter notebooks illustrating various aspects of differential machine learning. The code was modified and extended to suit the specific needs of this project.
-
-
 
 ## Contributing
 
