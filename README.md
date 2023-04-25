@@ -176,6 +176,27 @@ This repository is inspired by and builds upon various works from the literature
 
 - **Differential Machine Learning**: The code structure of classes used in this framework was adapted from the [GitHub repository](https://github.com/differential-machine-learning/notebooks) by Huge and Savine, which provides a collection of Jupyter notebooks illustrating various aspects of differential machine learning. The code was modified and extended to suit the specific needs of this project.
 
+# Future Work
+
+This section outlines the ideas and plans for future development of the project. Contributions and suggestions from the community are highly encouraged. To contribute, please open an issue or submit a pull request.
+
+## Training Settings and Neural Network Architecture Settings
+
+The framework can be enhanced by incorporating a greater variety of training and neural network architecture settings:
+
+1. **More training settings**: Exploring different training settings, such as varying learning rate schedules, optimization algorithms, and loss functions, can lead to improved model performance.
+2. **Neural network architecture settings**: Supporting a wider range of neural network architectures allows the framework to be more adaptable to different use cases and preferences. This includes the option to use custom or pretrained models, as well as varying layer configurations.
+
+## Differential Machine Learning
+
+Integrating differential machine learning into the framework by:
+
+1. **TrainingDataGenerator**: Modifying the TrainingDataGenerator to accept pathwise sensitivity outputs, which would enable differential information to be easily incorporated into the training data.
+2. **Loss functions and evaluation metrics**: Implementing differential-aware loss functions and evaluation metrics could improve the training process and performance measurement for models working with differential data.
+3. **Exploring TensorFlow's automatic differentiation**
+
+Any feedback, suggestions, or contributions to help make this project even better are greatly appreciated. Thank you for your support!
+
 ## Contributing
 
 I welcome contributions and suggestions to improve the framework. Please feel free to open an issue or submit a pull request with your proposed changes.
