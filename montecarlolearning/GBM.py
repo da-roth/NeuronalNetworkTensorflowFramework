@@ -56,7 +56,7 @@ class GBM(TrainingDataGenerator):
         sigma = 0.2
         mu = 0.05
         T = 1.0
-        K = 110
+        K = 110.0
 
 
         if (self._opt == GBM_Case.ClosedSolutionAddtiveNoise):
@@ -108,7 +108,7 @@ class GBM(TrainingDataGenerator):
         sigma = 0.2
         mu = 0.05
         T = 1.0
-        K = 110
+        K = 110.0
         
         # B.S. formula
         d1 = (np.log(s_0[:]/K) + (mu + 0.5 * sigma * sigma) * T) / sigma / np.sqrt(T)

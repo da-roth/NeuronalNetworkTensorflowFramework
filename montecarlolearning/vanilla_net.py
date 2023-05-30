@@ -61,8 +61,8 @@ def vanilla_net(
             initializer = tf.variance_scaling_initializer(), dtype=real_type))
         bs.append(tf.get_variable("b%d"%(l+1), [hiddenNeurons], \
             initializer = tf.zeros_initializer(), dtype=real_type))
-        zs.append(activationFunctionHidden[l-1](zs[l]) @ ws[l+1] + bs[l+1]) # eq. 3, l=2..L-1
-
+        #zs.append(activationFunctionHidden[l-1](zs[l]) @ ws[l+1] + bs[l+1]) # eq. 3, l=2..L-1
+        zs.append(tf.nn.softplus(zs[l]) @ ws[l+1] + bs[l+1]) # eq. 3, l=2..L-1
     activationFunctionOutput = activationFunctionOutput
     # output layer (index hiddenLayers+1)
     ws.append(tf.get_variable("w"+str(hiddenLayers+1), [hiddenNeurons, 1], \
@@ -70,8 +70,8 @@ def vanilla_net(
     bs.append(tf.get_variable("b"+str(hiddenLayers+1), [1], \
         initializer = tf.zeros_initializer(), dtype=real_type))
     # eq. 3, l=L
-    #zs.append(tf.nn.softplus(zs[hiddenLayers]) @ ws[hiddenLayers+1] + bs[hiddenLayers+1]) 
-    zs.append(activationFunctionOutput(zs[hiddenLayers]) @ ws[hiddenLayers+1] + bs[hiddenLayers+1]) 
+    zs.append(tf.nn.softplus(zs[hiddenLayers]) @ ws[hiddenLayers+1] + bs[hiddenLayers+1]) 
+    #zs.append(activationFunctionOutput(zs[hiddenLayers]) @ ws[hiddenLayers+1] + bs[hiddenLayers+1]) 
     #zs.append(zs[hiddenLayers] @ ws[hiddenLayers+1] + bs[hiddenLayers+1]) 
     
     # result = output layer

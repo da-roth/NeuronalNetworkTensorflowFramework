@@ -39,7 +39,8 @@ def backprop(
     # output layer
     zbar = (zbar @ tf.transpose(ws[L])) * activationFunctionOutput(zs[L-1])
     for l in range(L-2, 0, -1):
-        zbar = (zbar @ tf.transpose(ws[l+1])) * activationFunctionHidden[l](zs[l]) # eq. 4
+        #zbar = (zbar @ tf.transpose(ws[l+1])) * activationFunctionHidden[l](zs[l]) # eq. 4
+        zbar = (zbar @ tf.transpose(ws[l+1])) * tf.nn.sigmoid(zs[l]) # eq. 4
     # for l=0
     zbar = zbar @ tf.transpose(ws[1]) # eq. 4
     

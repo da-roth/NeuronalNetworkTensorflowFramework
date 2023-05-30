@@ -20,7 +20,7 @@ exec(open(packageFile).read())
 ### 1. Training data Generator/Importer
 ###
 
-Generator = GBM_Differential(GBM_Case.ClosedSolution)
+Generator = GBM_Differential(GBM_Case.Standard)
 Generator.set_inputName('S')
 Generator.set_outputName('EuropeanCallPrice(S)')
 

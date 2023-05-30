@@ -319,13 +319,13 @@ class Neural_Approximator():
         return y
 
     # Predict values and derivatives
-    def predict_values_and_derivs(self, x):
+    def predict_values_and_derivs(self, x, isTraining = True):
         # scale
         x_scaled = (x-self.x_mean) / self.x_std
         # predict scaled
         y_scaled, dyscaled_dxscaled = self.session.run(
             [self.predictions, self.derivs_predictions], 
-            feed_dict = {self.inputs: x_scaled, self.isTraining: True})
+            feed_dict = {self.inputs: x_scaled})
         # unscale
         y = self.y_mean + self.y_std * y_scaled
         dydx = self.y_std / self.x_std * dyscaled_dxscaled

@@ -70,7 +70,7 @@ def train_and_test(Generator,
         Regressor.initializeAndResetGraph()
         with Regressor.graph.as_default():  
             xTrain, yTrain, yDifferentialTrain = Generator.trainingSet(initial_sample_amount, trainSeed=Generator.dataSeed)
-            xTest, yTest, _unused, _unused2 = Generator.testSet(num=TrainSettings.nTest, testSeed=Generator.testSeed)
+            xTest, yTest, yDifferentialTest, _unused2 = Generator.testSet(num=TrainSettings.nTest, testSeed=Generator.testSeed)
             #print("done")
             
             # 2. Neural network initialization 
@@ -90,12 +90,12 @@ def train_and_test(Generator,
             file_out.write('train_steps, RMSE, Max_Error \n ')
             for i in range(1,TrainSettings.TrainingSteps):
                 #print('Training step ' + str(i) + ' will be done')
-                xTrain, yTrain, _unused = Generator.trainingSet(TrainSettings.SamplesPerStep, trainSeed=i)
+                xTrain, yTrain, yDifferentialTrain = Generator.trainingSet(TrainSettings.SamplesPerStep, trainSeed=i)
                 
                 # ToDo: rethink this. It doesn't work without this, see e.g. closed path gbm. 
                 # Since data is generated each time, the first normalization is not correct later...
                 # Idea: Perhaps with max/min of intervals, to overcome border cases...?
-                Regressor.storeNewDataAndNormalize(xTrain,  yTrain, _unused, TrainSettings.SamplesPerStep)
+                Regressor.storeNewDataAndNormalize(xTrain,  yTrain, yDifferentialTrain, TrainSettings.SamplesPerStep)
                 
                 # 4. Train network
                 t0 = time.time()
@@ -121,7 +121,10 @@ def train_and_test(Generator,
             
             # 4. Predictions on test data
             isTraining = False
-            predictions = Regressor.predict_values(xTest, isTraining)
+            if yDifferentialTrain is not None:
+                predictions, preddeltas = Regressor.predict_values_and_derivs(xTest, isTraining)
+            else:
+                predictions = Regressor.predict_values(xTest, isTraining)
             if isinstance(predictions, tf.Tensor):
                 predictions = predictions.eval(session=Regressor.session)
             predvalues[("standard", TrainSettings.nTest)] = predictions
@@ -135,8 +138,11 @@ def train_and_test(Generator,
             print('max error  after training is ' + str(L_infinity) )
             # file_out.write('%i, %f, %f \n' % (i+1, L_2,L_infinity)) 
             # file_out.flush()
-                    
-            return xTest, yTest, predvalues
+
+            if yDifferentialTrain is not None:    
+                return xTest, yTest, predvalues, yDifferentialTest, preddeltas
+            else:
+                return xTest, yTest, predvalues
         
     else:
        print('Training method not recognized')

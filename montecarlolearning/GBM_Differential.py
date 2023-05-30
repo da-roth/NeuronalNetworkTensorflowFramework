@@ -56,7 +56,7 @@ class GBM_Differential(TrainingDataGenerator):
         sigma = 0.2
         mu = 0.05
         T = 1.0
-        K = 110
+        K = 110.0
 
 
         if (self._opt == GBM_Case.ClosedSolutionAddtiveNoise):
@@ -64,7 +64,8 @@ class GBM_Differential(TrainingDataGenerator):
             d2 = d1[:] - sigma * np.sqrt(T)
             z=np.random.normal(0.0, self._noiseVariance, m)
             noisedPrice = s_0[:] * norm.cdf(d1[:]) - np.exp(-mu*T) * K * norm.cdf(d2[:]) + z[:]
-            return s_0.reshape([-1,1]), noisedPrice.reshape([-1,1]), None
+            delta = norm.cdf(d1[:])
+            return s_0.reshape([-1,1]), noisedPrice.reshape([-1,1]), delta.reshape([-1,1])
         
         elif (self._opt == GBM_Case.ClosedSolution):
             d1 = (np.log(s_0[:]/K) +(mu + 0.5 * sigma * sigma) * T) / sigma / np.sqrt(T)
@@ -84,6 +85,12 @@ class GBM_Differential(TrainingDataGenerator):
             #piecewise multiply of s= s_0[:] * np.exp((mu-sigma*sigma/2)*h+sigma*np.sqrt(h)*z[:])
             s= np.multiply(s_0[:],np.exp((mu-0.5*sigma*sigma)*h+sigma*np.sqrt(h)*z[:]))
             payoffs=np.exp(-mu * T) * (s[:]-K) * (1-p[:])
+
+            # Calculate pathwise sensitivities
+            ds_ds0 = np.exp((mu - 0.5 * sigma * sigma) * h + sigma * np.sqrt(h) * z[:])
+            dp_ds0 = -(1 / (s_0[:] * sigma * np.sqrt(T))) * ds_ds0
+            dpayoffs_ds0 = np.exp(-mu * T) * (1 - p[:]) * (ds_ds0 - (s[:] - K) * dp_ds0)
+
             return s_0.reshape([-1,1]) , payoffs.reshape([-1,1]), None
         
         else: #(self._opt == GBM_Case.Standard):
@@ -93,7 +100,10 @@ class GBM_Differential(TrainingDataGenerator):
             #piecewise multiply of s= s_0[:] * np.exp((mu-sigma*sigma/2)*h+sigma*np.sqrt(h)*z[:])
             s= np.multiply(s_0[:],np.exp((mu-0.5*sigma*sigma)*h+sigma*np.sqrt(h)*z[:]))
             payoffs=np.exp(-mu * T) * np.maximum(s[:] - K, 0.0)
-            return s_0.reshape([-1,1]) , payoffs.reshape([-1,1]), None
+            # Calculate pathwise sensitivity
+            dS = np.exp((mu - 0.5 * sigma**2) * h + sigma * np.sqrt(h) * z)
+            pathwise_sensitivity = np.exp(-mu * T) * np.where(s[:] - K > 0.0, dS[:], 0.0)
+            return s_0.reshape([-1,1]) , payoffs.reshape([-1,1]), pathwise_sensitivity.reshape([-1,1])
         
     
     # test set: returns a grid of uniform spots 
@@ -109,7 +119,7 @@ class GBM_Differential(TrainingDataGenerator):
         sigma = 0.2
         mu = 0.05
         T = 1.0
-        K = 110
+        K = 110.0
         
         # B.S. formula
         d1 = (np.log(s_0[:]/K) + (mu + 0.5 * sigma * sigma) * T) / sigma / np.sqrt(T)

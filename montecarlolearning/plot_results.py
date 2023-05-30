@@ -12,11 +12,13 @@ def plot_results(title,
           xTest, 
           yTest,
           Generator,
+          yDeltaTest = None,
+          yDeltaPredicted = None,
           computeRmse=True, 
           weights=None):
     
 
-    if Generator.Differential:
+    if Generator._differential:
         displayResults = enumerate(["standard", "differential"])
         numCols = 2
     else:
@@ -37,7 +39,7 @@ def plot_results(title,
             xycoords=ax[i,0].yaxis.label, textcoords='offset points',
             ha='right', va='center')
         
-        if Generator.Differential:
+        if Generator._differential:
             displayResults = enumerate(["standard", "differential"])
             ax[0,1].set_title("differential")
         else:
@@ -66,12 +68,14 @@ def plot_results(title,
 
                 ax[i,j].legend(prop={'size': 8}, loc='upper left')
     elif Generator.TrainMethod == Generator.TrainMethod.GenerateDataDuringTraining:
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots(1, numCols, squeeze=False)
         fig.set_size_inches(4 + 1.5, 4 )
-        ax.set_title("standard")
-        ax.annotate("y-axis",xy=(0, 0.5), 
-        xytext=(-ax.yaxis.labelpad-5, 0),
-        xycoords=ax.yaxis.label, textcoords='offset points',
+        ax[0,0].set_title("standard")
+        if(numCols > 1):
+            ax[0,1].set_title("differential")
+            ax[0,0].annotate("y-axis",xy=(0, 0.5), 
+        xytext=(-ax[0,0].yaxis.labelpad-5, 0),
+        xycoords=ax[0,0].yaxis.label, textcoords='offset points',
         ha='right', va='center')
 
 
@@ -85,14 +89,21 @@ def plot_results(title,
             else:
                 t = Generator.inputName
                 
-            ax.set_xlabel(t)            
-            ax.set_ylabel(Generator.outputName)
+            ax[0,0].set_xlabel(t)            
+            ax[0,0].set_ylabel(Generator.outputName)
 
-            ax.plot(xTest[:,0], yPredicted[("standard",yTest.size)], 'co', \
+            ax[0,0].plot(xTest[:,0], yPredicted[("standard",yTest.size)], 'co', \
                         markersize=2, markerfacecolor='white', label="predicted")
-            ax.plot(xTest[:,0], yTest, 'r.', markersize=0.5, label='yTest')
+            ax[0,0].plot(xTest[:,0], yTest, 'r.', markersize=0.5, label='yTest')
 
-            ax.legend(prop={'size': 8}, loc='upper left')
+            #ax[0,0].legend(prop={'size': 8}, loc='upper left')
+
+            if(numCols > 1):
+                ax[0,1].plot(xTest, yDeltaPredicted, 'co', \
+                            markersize=2, markerfacecolor='white', label="predicted")
+                ax[0,1].plot(xTest, yDeltaTest, 'r.', markersize=0.5, label='yDeltaTest')
+
+                #ax[0,1].legend(prop={'size': 8}, loc='upper left')
     else:
        print('Training method not recognized')
        
