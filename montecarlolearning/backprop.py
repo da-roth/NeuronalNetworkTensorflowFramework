@@ -52,7 +52,7 @@ def backprop(
 def twin_net(input_dim, hidden_units, hidden_layers, activationFunctionsHidden, activationFunctionOutput,  seed):
     
     # first, build the feedforward net
-    xs, (ws, bs), zs, ys = vanilla_net(input_dim, hidden_units, hidden_layers, activationFunctionsHidden, activationFunctionOutput, seed)
+    xs, (ws, bs), zs, ys, isTraining = vanilla_net(input_dim, hidden_units, hidden_layers, activationFunctionsHidden, activationFunctionOutput, seed)
     
     # then, build its differentiation by backprop
     xbar = backprop((ws, bs), zs, activationFunctionsHidden, activationFunctionOutput)
