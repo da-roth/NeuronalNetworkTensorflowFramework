@@ -69,13 +69,13 @@ def train_and_test(Generator,
         
         Regressor.initializeAndResetGraph()
         with Regressor.graph.as_default():  
-            xTrain, yTrain, _unused = Generator.trainingSet(initial_sample_amount, trainSeed=Generator.dataSeed)
+            xTrain, yTrain, yDifferentialTrain = Generator.trainingSet(initial_sample_amount, trainSeed=Generator.dataSeed)
             xTest, yTest, _unused, _unused2 = Generator.testSet(num=TrainSettings.nTest, testSeed=Generator.testSeed)
             #print("done")
             
             # 2. Neural network initialization 
             #print("initializing neural appropximator")
-            Regressor.initializeData(xTrain, yTrain)
+            Regressor.initializeData(xTrain, yTrain, yDifferentialTrain)
             # Prepare: normalize dataset and initialize tf graph
             Regressor.prepare(initial_sample_amount, TrainSettings.nTest)
             #print("done")        

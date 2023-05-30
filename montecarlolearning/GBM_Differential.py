@@ -18,7 +18,7 @@ class GBM_Case(Enum):
     
     
 # main class
-class GBM(TrainingDataGenerator):
+class GBM_Differential(TrainingDataGenerator):
     
     ###(TrainingDataGenerator)
     ### Constructor
@@ -31,7 +31,7 @@ class GBM(TrainingDataGenerator):
         super().__init__()
 
         # Mandatory 
-        self._differential = False
+        self._differential = True
         
         self._opt = opt
         self._noiseVariance = noiseVariance
@@ -70,7 +70,8 @@ class GBM(TrainingDataGenerator):
             d1 = (np.log(s_0[:]/K) +(mu + 0.5 * sigma * sigma) * T) / sigma / np.sqrt(T)
             d2 = d1[:] - sigma * np.sqrt(T)
             price = s_0[:] * norm.cdf(d1[:]) - np.exp(-mu*T) * K * norm.cdf(d2[:])
-            return s_0.reshape([-1,1]), price.reshape([-1,1]), None
+            delta = norm.cdf(d1[:])
+            return s_0.reshape([-1,1]), price.reshape([-1,1]), delta.reshape([-1,1])
 
         elif (self._opt == GBM_Case.VarianceReduced):
             #3. sets of random returns
@@ -114,4 +115,5 @@ class GBM(TrainingDataGenerator):
         d1 = (np.log(s_0[:]/K) + (mu + 0.5 * sigma * sigma) * T) / sigma / np.sqrt(T)
         d2 = d1[:] - sigma * np.sqrt(T)
         price = s_0[:] * norm.cdf(d1[:]) - np.exp(-mu*T) * K * norm.cdf(d2[:])
-        return s_0.reshape([-1,1]), price.reshape([-1,1]), None, None
+        delta = norm.cdf(d1[:])
+        return s_0.reshape([-1,1]), price.reshape([-1,1]), delta.reshape([-1,1]), None

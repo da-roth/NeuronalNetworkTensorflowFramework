@@ -48,6 +48,7 @@ sys.path.append( os.path.join(mainDirectory,'src','Examples','CumulativeDensitiy
 from CDF import *
 from GBM_5d import *
 from GBM import *
+from GBM_Differential import *
 from DataImporter import *
 from Multilevel_GBM import *
 

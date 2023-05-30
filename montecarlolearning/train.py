@@ -71,7 +71,7 @@ def train(description,
             TrainingSettings.increaseMadeSteps()
         
         # train one epoch
-        if not Regressor._Generator.Differential:
+        if not Regressor._Generator._differential:
         
             vanilla_train_one_epoch(
                 Regressor, 

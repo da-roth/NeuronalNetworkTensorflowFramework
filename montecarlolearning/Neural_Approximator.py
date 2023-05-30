@@ -267,8 +267,7 @@ class Neural_Approximator():
                 self.learning_rate, \
                 self.loss, \
                 self.minimizer , \
-                self.isTraining, \
-                self.predictionsTest \
+                self.isTraining \
                     = diff_training_graph(self.n, self.nTest, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed, self.alpha, self.beta, self.lambda_j)
         
             # Global initializer

@@ -48,6 +48,7 @@ from montecarlolearning.BlackScholes import *
 from montecarlolearning.DataImporter import *
 from montecarlolearning.CDF import *
 from montecarlolearning.GBM import *
+from montecarlolearning.GBM_Differential import *
 from montecarlolearning.GBM_5d import *
 from montecarlolearning.Multilevel_GBM import *
 
