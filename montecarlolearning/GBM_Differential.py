@@ -98,11 +98,11 @@ class GBM_Differential(TrainingDataGenerator):
             h=T/1.0
             z=np.random.normal(0.0,1.0,m)
             #piecewise multiply of s= s_0[:] * np.exp((mu-sigma*sigma/2)*h+sigma*np.sqrt(h)*z[:])
-            s= np.multiply(s_0[:],np.exp((mu-0.5*sigma*sigma)*h+sigma*np.sqrt(h)*z[:]))
+            pathModification = np.exp((mu-0.5*sigma*sigma)*h+sigma*np.sqrt(h)*z[:])
+            s= np.multiply(s_0[:],pathModification)
             payoffs=np.exp(-mu * T) * np.maximum(s[:] - K, 0.0)
             # Calculate pathwise sensitivity
-            dS = np.exp((mu - 0.5 * sigma**2) * h + sigma * np.sqrt(h) * z)
-            pathwise_sensitivity = np.exp(-mu * T) * np.where(s[:] - K > 0.0, dS[:], 0.0)
+            pathwise_sensitivity = np.exp(-mu * T) * np.where(s[:] - K > 0.0, pathModification[:], 0.0)
             return s_0.reshape([-1,1]) , payoffs.reshape([-1,1]), pathwise_sensitivity.reshape([-1,1])
         
     
