@@ -9,6 +9,8 @@ def diff_training_graph(
     testDim,
     hidden_units, 
     hidden_layers, 
+    activationFunctionsHidden,
+    activationFunctionOutput,
     seed, 
     # balance relative weight of values and differentials 
     # loss = alpha * MSE(values) + beta * MSE(greeks, lambda_j) 
@@ -19,7 +21,7 @@ def diff_training_graph(
     isTraining = True):
     
     # net, now a twin
-    inputs, predictions, derivs_predictions = twin_net(trainingDim, hidden_units, hidden_layers, seed)
+    inputs, predictions, derivs_predictions = twin_net(trainingDim, hidden_units, hidden_layers, activationFunctionsHidden, activationFunctionOutput, seed)
     
     # placeholder for labels, now also derivs labels
     labels = tf.placeholder(shape=[None, 1], dtype=real_type)

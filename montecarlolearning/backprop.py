@@ -49,13 +49,13 @@ def backprop(
     return xbar    
 
 # combined graph for valuation and differentiation
-def twin_net(input_dim, hidden_units, hidden_layers, seed):
+def twin_net(input_dim, hidden_units, hidden_layers, activationFunctionsHidden, activationFunctionOutput,  seed):
     
     # first, build the feedforward net
-    xs, (ws, bs), zs, ys = vanilla_net(input_dim, hidden_units, hidden_layers, seed)
+    xs, (ws, bs), zs, ys = vanilla_net(input_dim, hidden_units, hidden_layers, activationFunctionsHidden, activationFunctionOutput, seed)
     
     # then, build its differentiation by backprop
-    xbar = backprop((ws, bs), zs)
+    xbar = backprop((ws, bs), zs, activationFunctionsHidden, activationFunctionOutput)
     
     # return input x, output y and differentials d_y/d_z
     return xs, ys, xbar

@@ -205,8 +205,8 @@ class Neural_Approximator():
         
         
     # Build graph
-    def build_graph(self,       # differential or not           
-                lam,                # balance cost between values and derivs  
+    def build_graph(self,                
+                lam,                
                 hiddenNeurons, 
                 hiddenLayers,
                 activationFunctionsHidden, 
@@ -226,7 +226,7 @@ class Neural_Approximator():
                 
         with self.graph.as_default():
             
-            if not self._Generator.Differential:
+            if not self._Generator._differential:
             # Build vanilla graph through vanilla_graph.py
                 if isinstance(self.x_raw, tf.Tensor):
                     self.inputs, \
@@ -269,9 +269,7 @@ class Neural_Approximator():
                 self.minimizer , \
                 self.isTraining, \
                 self.predictionsTest \
-                    = diff_training_graph(self.n, self.nTest, hidden_units, \
-                                                hidden_layers, weight_seed, \
-                                                self.alpha, self.beta, self.lambda_j)
+                    = diff_training_graph(self.n, self.nTest, hiddenNeurons, hiddenLayers, activationFunctionsHidden, activationFunctionOutput, weight_seed, self.alpha, self.beta, self.lambda_j)
         
             # Global initializer
             self.initializer = tf.global_variables_initializer()

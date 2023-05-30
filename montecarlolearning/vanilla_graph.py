@@ -21,7 +21,7 @@ def vanilla_training_graph(trainingDim, testDim, hiddenNeurons, hiddenLayers, ac
             inputs, weights_and_biases, layers, predictions, isTraining = \
                 vanilla_net(trainingDim, hiddenNeurons, hiddenLayers, activationFunctionsHidden,activationFunctionOutput , seed)
         
-        # backprop even though we are not USING differentials for training
+        # backprop even if we are not USING differentials for training
         # we still need them to predict derivatives dy_dx 
         derivs_predictions = backprop(weights_and_biases, layers, activationFunctionsHidden, activationFunctionOutput)
         
