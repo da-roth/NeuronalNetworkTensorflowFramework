@@ -7,9 +7,9 @@ In addition to the provided examples, there is an [introduction PDF](https://git
 ## Table of Contents
 
 - [Overview](#overview)
+- [Examples](#examples)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Examples](#examples)
 - [Multilevel Monte Carlo Learning](#multilevel-monte-carlo-learning)
 - [Related Works](#related-works)
 - [Future Work](#future-work)
@@ -27,6 +27,35 @@ The project is divided into two main components:
 2. Investigation of neural networks' properties with respect to Monte Carlo learning techniques.
 
 The repository also includes an extension that demonstrates the application of multilevel neural network training for the approximation of expected values of functional quantities on the solution of a stochastic differential equation (SDE), as described in the ["Multilevel Monte Carlo Learning"](https://arxiv.org/abs/2102.08734) article.
+
+## Examples
+
+Several examples have been provided in the `src/Examples` directory, demonstrating the framework's capabilities and usage. A Google Colab executable link with all examples is also available and will be linked below.
+
+Refer to the [documentation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/documentation.pdf) for detailed explanations of the examples and the code.
+
+### Cumulative Density Function Training Examples
+
+- [Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples/CumulativeDensitiyFunction/Implementation_CDF.ipynb)
+- [Colab Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples_Colab/CumulativeDensitiyFunction/Implementation_CDF.ipynb)
+
+### Using Approximations As Training Data Examples
+
+- One-dimensional geometric Brownian motion and the Black-Scholes closed solution for a European call option:
+    - [Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples/MonteCarloLearning/Implementation_GBM_ClosedSolution.ipynb)
+    - [Colab Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples_Colab/MonteCarloLearning/Implementation_GBM_ClosedSolution.ipynb)
+
+- Now, use Monte Carlo simulation instead of the closed solution:
+    - [Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples/MonteCarloLearning/Implementation_GBM_MC.ipynb)
+    - [Colab Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples_Colab/MonteCarloLearning/Implementation_GBM_MC.ipynb)
+
+- Five-dimensional training interval:
+    - [Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples/MonteCarloLearning/Implementation_GBM_5d.ipynb)
+    - [Colab Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples_Colab/MonteCarloLearning/Implementation_GBM_5d.ipynb)
+  
+- Multilevel Monte Carlo learning proof of concept:
+    - [Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples/MonteCarloLearning/Implementation_Multilevel_POC.ipynb)
+    - [Colab Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples_Colab/MonteCarloLearning/Implementation_Multilevel_POC.ipynb)
 
 
 ## Installation
@@ -106,37 +135,6 @@ To use this framework for your own project, follow the steps below:
     ```
 
 The supported functions, specifications and further details are provided in the [documentation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/documentation.pdf).
-
-
-## Examples
-
-Several examples have been provided in the `src/Examples` directory, demonstrating the framework's capabilities and usage. A Google Colab executable link with all examples is also available and will be linked below.
-
-Refer to the [documentation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/documentation.pdf) for detailed explanations of the examples and the code.
-
-### Cumulative Density Function Training Examples
-
-- [Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples/CumulativeDensitiyFunction/Implementation_CDF.ipynb)
-- [Colab Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples_Colab/CumulativeDensitiyFunction/Implementation_CDF.ipynb)
-
-### Using Approximations As Training Data Examples
-
-- One-dimensional geometric Brownian motion and the Black-Scholes closed solution for a European call option:
-    - [Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples/MonteCarloLearning/Implementation_GBM_ClosedSolution.ipynb)
-    - [Colab Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples_Colab/MonteCarloLearning/Implementation_GBM_ClosedSolution.ipynb)
-
-- Now, use Monte Carlo simulation instead of the closed solution:
-    - [Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples/MonteCarloLearning/Implementation_GBM_MC.ipynb)
-    - [Colab Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples_Colab/MonteCarloLearning/Implementation_GBM_MC.ipynb)
-
-- Five-dimensional training interval:
-    - [Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples/MonteCarloLearning/Implementation_GBM_5d.ipynb)
-    - [Colab Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples_Colab/MonteCarloLearning/Implementation_GBM_5d.ipynb)
-  
-- Multilevel Monte Carlo learning proof of concept:
-    - [Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples/MonteCarloLearning/Implementation_Multilevel_POC.ipynb)
-    - [Colab Implementation](https://github.com/da-roth/NeuronalNetworkTensorflowFramework/blob/main/src/Examples_Colab/MonteCarloLearning/Implementation_Multilevel_POC.ipynb)
-
 
 ## Multilevel Monte Carlo Learning
 
